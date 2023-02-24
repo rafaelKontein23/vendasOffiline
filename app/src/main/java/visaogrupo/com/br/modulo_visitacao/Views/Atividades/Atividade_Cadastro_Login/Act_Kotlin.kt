@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Act_Cargas
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Dialogs.Dialog_erro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.Login_Cadastro.Task_Login
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.Ondismiss
@@ -71,7 +72,7 @@ class Act_Kotlin:  AppCompatActivity() , Ondismiss{
 
                 carregandoprogress!!.visibility = View.GONE
                 entrar!!.text = "Entrar"
-                var intent = Intent(baseContext,Act_Kotlin::class.java)
+                var intent = Intent(baseContext,Act_Cargas::class.java)
                 startActivity(intent)
             }
         }

@@ -2,8 +2,211 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.Atividades.Atividades_Cargas.Act_Cargas">
+    tools:context=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Act_Cargas">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#E6EDF3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/icon_home"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/home"
+        app:layout_constraintEnd_toStartOf="@+id/icon_pedidos"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <ImageView
+        android:id="@+id/icon_pedidos"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/pedidos"
+        app:layout_constraintEnd_toStartOf="@+id/icon_clientes"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon_home"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <ImageView
+        android:id="@+id/icon_clientes"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/clientes"
+        app:layout_constraintEnd_toStartOf="@+id/icon_lojas"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon_pedidos"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <ImageView
+        android:id="@+id/icon_lojas"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/lojas"
+        app:layout_constraintEnd_toStartOf="@+id/icon_produtos"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon_clientes"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <ImageView
+        android:id="@+id/icon_produtos"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/produtos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/icon_lojas"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/text_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="HOME"
+        android:textColor="#004076"
+        android:letterSpacing=".15"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/icon_home"
+        app:layout_constraintStart_toStartOf="@+id/icon_home"
+        app:layout_constraintTop_toBottomOf="@+id/icon_home" />
+
+    <TextView
+        android:id="@+id/text_pedidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="PEDIDOS"
+        android:letterSpacing=".15"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/icon_pedidos"
+        app:layout_constraintStart_toStartOf="@+id/icon_pedidos"
+        app:layout_constraintTop_toBottomOf="@+id/icon_pedidos" />
+
+    <TextView
+        android:id="@+id/text_clientes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing=".15"
+        android:text="CLIENTES"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/icon_clientes"
+        app:layout_constraintStart_toStartOf="@+id/icon_clientes"
+        app:layout_constraintTop_toBottomOf="@+id/icon_clientes" />
+
+    <TextView
+        android:id="@+id/text_lojas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="10dp"
+        android:text="LOJAS"
+        android:letterSpacing=".15"
+        app:layout_constraintEnd_toEndOf="@+id/icon_lojas"
+        app:layout_constraintStart_toStartOf="@+id/icon_lojas"
+        app:layout_constraintTop_toBottomOf="@+id/icon_lojas" />
+
+    <TextView
+        android:id="@+id/text_protudo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing=".15"
+        android:textSize="10dp"
+        android:text="PRODUTOS"
+        app:layout_constraintEnd_toEndOf="@+id/icon_produtos"
+        app:layout_constraintStart_toStartOf="@+id/icon_produtos"
+        app:layout_constraintTop_toBottomOf="@+id/icon_produtos" />
+
+    <View
+        android:id="@+id/view_home"
+        android:layout_width="16dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bordas_arredonda"
+        android:backgroundTint="#004076"
+        app:layout_constraintBottom_toTopOf="@+id/icon_home"
+        app:layout_constraintEnd_toEndOf="@+id/icon_home"
+        app:layout_constraintStart_toStartOf="@+id/icon_home" />
+
+    <View
+        android:id="@+id/view_prdidos"
+        android:layout_width="16dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bordas_arredonda"
+        android:backgroundTint="#004076"
+        app:layout_constraintBottom_toTopOf="@+id/icon_home"
+        app:layout_constraintEnd_toEndOf="@+id/icon_pedidos"
+        app:layout_constraintStart_toEndOf="@+id/icon_home" />
+
+    <View
+        android:id="@+id/view_clientes"
+        android:layout_width="16dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bordas_arredonda"
+        android:backgroundTint="#004076"
+        app:layout_constraintBottom_toTopOf="@+id/icon_clientes"
+        app:layout_constraintEnd_toEndOf="@+id/icon_clientes"
+        app:layout_constraintStart_toStartOf="@+id/icon_clientes" />
+    <View
+        android:id="@+id/view_lojas"
+        android:layout_width="16dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bordas_arredonda"
+        android:backgroundTint="#004076"
+        app:layout_constraintBottom_toTopOf="@+id/icon_lojas"
+        app:layout_constraintEnd_toEndOf="@+id/icon_lojas"
+        app:layout_constraintStart_toStartOf="@+id/icon_lojas" />
+    <View
+        android:id="@+id/view_produto"
+        android:layout_width="16dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bordas_arredonda"
+        android:backgroundTint="#004076"
+        app:layout_constraintBottom_toTopOf="@+id/icon_produtos"
+        app:layout_constraintEnd_toEndOf="@+id/icon_produtos"
+        app:layout_constraintStart_toStartOf="@+id/icon_produtos" />
+
+    <Spinner
+        android:id="@+id/menucim_spnier"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/bordas_menu_cima"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/menu_cima"
+        android:layout_width="0dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/icon_pontos"
+        app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
+        app:layout_constraintEnd_toEndOf="@+id/menucim_spnier"
+        app:layout_constraintStart_toStartOf="@+id/menucim_spnier"
+        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

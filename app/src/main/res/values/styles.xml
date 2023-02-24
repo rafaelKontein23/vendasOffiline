@@ -56,4 +56,11 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
+
+    <style name="CustomBottomNavigationStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/white</item>
+        <item name="itemIconTint">@color/Azul_inicial</item>
+        <item name="android:height">56dp</item>
+    </style>
+
 </resources>

@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31">
         <activity
-            android:name=".Act_Cargas"
+            android:name=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Act_Cargas"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
