@@ -40,7 +40,7 @@ public class Dialog_erro {
         confirma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               dialog.onBackPressed();
             }
         });
 
