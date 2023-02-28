@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Atividades.Atividade_Cadastro_L
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -32,6 +33,8 @@ class Act_Kotlin:  AppCompatActivity() , Ondismiss{
         senha = findViewById<EditText>(R.id.senha)
         entrar = findViewById<Button>(R.id.entrar)
         carregandoprogress = findViewById<ProgressBar>(R.id.progressBar_carregando_login)
+
+
 
         entrar!!.setOnClickListener {
             entrar!!.text = ""

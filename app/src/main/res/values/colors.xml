@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Azul_inicial">#0196B4</color>
+    <color name="azul_seleciona">#737880</color>
 </resources>

@@ -64,8 +64,6 @@ class Task_Login {
                     try {
                         val json_resposta: String = incript.decryptCBC(response.body()!!.string())
 
-
-
                         Log.d("Json", json_resposta)
                         val jsonObject1 = JSONObject(json_resposta)
                         val Dados = jsonObject1.getString("Dados")
