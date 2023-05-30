@@ -12,7 +12,7 @@
         android:title="Clientes"
 
         android:icon="@drawable/ic_baseline_person_outline_24" />
-    <item android:id="@+id/Teste_orfo"
+    <item android:id="@+id/Lojas"
         android:title="Lojas"
         android:icon="@drawable/ic_baseline_person_outline_24" />
     <item android:id="@+id/aall"

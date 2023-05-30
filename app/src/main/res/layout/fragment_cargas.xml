@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Fragments.Carga.FragmentCargas">
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+
+           <TextView
+               android:id="@+id/nomeVendedor"
+               style="@style/text_sub_titulo"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="45dp"
+               android:layout_marginEnd="24dp"
+               android:fontFamily="@font/inter_medium"
+               android:text="Rafael Vendedor"
+               android:textColor="#2E3642"
+               android:textFontWeight="@integer/material_motion_duration_long_1"
+               android:textSize="22dp"
+               android:textStyle="bold"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintHorizontal_bias="0.074"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+           <TextView
+               android:id="@+id/emailUsuario"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/inter"
+               android:text="email@email.com"
+               android:textSize="12dp"
+               app:layout_constraintEnd_toEndOf="@+id/nomeVendedor"
+               app:layout_constraintHorizontal_bias="0.0"
+               app:layout_constraintStart_toStartOf="@+id/nomeVendedor"
+               app:layout_constraintTop_toBottomOf="@+id/nomeVendedor" />
+
+           <View
+               android:id="@+id/view4"
+               android:layout_width="match_parent"
+               android:layout_height="89dp"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="40dp"
+               android:layout_marginEnd="24dp"
+               android:background="@drawable/bordas_carga"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/emailUsuario" />
+
+           <TextView
+               android:id="@+id/textView8"
+               style="@style/text_comum"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="16dp"
+               android:layout_marginTop="16dp"
+               android:layout_marginEnd="16dp"
+               android:drawableStart="@drawable/infoicon"
+               android:drawablePadding="10dp"
+               android:fontFamily="@font/inter_medium"
+               android:text="Verifique a data da ultima atualização"
+               android:textColor="@color/catarinense_cor_branco"
+               android:textSize="14dp"
+               app:layout_constraintEnd_toEndOf="@+id/view4"
+               app:layout_constraintStart_toStartOf="@+id/view4"
+               app:layout_constraintTop_toTopOf="@+id/view4" />
+
+           <TextView
+               android:id="@+id/textView9"
+               style="@style/text_comum"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="16dp"
+               android:layout_marginEnd="16dp"
+               android:fontFamily="@font/inter"
+               android:text="Recomendamos que você mantenhas os dados sempre atualizados."
+               android:textColor="@color/catarinense_cor_branco"
+               android:textSize="12dp"
+               app:layout_constraintBottom_toBottomOf="@+id/view4"
+               app:layout_constraintEnd_toEndOf="@+id/view4"
+               app:layout_constraintHorizontal_bias="0.0"
+               app:layout_constraintStart_toStartOf="@+id/view4"
+               app:layout_constraintTop_toBottomOf="@+id/textView8"
+               app:layout_constraintVertical_bias="0.2" />
+
+           <TextView
+               android:id="@+id/textView10"
+               style="@style/textbold"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="32dp"
+               android:text="Atualizações"
+               android:textColor="@color/corneutratext"
+               android:textSize="16dp"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+           <ImageView
+               android:id="@+id/imageView"
+               android:layout_width="94dp"
+               android:layout_height="55dp"
+               android:layout_marginTop="32dp"
+               android:src="@drawable/logo_principal"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent" />
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/caragDiaria"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="24dp"
+               android:layout_marginEnd="24dp"
+               android:background="@drawable/bordas_arredonda"
+               android:backgroundTint="@color/corview"
+               android:padding="12dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/textView10">
+
+               <ImageView
+                   android:id="@+id/imgcargadiaria"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="8dp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginBottom="4dp"
+                   android:background="@drawable/bordas_arredonda"
+                   android:backgroundTint="@color/corviewicon"
+                   android:padding="14dp"
+                   android:src="@drawable/cargadiaria"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent">
+
+               </ImageView>
+
+               <TextView
+                   android:id="@+id/textcargaDiaria"
+                   style="@style/textbold"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginEnd="16dp"
+                   android:text="Carga Diária"
+                   android:textSize="14dp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/imgcargadiaria"
+                   app:layout_constraintTop_toTopOf="@+id/imgcargadiaria" />
+
+               <TextView
+                   android:id="@+id/infoTextCargDiaria"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginEnd="16dp"
+                   android:text="baixar carga diaria..."
+                   android:textColor="@color/azul_seleciona"
+                   app:layout_constraintBottom_toBottomOf="@+id/imgcargadiaria"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintHorizontal_bias="0.0"
+                   app:layout_constraintStart_toEndOf="@+id/imgcargadiaria"
+                   app:layout_constraintTop_toBottomOf="@+id/textcargaDiaria"
+                   app:layout_constraintVertical_bias="0.0" />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/cargaImagem"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="16dp"
+               android:layout_marginEnd="24dp"
+               android:background="@drawable/bordas_arredonda"
+               android:backgroundTint="@color/corview"
+               android:padding="12dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/caragDiaria">
+
+               <ImageView
+                   android:id="@+id/imgCargaiImagem"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="8dp"
+                   android:background="@drawable/bordas_arredonda"
+                   android:backgroundTint="@color/corviewicon"
+                   android:padding="14dp"
+                   android:src="@drawable/imagemcarga"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent">
+
+               </ImageView>
+
+               <TextView
+                   android:id="@+id/textcargaImagem"
+                   style="@style/textbold"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginEnd="16dp"
+                   android:text="Atualizar Imagens"
+                   android:textSize="14dp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/imgCargaiImagem"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <TextView
+                   android:id="@+id/infoTextCargaImagem"
+                   android:layout_width="0dp"
+                   android:layout_height="19dp"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginEnd="16dp"
+                   android:text="baixar carga de imagens..."
+                   android:textColor="@color/azul_seleciona"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintHorizontal_bias="0.0"
+                   app:layout_constraintStart_toEndOf="@+id/imgCargaiImagem"
+                   app:layout_constraintTop_toBottomOf="@+id/textcargaImagem" />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/cargaModelodePedido"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginTop="16dp"
+               android:layout_marginEnd="24dp"
+               android:background="@drawable/bordas_arredonda"
+               android:backgroundTint="@color/corview"
+               android:padding="12dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/cargaImagem">
+
+               <ImageView
+                   android:id="@+id/imgCargamodelo"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="8dp"
+                   android:background="@drawable/bordas_arredonda"
+                   android:backgroundTint="@color/corviewicon"
+                   android:padding="14dp"
+                   android:src="@drawable/modeloicon"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent">
+
+               </ImageView>
+
+               <TextView
+                   android:id="@+id/textcargamodelo"
+                   style="@style/textbold"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginTop="4dp"
+                   android:layout_marginEnd="16dp"
+                   android:text="Atualizar Modelos de Pedido"
+                   android:textSize="14dp"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+               <TextView
+                   android:id="@+id/infoTextCargamodelo"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="16dp"
+                   android:layout_marginEnd="16dp"
+                   android:layout_marginBottom="8dp"
+                   android:textColor="@color/azul_seleciona"
+                   android:text="baixar carga de modelos..."
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintHorizontal_bias="0.0"
+                   app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
+                   app:layout_constraintTop_toBottomOf="@+id/textcargamodelo"
+                   app:layout_constraintVertical_bias="0.0" />
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+           <TextView
+               android:id="@+id/atualizarTodos"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_marginEnd="24dp"
+               android:text="atualizar todos"
+               android:textAlignment="textEnd"
+               android:textColor="@color/corazultext"
+               app:layout_constraintBottom_toBottomOf="@+id/textView10"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toEndOf="@+id/textView10"
+               app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

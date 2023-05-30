@@ -13,14 +13,14 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31">
         <activity
-            android:name=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Act_Cargas"
+            android:name=".Views.Atividades.Act_Pricipal"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.Atividade_Cadastro_Login.Act_Kotlin"
+            android:name=".Views.Atividades.Act_Kotlin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

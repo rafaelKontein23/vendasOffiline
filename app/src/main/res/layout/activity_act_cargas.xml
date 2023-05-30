@@ -5,7 +5,7 @@
     android:id="@+id/lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Act_Cargas">
+    tools:context=".Views.Atividades.Act_Pricipal">
 
     <View
         android:id="@+id/view2"
@@ -200,16 +200,19 @@
         android:layout_width="34dp"
         android:layout_height="34dp"
         android:layout_marginTop="24dp"
-
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/bordas_menu_cima"
+        android:gravity="left"
         android:popupBackground="@drawable/bordas_spiner_personalizada"
+        android:rotationX="187"
+        android:rotationY="182"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/menu_cima"
         android:layout_width="18dp"
+
         android:layout_height="18dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="3dp"
@@ -220,5 +223,16 @@
         app:layout_constraintEnd_toEndOf="@+id/menucim_spnier"
         app:layout_constraintStart_toStartOf="@+id/menucim_spnier"
         app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerViewPrincipal"
+        android:name="visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_cargas" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
