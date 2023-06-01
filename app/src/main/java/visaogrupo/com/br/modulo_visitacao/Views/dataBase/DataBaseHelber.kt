@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    10 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
+    15 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -57,24 +57,24 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
         // Tabele de lojas
         val sqlCliente = "CREATE TABLE if NOT EXISTS TB_clientes(" +
                 "Empresa_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,  "+
-                "cnpj varchar(20)," +
-                "RazaoSocial varchar(255), " +
-                "Fantasia varchar (255)," +
-                "Endereco varchar (255)," +
-                "Numero varchar (20)," +
-                "Complemento varchar (90)," +
-                "Bairro varchar(90)," +
-                "Cidade varchar (90)," +
-                "UF varchar (2)," +
-                "Cep varchar(90)," +
+                "cnpj VARCHAR(20)," +
+                "RazaoSocial VARCHAR(255), " +
+                "Fantasia VARCHAR (255)," +
+                "Endereco VARCHAR (255)," +
+                "Numero VARCHAR (20)," +
+                "Complemento VARCHAR (90)," +
+                "Bairro VARCHAR(90)," +
+                "Cidade VARCHAR (90)," +
+                "UF VARCHAR (2)," +
+                "Cep VARCHAR(90)," +
                 "CompraControlado Bolean," +
                 "LimiteCredito INT ," +
-                "UltimoPedido varchar," +
-                "VendaDireta varchar (20)," +
-                "Associativismo varchar(10)," +
-                "Telefone varchar (20)," +
-                "Email varchar (255)," +
-                "Formalizado varchar (2)," +
+                "UltimoPedido VARCHAR," +
+                "VendaDireta VARCHAR (20)," +
+                "Associativismo VARCHAR(10)," +
+                "Telefone VARCHAR (20)," +
+                "Email VARCHAR (255)," +
+                "Formalizado VARCHAR (2)," +
                 "Investimento Bolean," +
                 "DuplicataVencida Int," +
                 "SanitarioData INT"+
@@ -93,18 +93,58 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
         val sqlProtudos = "CREATE TABLE IF NOT EXISTS TB_produtos(" +
                 "Produto_codigo INTEGER PRIMARY KEY,"+
                 "Nome varchar(255),"+
-                "Apresentacao varchar(100),"+
-                "PrincipioAtivo varchar(100),"+
-                "ListaICMS varchar(100),"+
+                "Apresentacao VARCHAR(100),"+
+                "PrincipioAtivo VARCHAR(100),"+
+                "ListaICMS VARCHAR(100),"+
                 "CaixaPadrao INTEGER,"+
-                "Imagem varchar(50),"+
-                "Barra varchar(30),"+
+                "Imagem VARCHAR(50),"+
+                "Barra VARCHAR(30),"+
                 "Unidade_id INTERGER,"+
-                "Categoria varchar(10),"+
-                "RegistroMS varchar(40)"+
+                "Categoria VARCHAR(10),"+
+                "RegistroMS VARCHAR(40)"+
+                ");"
+        val sqlFormaDePagemento = "CREATE TABLE IF NOT EXISTS TB_fornaDePagamento(" +
+                "loja INTEGER NOT NULL," +
+                "Cod_FormaPgto VARCHAR(40) NOT NULL," +
+                "FormaPgto VARCHAR(40) NOT NULL," +
+                "ValorMinimo DOUBLE NOT NULL," +
+                "Alternativa  Boolean NOT NULL" +
                 ");"
 
+       val  sqlOperadorLogistico = "CREATE TABLE IF NOT EXISTS TB_OperadorLogistico(" +
+                "loja_id INTEGER not null," +
+                "OperadorLogistico_ID INTEGER," +
+                "Nome VARCHAR(60)," +
+                "Estado VARCHAR(2)," +
+                "MinimoValor DOUBLE," +
+                "OperadorLogistico_Grupo_id INTEGER," +
+                "Grupo VARCHAR(25)" +
+                ");"
+
+        val  sqlPRogressiva = "CREATE TABLE IF NOT EXISTS TB_Progressiva (" +
+                "Loja_id INTEGER NOT NULL," +
+                "Prod_cod INTEGER NOT NULL," +
+                "Valor REAL NOT NULL," +
+                "Quantidade INTEGER NOT NULL," +
+                "QuantidadeMaxima INTEGER NOT NULL," +
+                "Desconto REAL NOT NULL," +
+                "Desconto_Min REAL NOT NULL," +
+                "DescontoMaximo REAL NOT NULL," +
+                "PF REAL NOT NULL," +
+                "PMC REAL NOT NULL," +
+                "ST REAL NOT NULL," +
+                "formalizacao TEXT NOT NULL," +
+                "Seq_Kit INTEGER NOT NULL," +
+                "Seq_Cond_Coml INTEGER NOT NULL," +
+                "UF TEXT NOT NULL," +
+                "Data_Vencimento TEXT NOT NULL," +
+                "Prioridade INTEGER NOT NULL," +
+                "Promocao INTEGER NOT NULL" +
+                ");"
         try {
+            db?.execSQL(sqlPRogressiva)
+            db?.execSQL(sqlOperadorLogistico)
+            db?.execSQL(sqlFormaDePagemento)
             db?.execSQL(sqlProtudos)
             db?.execSQL(apagaTabelea)
             db?.execSQL(sqlClientePorLojas)

@@ -17,7 +17,7 @@ class LerZip {
         val json = inputStream.bufferedReader().use { it.readText() }
         inputStream.close()
         zipFile.close()
-        Log.d(TAG,json)
+
 
         return json
     }

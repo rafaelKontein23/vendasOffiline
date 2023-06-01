@@ -10,10 +10,12 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 class LojasDAO (context:Context):ILojas{
 
     var DBLojas = DataBaseHelber(context).writableDatabase
-     override   fun insert(lojas: JSONArray): Boolean {
+    val listaLojas = mutableListOf<Lojas>()
+    override   fun insert(lojas: JSONArray): Boolean {
          try {
 
              val valoresLojas =   ContentValues()
+
 
              for (i in 0 until lojas.length()) {
                  try {
@@ -43,6 +45,33 @@ class LojasDAO (context:Context):ILojas{
                      valoresLojas.put("Valida_Estoque", jsonLojasRetorno.optBoolean("ValidaEstoque"));
                      valoresLojas.put("Loja_Preco", jsonLojasRetorno.optBoolean("LojaPreco"));
                      valoresLojas.put("Exibe_Estoque", jsonLojasRetorno.optBoolean("ExibeEstoque"));
+                     val lojas = Lojas(
+                         jsonLojasRetorno.optBoolean("ANR"),
+                         jsonLojasRetorno.optString("DataFim"),
+                         jsonLojasRetorno.optString("DataInicio"),
+                         jsonLojasRetorno.optDouble("DescontoMaximo"),
+                         jsonLojasRetorno.optInt("Distribuidora"),
+                         jsonLojasRetorno.optBoolean("LiberaCotacao"),
+                         jsonLojasRetorno.optBoolean("LiberaFidelidade"),
+                         jsonLojasRetorno.optString("LogoHome"),
+                         jsonLojasRetorno.optBoolean("LojaTablet"),
+                         jsonLojasRetorno.optInt("LojaTipo"),
+                         jsonLojasRetorno.optInt("Loja_id"),
+                         jsonLojasRetorno.optInt("MinimoUnidades"),
+                         jsonLojasRetorno.optDouble("MinimoValor"),
+                         jsonLojasRetorno.optString("Nome"),
+                         jsonLojasRetorno.optInt("Ordem"),
+                         jsonLojasRetorno.optString("Portfolio"),
+                         jsonLojasRetorno.optInt("QtdProdutosLoja"),
+                         jsonLojasRetorno.optString("TipoImposto"),
+                         jsonLojasRetorno.optInt("TipoImposto_ID"),
+                         jsonLojasRetorno.optInt("Unificada"),
+                         jsonLojasRetorno.optBoolean("ValidaEstoque"),
+                         jsonLojasRetorno.optDouble("ValorUnificada"),
+                         jsonLojasRetorno.optInt("VendaTipo_id"),
+                         jsonLojasRetorno.optString("tipo")
+                     )
+                     listaLojas.add(lojas)
 
                      DBLojas.insert("TB_lojas",null,valoresLojas)
                  }catch (e:Exception){
@@ -54,7 +83,7 @@ class LojasDAO (context:Context):ILojas{
              return  true
          }catch (e:Exception){
              e.printStackTrace()
-             return false
+             return  false
          }
     }
 
