@@ -13,6 +13,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Controler.Obejtos.Personalizacao
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.CustomSpinnerAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
+import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
 
 class Act_Pricipal : AppCompatActivity() {
@@ -20,6 +21,7 @@ class Act_Pricipal : AppCompatActivity() {
     var list_menu:MutableList<String> = ArrayList<String>()
     val fragmentLojas = FragmentLojas()
     val fragmentCargas = FragmentCargas()
+    val fragmentClientes = FragmentClientes()
 
 
 
@@ -35,7 +37,7 @@ class Act_Pricipal : AppCompatActivity() {
 
         supportFragmentManager.
         beginTransaction()
-            .add(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
+            .replace(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
 
         val clickListenerhome = View.OnClickListener {
             seleciona(text_home,view_home,icon_home);
@@ -65,6 +67,12 @@ class Act_Pricipal : AppCompatActivity() {
             seleciona(text_clientes,view_clientes,icon_clientes);
             Deseleciona_itens(text_home,text_pedidos,text_lojas,text_protudo,view_home,
                 view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
+
+            if(!fragmentCargas.isVisible){
+                supportFragmentManager.
+                beginTransaction()
+                    .replace(R.id.fragmentContainerViewPrincipal, fragmentClientes).addToBackStack(null).commit()
+            }
         }
 
         icon_clientes.setOnClickListener(clickListenerclientes)

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Fragments.Carga.FragmentCargas">
+    android:layout_height="match_parent">
 
        <androidx.constraintlayout.widget.ConstraintLayout
            android:layout_width="match_parent"
@@ -119,8 +118,8 @@
                android:layout_marginStart="24dp"
                android:layout_marginTop="24dp"
                android:layout_marginEnd="24dp"
-               android:background="@drawable/bordas_arredonda"
-               android:backgroundTint="@color/corview"
+               android:background="@drawable/bordascargas"
+
                android:padding="12dp"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
@@ -130,11 +129,11 @@
                    android:id="@+id/imgcargadiaria"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginStart="8dp"
+                   android:layout_marginStart="4dp"
                    android:layout_marginTop="4dp"
                    android:layout_marginBottom="4dp"
-                   android:background="@drawable/bordas_arredonda"
-                   android:backgroundTint="@color/corviewicon"
+                   android:background="@drawable/bordasimagenscargas"
+
                    android:padding="14dp"
                    android:src="@drawable/cargadiaria"
                    app:layout_constraintBottom_toBottomOf="parent"
@@ -180,9 +179,9 @@
                android:layout_marginStart="24dp"
                android:layout_marginTop="16dp"
                android:layout_marginEnd="24dp"
-               android:background="@drawable/bordas_arredonda"
-               android:backgroundTint="@color/corview"
+               android:background="@drawable/bordascargas"
                android:padding="12dp"
+
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toBottomOf="@+id/caragDiaria">
@@ -191,14 +190,15 @@
                    android:id="@+id/imgCargaiImagem"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginStart="8dp"
+                   android:layout_marginStart="4dp"
                    android:background="@drawable/bordas_arredonda"
-                   android:backgroundTint="@color/corviewicon"
+                   android:backgroundTint="#EAEBEC"
                    android:padding="14dp"
                    android:src="@drawable/imagemcarga"
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent">
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:tint="@color/cornaoselecionada">
 
                </ImageView>
 
@@ -212,6 +212,7 @@
                    android:layout_marginEnd="16dp"
                    android:text="Atualizar Imagens"
                    android:textSize="14dp"
+                   android:textColor="@color/cornaoselecionadatext"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintStart_toEndOf="@+id/imgCargaiImagem"
                    app:layout_constraintTop_toTopOf="parent" />
@@ -223,7 +224,7 @@
                    android:layout_marginStart="16dp"
                    android:layout_marginEnd="16dp"
                    android:text="baixar carga de imagens..."
-                   android:textColor="@color/azul_seleciona"
+                   android:textColor="@color/cornaoselecionadatextsub"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintHorizontal_bias="0.0"
                    app:layout_constraintStart_toEndOf="@+id/imgCargaiImagem"
@@ -238,8 +239,8 @@
                android:layout_marginStart="24dp"
                android:layout_marginTop="16dp"
                android:layout_marginEnd="24dp"
-               android:background="@drawable/bordas_arredonda"
-               android:backgroundTint="@color/corview"
+               android:background="@drawable/bordascargas"
+
                android:padding="12dp"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
@@ -249,14 +250,15 @@
                    android:id="@+id/imgCargamodelo"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginStart="8dp"
+                   android:layout_marginStart="4dp"
                    android:background="@drawable/bordas_arredonda"
-                   android:backgroundTint="@color/corviewicon"
+                   android:backgroundTint="#EAEBEC"
                    android:padding="14dp"
                    android:src="@drawable/modeloicon"
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent">
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:tint="@color/cornaoselecionada">
 
                </ImageView>
 
@@ -270,6 +272,7 @@
                    android:layout_marginEnd="16dp"
                    android:text="Atualizar Modelos de Pedido"
                    android:textSize="14dp"
+                   android:textColor="@color/cornaoselecionadatext"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
                    app:layout_constraintTop_toTopOf="parent" />
@@ -281,11 +284,12 @@
                    android:layout_marginStart="16dp"
                    android:layout_marginEnd="16dp"
                    android:layout_marginBottom="8dp"
-                   android:textColor="@color/azul_seleciona"
+                   android:textColor="@color/cornaoselecionadatextsub"
                    android:text="baixar carga de modelos..."
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintHorizontal_bias="0.0"
+
                    app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
                    app:layout_constraintTop_toBottomOf="@+id/textcargamodelo"
                    app:layout_constraintVertical_bias="0.0" />

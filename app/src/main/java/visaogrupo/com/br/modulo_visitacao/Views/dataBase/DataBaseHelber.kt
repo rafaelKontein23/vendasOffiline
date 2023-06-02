@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    15 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
+    17 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -141,7 +141,14 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Prioridade INTEGER NOT NULL," +
                 "Promocao INTEGER NOT NULL" +
                 ");"
+
+        val sqlEstoque = "CREATE TABLE IF NOT EXISTS TB_Estoque(" +
+                "Barra VARCHAR(50) NOT NULL," +
+                "Quantidade INTEGER NOT NULL," +
+                "Loja_id INTEGER NOT NULL" +
+                ");"
         try {
+            db?.execSQL(sqlEstoque)
             db?.execSQL(sqlPRogressiva)
             db?.execSQL(sqlOperadorLogistico)
             db?.execSQL(sqlFormaDePagemento)

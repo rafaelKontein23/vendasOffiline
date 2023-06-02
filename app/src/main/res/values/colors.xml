@@ -14,4 +14,14 @@
     <color name="corview">#33E6EDF3</color>
     <color name="corviewicon">#E6EDF3</color>
     <color name="corazultext">#004682</color>
+
+
+    <color name="cornaoselecionada">#9FA3A8</color>
+    <color name="cornaoselecionadatext">#B3585E68</color>
+    <color name="cornaoselecionadatextsub">#BEC1C4</color>
+    <color name="cornaoselecionadacontrain">#0DBEC1C4</color>
+
+    <color name="acaboucargaverde">#1A64BC26</color>
+   <color name="textacaboucarga">#64BC26</color>
+
 </resources>
