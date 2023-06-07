@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis
 
+import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
@@ -13,7 +14,6 @@ import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import visaogrupo.com.br.modulo_visitacao.R
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.DAO.LerZip
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.TaskEstoque
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.Task_Cargadiaria
@@ -24,7 +24,7 @@ import java.util.*
 class CargaDiaria {
 
 
-    fun fazCargaDiaria(context: Context, user_ide:String, constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView){
+    fun fazCargaDiaria(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView, animador: ObjectAnimator){
         CoroutineScope(Dispatchers.IO).launch {
             //Faz request de Zip
             var patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
@@ -294,7 +294,10 @@ class CargaDiaria {
 
                     }
                     lendoEstoque.join()
-                    cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon)
+
+                        cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador)
+
+
                     Log.d("Terminou carga","")
                 }catch (e:Exception){
                     e.printStackTrace()
@@ -303,31 +306,41 @@ class CargaDiaria {
         }
     }
 
-    fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView,context: Context, icon:ImageView){
-        constrain.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
-        texttitulocarga.setTextColor(Color.parseColor("#64BC26"))
-        subtitulocarga.setTextColor(Color.parseColor("#64BC26"))
-        subtitulocarga.text ="atualizou."
+    fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView,context: Context, icon:ImageView,animador: ObjectAnimator){
+
+
         val drawable = icon.drawable
 
+        CoroutineScope(Dispatchers.Main).launch {
+            constrain.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
+            texttitulocarga.setTextColor(Color.parseColor("#64BC26"))
+            subtitulocarga.setTextColor(Color.parseColor("#64BC26"))
+            subtitulocarga.text ="atualizou."
 
-        val color = ContextCompat.getColor(context, R.color.textacaboucarga)
-        val mutableDrawable = DrawableCompat.wrap(drawable).mutate()
-        DrawableCompat.setTint(mutableDrawable, color)
-        icon.setImageDrawable(mutableDrawable)
-        icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
+
+            animador.end()
+            val color = ContextCompat.getColor(context, R.color.textacaboucarga)
+            val mutableDrawable = DrawableCompat.wrap(drawable).mutate()
+            DrawableCompat.setTint(mutableDrawable, color)
+            icon.setImageDrawable(mutableDrawable)
+            icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
+        }
+
 
         Thread.sleep(10000)
+        CoroutineScope(Dispatchers.Main).launch {
+            val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)
+            val mutableDrawableicon = DrawableCompat.wrap(drawable).mutate()
+            DrawableCompat.setTint(mutableDrawableicon, colorcorazultext)
+            icon.setImageDrawable(mutableDrawableicon)
+            icon.background = ContextCompat.getDrawable(context, R.drawable.bordasimagenscargas)
+            constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
+            texttitulocarga.setTextColor(Color.parseColor("#21262F"))
+            subtitulocarga.setTextColor(Color.parseColor("#737880"))
+            val currentDate: String = SimpleDateFormat("dd/MMyyyy", Locale.getDefault()).format(Date())
+            subtitulocarga.text ="atualizado em: ${currentDate} "
+        }
 
-        val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)
-        val mutableDrawableicon = DrawableCompat.wrap(drawable).mutate()
-        DrawableCompat.setTint(mutableDrawableicon, colorcorazultext)
-        icon.setImageDrawable(mutableDrawableicon)
-        icon.background = ContextCompat.getDrawable(context, R.drawable.bordasimagenscargas)
-        constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
-        texttitulocarga.setTextColor(Color.parseColor("#21262F"))
-        subtitulocarga.setTextColor(Color.parseColor("#737880"))
-        val currentDate: String = SimpleDateFormat("dd/MMyyyy", Locale.getDefault()).format(Date())
-        subtitulocarga.text ="atualizado em: ${currentDate} "
+
     }
 }

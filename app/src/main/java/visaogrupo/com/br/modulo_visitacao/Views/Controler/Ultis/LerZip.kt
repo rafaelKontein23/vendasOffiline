@@ -1,6 +1,5 @@
-package visaogrupo.com.br.modulo_visitacao.Views.Controler.DAO
+package visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis
 
-import android.util.Log
 import java.util.zip.ZipFile
 
 class LerZip {

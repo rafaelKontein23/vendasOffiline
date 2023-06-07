@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.LojasDAO
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -30,7 +31,12 @@ class FragmentLojas : Fragment() {
     ): View? {
 
         var view = inflater.inflate(R.layout.fragment_lojas, container, false)
-
+        val listalojas = LojasDAO(requireContext())
+        val querylojasClientes = "SELECT LojCli.empresa_id, Lojas.*" +
+                "FROM TB_lojas Lojas" +
+                "inner join TB_lojaporcliente LojCli on Lojas.Loja_id = LojCli.loja_id" +
+                "WHERE LojCli.empresa_id = 77713"
+        listalojas.listarlojas(requireContext(),1,querylojasClientes)
         return  view;
     }
 

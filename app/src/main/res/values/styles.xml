@@ -47,6 +47,11 @@
 
     </style>
 
+    <style name="CustomBottomNavigationCimapraBaixo">
+        <item name="android:windowEnterAnimation">@anim/slide_pra_baixo</item>
+        <item name="android:windowExitAnimation">@anim/slide_pra_cima</item>
+    </style>
+
     <style name="text_comum">
         <item name="android:fontFamily">@font/inter</item>
         <item name="android:textSize">16sp</item>
@@ -63,4 +68,32 @@
         <item name="android:height">56dp</item>
     </style>
 
+    <style name="editinputbusca">
+        <item name="android:background">@drawable/bordas_edit</item>
+        <item name="hintAnimationEnabled">true</item>
+        <item name="hintTextColor">@color/cornaoselecionadatextsub</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/azul_seleciona</item>
+    </style>
+    <style name="TextCnpj">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/corazultext</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextrazaoSocial">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/corazultext</item>
+        <item name="android:fontFamily">@font/inter</item>
+
+    </style>
 </resources>

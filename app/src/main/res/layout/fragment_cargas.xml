@@ -142,6 +142,7 @@
 
                </ImageView>
 
+
                <TextView
                    android:id="@+id/textcargaDiaria"
                    style="@style/textbold"
@@ -149,10 +150,9 @@
                    android:layout_height="wrap_content"
                    android:layout_marginStart="16dp"
                    android:layout_marginTop="4dp"
-                   android:layout_marginEnd="16dp"
                    android:text="Carga Diária"
                    android:textSize="14dp"
-                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintEnd_toStartOf="@+id/carregandocargadiaria"
                    app:layout_constraintStart_toEndOf="@+id/imgcargadiaria"
                    app:layout_constraintTop_toTopOf="@+id/imgcargadiaria" />
 
@@ -161,15 +161,25 @@
                    android:layout_width="0dp"
                    android:layout_height="wrap_content"
                    android:layout_marginStart="16dp"
-                   android:layout_marginEnd="16dp"
                    android:text="baixar carga diaria..."
                    android:textColor="@color/azul_seleciona"
                    app:layout_constraintBottom_toBottomOf="@+id/imgcargadiaria"
-                   app:layout_constraintEnd_toEndOf="parent"
-                   app:layout_constraintHorizontal_bias="0.0"
+                   app:layout_constraintEnd_toStartOf="@+id/carregandocargadiaria"
                    app:layout_constraintStart_toEndOf="@+id/imgcargadiaria"
                    app:layout_constraintTop_toBottomOf="@+id/textcargaDiaria"
                    app:layout_constraintVertical_bias="0.0" />
+
+               <ImageView
+                   android:id="@+id/carregandocargadiaria"
+                   android:layout_width="24dp"
+                   android:layout_height="22dp"
+                   android:layout_marginEnd="8dp"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+
+                   app:srcCompat="@drawable/carregando"
+                   app:tint="@color/cornaoselecionadatextsub" />
            </androidx.constraintlayout.widget.ConstraintLayout>
 
            <androidx.constraintlayout.widget.ConstraintLayout

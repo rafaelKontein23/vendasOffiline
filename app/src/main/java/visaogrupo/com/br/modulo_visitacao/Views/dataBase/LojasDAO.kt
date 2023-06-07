@@ -94,4 +94,17 @@ class LojasDAO (context:Context):ILojas{
     override fun remover(produto: Lojas): Boolean {
         TODO("Not yet implemented")
     }
+
+    override fun listarlojas(context: Context, empresaID: Int,query:String): List<Lojas> {
+        val listaLojasobject = mutableListOf<Lojas>()
+        val dblistalojas = DataBaseHelber(context)
+
+
+        val  cursor = dblistalojas.readableDatabase.rawQuery(query,null)
+        while (cursor.moveToNext()){
+
+        }
+
+        return  listaLojasobject
+    }
 }

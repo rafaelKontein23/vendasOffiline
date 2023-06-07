@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.Atividades.Atividades_Cargas_Lojas_Protudos.Cargas.Fragments.Carga.FragmentLojas">
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Lojas" />
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView5"
+            style="@style/text_sub_titulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="29dp"
+            android:fontFamily="@font/inter_medium"
+            android:text="Lojas"
+            android:textColor="#2E3642"
+
+            android:textFontWeight="@integer/material_motion_duration_long_1"
+            android:textSize="20dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edtBuscaLojas"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:drawableEnd="@drawable/buscaedit"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:padding="10dp"
+            android:hint="Buscar Lojas.."
+            android:drawablePadding="20dp"
+            style="@style/editinputbusca"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+        </EditText>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyLojas"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtBuscaLojas" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
