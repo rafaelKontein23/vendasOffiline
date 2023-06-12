@@ -30,19 +30,21 @@
 
         <EditText
             android:id="@+id/edtBuscaLojas"
+            style="@style/editinputbusca"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:drawableEnd="@drawable/buscaedit"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="24dp"
-            android:padding="10dp"
-            android:hint="Buscar Lojas.."
+            android:drawableEnd="@drawable/buscaedit"
             android:drawablePadding="20dp"
-            style="@style/editinputbusca"
+            android:hint="Buscar Lojas.."
+            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5">
+            app:layout_constraintTop_toBottomOf="@+id/view9"
+            tools:ignore="TouchTargetSizeCheck">
 
         </EditText>
 
@@ -53,11 +55,63 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtBuscaLojas" />
+
+        <View
+            android:id="@+id/view9"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/corviewicon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/textclienteselecionado"
+            android:layout_marginEnd="24dp"
+            android:text="Cliente Selecionado"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view9" />
+
+        <TextView
+            android:id="@+id/cnpjClienteSelecionado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="24dp"
+            android:text="TextView"
+            style="@style/textbold"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:textColor="@color/corazultext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <TextView
+            android:id="@+id/textRazaosocialclienteSelecionado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="TextView"
+            style="@style/text_sub_titulo"
+            android:textSize="14dp"
+            android:textColor="@color/corazultext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cnpjClienteSelecionado" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

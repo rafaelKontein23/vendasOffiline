@@ -250,5 +250,18 @@
         app:srcCompat="@drawable/vender"
         />
 
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="40dp"
+        android:elevation="20dp"
+        android:tint="@color/corazultext"
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButton"
+        app:srcCompat="@drawable/bordas_spiner_personalizada" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    17 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
+    18 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)

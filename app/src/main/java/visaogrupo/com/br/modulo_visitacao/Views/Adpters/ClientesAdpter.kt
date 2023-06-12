@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Adpters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.celulaclientes.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogDetalhesClientes
@@ -32,7 +34,15 @@ class ClientesAdpter (list: MutableList<Clientes>,val  idfram:Int, val supoortfr
         holder.enderecocliente.text = listaClientes[position].Endereco
 
         holder.comtarincelula.setOnClickListener {
+
             val dialogDetalhesClientes = DialogDetalhesClientes()
+            val sharedPreferences = holder.comtarincelula.context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val objetoSerializado = gson.toJson(listaClientes[position])
+            val editor = sharedPreferences.edit()
+            editor.putString("ClienteSelecionado", objetoSerializado)
+            editor.apply()
+
 
             dialogDetalhesClientes.dialogDetalhe(holder.cnpjcliente.context,CNPJ,listaClientes[position], idfram,supoortfragment,trocarcoritem )
         }
