@@ -38,13 +38,15 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment() {
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         val lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
         val clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
-        val   query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Progressiva.valor, min(Progressiva.valor) " +
+
+        val query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf, min(Progressiva.valor) " +
                 "FROM TB_produtos Produtos " +
                 "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
                 "inner join TB_lojaporcliente LojxCli on LojxCli.loja_id = Progressiva.loja_id " +
-                "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
+                "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
+                "where Progressiva.loja_id = ${lojaSelecionada.loja_id}  " +
                 "and LojxCli.empresa_id =${clienteSelecionado.Empresa_id} " +
-                "and Progressiva.uf = '${clienteSelecionado.UF}'"+
+                "and Progressiva.uf = '${clienteSelecionado.UF}' " +
                 "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo"
         // configura o recycler
         val produtos = ProdutosDAO(requireContext())

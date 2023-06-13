@@ -54,10 +54,14 @@ class ProdutosDAO(context:Context):IProtudos {
             val Apresentacao = curso.getString(1)
             val Imagem = curso.getString(3)
             val Barra = curso.getString(2)
-            val valor = curso.getString(5)
+            val valor = curso.getString(8)
+
+            val PMC = curso.getDouble(6)
+            val Quantidade = curso.getInt(7)
+            val Caixapadrao = curso.getInt(5)
 
 
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor)
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao)
 
             listaprotudos.add(produtos)
         }

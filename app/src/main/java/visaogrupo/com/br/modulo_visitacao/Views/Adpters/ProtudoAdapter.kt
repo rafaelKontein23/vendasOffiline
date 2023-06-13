@@ -1,5 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Adpters
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Produtos
+import java.io.Serializable
 
 class ProtudoAdapter (list :List<ProdutoProgressiva>): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
@@ -23,10 +27,19 @@ class ProtudoAdapter (list :List<ProdutoProgressiva>): Adapter<ProtudoAdapter.Pr
     }
 
     override fun onBindViewHolder(holder: ProdutoViewHolder, position: Int) {
+        val context =   holder.constrainProtudos.context
         holder.nomeProtudo.text = listaProtudos[position].nome
         holder.codigoProduto.text = listaProtudos[position].ProdutoCodigo.toString()
         holder.barra.text = listaProtudos[position].barra
         holder.valor.text = "R$ " + listaProtudos[position].valor.toString().replace(".",",")
+        holder.constrainProtudos.setOnClickListener {
+         val intent = Intent(context,ActProtudoDetalhe::class.java)
+         val bundle = Bundle()
+         bundle.putSerializable("ProtudoSelecionado", listaProtudos[position] as Serializable)
+         intent.putExtra("ProtudoSelecionado_bundle", bundle)
+         context. startActivity(intent)
+
+        }
     }
 
     override fun getItemCount(): Int {
