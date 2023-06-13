@@ -14,12 +14,13 @@ import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 
 class DialogDetalhesClientes {
 
 
-       fun dialogDetalhe(context:Context,cnpjformat:String, cliente:Clientes,frameid:Int,supportFragmentManager:FragmentManager,trocarcorItem: TrocarcorItem){
+       fun dialogDetalhe(context:Context,cnpjformat:String, cliente:Clientes,frameid:Int,supportFragmentManager:FragmentManager,trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible){
            val  dialog =  Dialog(context);
 
            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -41,7 +42,7 @@ class DialogDetalhesClientes {
                Act_Pricipal.troca = TrocaItemSelecionado.lojas
                trocarcorItem.trocacor()
                val mudarFragment = MudarFragment()
-               mudarFragment.openFragmentWithFragmentManager(supportFragmentManager,frameid)
+               mudarFragment.openFragmentLojas(supportFragmentManager,frameid,trocarcorItem, carrinhoVisible )
 
            }
            cnpj.text = cnpjformat

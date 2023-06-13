@@ -20,32 +20,15 @@ import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.CargaDiaria
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentCargasBinding
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentCargas.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FragmentCargas : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    lateinit var  login: Login
 
+    lateinit var  login: Login
 
     private  lateinit var binding: FragmentCargasBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentCargasBinding.inflate(layoutInflater)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -83,16 +66,6 @@ class FragmentCargas : Fragment() {
         animator.repeatCount = ObjectAnimator.INFINITE
         animator.start()
         return animator
-    }
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentCargas().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 
 }

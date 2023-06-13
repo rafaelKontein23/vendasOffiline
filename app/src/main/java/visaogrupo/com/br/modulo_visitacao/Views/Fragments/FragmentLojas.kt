@@ -9,11 +9,14 @@ import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_lojas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.LojasAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.LojaXCliente
@@ -23,26 +26,17 @@ import visaogrupo.com.br.modulo_visitacao.Views.dataBase.LojasDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentLojasBinding
 import kotlin.math.log
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class FragmentLojas (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible): Fragment() {
 
-
-class FragmentLojas : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private  lateinit var  binding: FragmentLojasBinding
     lateinit var clienteSelecionado:Clientes
     lateinit var  AdapterLojas:LojasAdapter
-
+    val  trocarcorItem = trocarcorItem
+    val  carrinhoVisible = carrinhoVisible
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentLojasBinding.inflate(layoutInflater)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -51,7 +45,6 @@ class FragmentLojas : Fragment() {
     ): View? {
 
         var view = binding.root
-        val lojasDAO = LojasDAO(requireContext())
         //recupera cliente Selecionado
         val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
@@ -60,14 +53,15 @@ class FragmentLojas : Fragment() {
 
 
         // atualiza o cliente selecionado na view
-        binding.cnpjClienteSelecionado.text = clienteSelecionado.CNPJ
+        val  CNPJ = clienteSelecionado.CNPJ.substring(0,2)+"."+clienteSelecionado.CNPJ.substring(2,5)+"."+clienteSelecionado.CNPJ.substring(5,8)+"/"+clienteSelecionado.CNPJ.substring(8,12) +"-"+ clienteSelecionado.CNPJ.substring(12,14);
+        binding.cnpjClienteSelecionado.text = CNPJ
         binding.textRazaosocialclienteSelecionado.text = clienteSelecionado.RazaoSocial
 
         // recupera lisat de lojas
         val listalojas = LojasDAO(requireContext())
         val querylojasClientes = "SELECT LojCli.empresa_id, Lojas.* FROM TB_lojas Lojas inner join TB_lojaporcliente LojCli on Lojas.Loja_id = LojCli.loja_id WHERE LojCli.empresa_id = ${clienteSelecionado.Empresa_id} "
         val listLojas =  listalojas.listarlojas(requireContext(),1,querylojasClientes)
-        AdapterLojas = LojasAdapter(listLojas)
+        AdapterLojas = LojasAdapter(listLojas,trocarcorItem,R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible)
         val  layoutManager = LinearLayoutManager(requireContext())
         binding.recyLojas.layoutManager = layoutManager
         binding.recyLojas.adapter = AdapterLojas

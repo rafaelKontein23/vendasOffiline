@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Interfaces.DAIInterface
 
 import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
+import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Produtos
 
 interface IProtudos {
@@ -11,4 +12,6 @@ interface IProtudos {
     fun atualizar (produtos: Produtos):Boolean
 
     fun remover (produtos:Produtos):Boolean
+
+    fun  litar(query: String):MutableList<ProdutoProgressiva>
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
@@ -18,18 +19,22 @@ import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogDetalhesClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
+import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 
-class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
+class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible {
 
     var list_menu:MutableList<String> = ArrayList<String>()
-    val fragmentLojas = FragmentLojas()
-    val fragmentCargas = FragmentCargas()
-    val fragmentClientes = FragmentClientes(this)
-
+    val fragmentLojas =    FragmentLojas(this,this)
+    val fragmentCargas =   FragmentCargas()
+    val fragmentClientes = FragmentClientes(this,this)
+    val fragmentProtudos = FragmentProtudos(this)
+    lateinit var viewcarrinho :TextView
+    lateinit var qtdNotificacoes :TextView
+    lateinit var viewnotification :View
     companion object {
         var  troca = TrocaItemSelecionado.home
-        val contextPrincipal = this
     }
 
 
@@ -40,7 +45,9 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
         list_menu.add("")
         list_menu.add("")
         list_menu.add("")
-
+        viewcarrinho = findViewById(R.id.carrinho)
+        qtdNotificacoes = findViewById(R.id.qtdNotification)
+        viewnotification = findViewById(R.id.viewnotification)
 
         supportFragmentManager.
         beginTransaction()
@@ -65,6 +72,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
             seleciona(text_pedidos,view_prdidos,icon_pedidos);
             Deseleciona_itens(text_home,text_clientes,text_lojas,text_protudo,view_home,
                 view_clientes,view_lojas,view_produto,icon_home,icon_clientes,icon_lojas,icon_produtos)
+            itensVisible()
         }
 
         icon_pedidos.setOnClickListener (clickListenerpedidos)
@@ -74,7 +82,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
             seleciona(text_clientes,view_clientes,icon_clientes);
             Deseleciona_itens(text_home,text_pedidos,text_lojas,text_protudo,view_home,
                 view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
-
+            itensVisible()
             if(!fragmentClientes.isVisible){
                 supportFragmentManager.
                 beginTransaction()
@@ -90,7 +98,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
             seleciona(text_lojas,view_lojas,icon_lojas);
             Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
                 view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
-
+            itensVisible()
             val visivel =fragmentLojas.isVisible
             if(!visivel){
                 supportFragmentManager.
@@ -107,6 +115,12 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
             seleciona(text_protudo,view_produto,icon_produtos);
             Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
                 view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
+            itensInvisible()
+            if(!fragmentProtudos.isVisible){
+                supportFragmentManager.
+                beginTransaction()
+                    .replace(R.id.fragmentContainerViewPrincipal, fragmentProtudos).addToBackStack(null).commit()
+            }
         }
 
         icon_produtos.setOnClickListener (clickListenerprodutos)
@@ -168,7 +182,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
 
 
 
-
+    // botão voltar nativo
     override fun onBackPressed() {
         super.onBackPressed()
         if(fragmentCargas.isVisible){
@@ -183,6 +197,10 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
             seleciona(text_clientes,view_clientes,icon_clientes);
             Deseleciona_itens(text_home,text_pedidos,text_lojas,text_protudo,view_home,
                 view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
+        }else if(fragmentProtudos.isVisible){
+            seleciona(text_protudo,view_produto,icon_produtos);
+            Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
+                view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
         }
 
 
@@ -218,5 +236,22 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem {
                     view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
             }
         }
+    }
+    fun itensVisible(){
+        viewcarrinho.isVisible = true
+        qtdNotificacoes.isVisible = true
+        viewnotification.isVisible = true
+    }
+
+    fun itensInvisible(){
+        viewcarrinho.isVisible = false
+        qtdNotificacoes.isVisible = false
+        viewnotification.isVisible = false
+    }
+
+    override fun carrinhoVisivel() {
+        viewcarrinho.isVisible = false
+        qtdNotificacoes.isVisible = false
+        viewnotification.isVisible = false
     }
 }

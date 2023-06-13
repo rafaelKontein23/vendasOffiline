@@ -197,8 +197,8 @@
 
     <Spinner
         android:id="@+id/menucim_spnier"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/bordas_menu_cima"
@@ -236,32 +236,51 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_cargas" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+
+    <TextView
+        android:id="@+id/carrinho"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+
+        android:background="@drawable/botaovender"
+        android:drawableEnd="@drawable/vender"
+        android:drawablePadding="10dp"
+        android:elevation="10dp"
+        android:outlineAmbientShadowColor="@color/corazultext"
+        android:outlineSpotShadowColor="@color/corazultext"
+        android:paddingEnd="14dp"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/viewnotification"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="32dp"
+        android:elevation="10dp"
+
+        android:background="@drawable/bordas_carga"
+        app:layout_constraintBottom_toBottomOf="@+id/carrinho"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/bordas_spiner_personalizada" />
+
+    <TextView
+        android:id="@+id/qtdNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-
-        android:backgroundTint="@color/Azul_inicial"
-        android:clickable="true"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/vender"
-        />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginBottom="40dp"
-        android:elevation="20dp"
-        android:tint="@color/corazultext"
-        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
-        app:layout_constraintStart_toStartOf="@+id/floatingActionButton"
-        app:srcCompat="@drawable/bordas_spiner_personalizada" />
+        android:elevation="21dp"
+        android:text="1"
+        android:textSize="12dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/viewnotification"
+        app:layout_constraintEnd_toEndOf="@+id/viewnotification"
+        app:layout_constraintStart_toStartOf="@+id/viewnotification"
+        app:layout_constraintTop_toTopOf="@+id/viewnotification" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

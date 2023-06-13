@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 class Retrofit_Carga {
 
     companion object {
-         val url = "https://wwwi.catarinenseonline.com.br/"
+         val url = "https://wwwe.catarinenseonline.com.br/"
 
 
          val builder = Retrofit.Builder().baseUrl(url)

@@ -21,32 +21,26 @@ import kotlinx.android.synthetic.main.fragment_clientes.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ClientesAdpter
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.LojaXCliente
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ClientesDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-class FragmentClientes (trocarcorItem: TrocarcorItem) : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class FragmentClientes (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible) : Fragment() {
+
     private var  totaldeclientes = 0
     private var loadedItems = 0
     val  trocarcorItem = trocarcorItem
-
+    val carrinhoVisible = carrinhoVisible
     private  lateinit var  binding:FragmentClientesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentClientesBinding.inflate(layoutInflater)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -70,7 +64,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem) : Fragment() {
         totaldeclientes = clientes.countar(requireContext())
         view.quatidadeClienetes.text = totaldeclientes.toString() + " Clientes"
         val listaclientes = clientes.listar(requireContext(),queryListaClientes)
-        val adapterCliente = ClientesAdpter(listaclientes,R.id.fragmentContainerViewPrincipal,getParentFragmentManager(), trocarcorItem )
+        val adapterCliente = ClientesAdpter(listaclientes,R.id.fragmentContainerViewPrincipal,getParentFragmentManager(), trocarcorItem,carrinhoVisible )
         val layoutManegerCliente:LayoutManager = LinearLayoutManager(context)
 
         view.recyClientes.layoutManager = layoutManegerCliente

@@ -4,11 +4,14 @@ import android.content.ContentValues
 import android.content.Context
 import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.DAIInterface.IProtudos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Produtos
 
 class ProdutosDAO(context:Context):IProtudos {
     val DBProtudos = DataBaseHelber(context).writableDatabase
+    val dblistaproudos = DataBaseHelber(context).readableDatabase
     val valoresProtudos = ContentValues()
+
     override fun insert(jsonProtudos: JSONArray): Boolean {
         try {
             for (i in  0  until jsonProtudos.length()){
@@ -39,5 +42,26 @@ class ProdutosDAO(context:Context):IProtudos {
 
     override fun remover(produtos: Produtos): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun litar(query: String): MutableList<ProdutoProgressiva> {
+        var listaprotudos = mutableListOf<ProdutoProgressiva>()
+
+        val curso = dblistaproudos.rawQuery(query,null)
+        while (curso.moveToNext()){
+            val Produto_codigo = curso.getInt(4)
+            val Nome = curso.getString(0)
+            val Apresentacao = curso.getString(1)
+            val Imagem = curso.getString(3)
+            val Barra = curso.getString(2)
+            val valor = curso.getString(5)
+
+
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor)
+
+            listaprotudos.add(produtos)
+        }
+        return listaprotudos
+
     }
 }
