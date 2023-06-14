@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProgressivaAdpter
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
@@ -22,7 +23,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
 
-class ActProtudoDetalhe : AppCompatActivity() {
+class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
 
     private  lateinit var  binding: ActivityActProtudoDetalheBinding
@@ -153,7 +154,7 @@ class ActProtudoDetalhe : AppCompatActivity() {
             val dialogProgressiva = DialogProgressiva()
             var valorProduto =  binding.PF.text.toString()
             valorProduto = valorProduto.replace("R$","").replace(" ","").replace(",",".")
-            dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome)
+            dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado)
         }
 
 
@@ -189,6 +190,10 @@ class ActProtudoDetalhe : AppCompatActivity() {
             binding.valorTotal.text = "R$ "+ valorFormatado
 
         }
+
+    }
+
+    override fun ProgressivaAtualiza() {
 
     }
 }

@@ -142,6 +142,17 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Promocao INTEGER NOT NULL" +
                 ");"
 
+        val sqlProgressivaPersonalizada= "CREATE TABLE Tb_Progressiva_Personalizada (" +
+                "COLUMN_PRODUTO_CODIGO INTEGER, " +
+                "COLUMN_CAIXA_PADRAO INTEGER, " +
+                "COLUMN_PMC REAL, " +
+                "COLUMN_PF REAL, " +
+                "COLUMN_VALOR REAL, " +
+                "COLUMN_QUANTIDADE INTEGER, " +
+                "COLUMN_DESCONTO REAL," +
+                "PRIMARY KEY (COLUMN_DESCONTO, COLUMN_QUANTIDADE) "+
+                ")"
+
         val sqlEstoque = "CREATE TABLE IF NOT EXISTS TB_Estoque(" +
                 "Barra VARCHAR(50) NOT NULL," +
                 "Quantidade INTEGER NOT NULL," +
@@ -157,6 +168,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlClientePorLojas)
             db?.execSQL(sqlCliente)
             db?.execSQL(sqllojas)
+            db?.execSQL(sqlProgressivaPersonalizada)
 
 
         }catch (e:Exception)
