@@ -96,7 +96,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
                 positionQuatidade = position
 
             }
-            if ((position == positionQuatidade) && ( quantidadeAdionada +1 == listaProgrssiva[position].quantidade )){
+            if ((position == positionQuatidade) && ( quantidadeAdionada +1 ==  listaProgrssiva[position].quantidade )){
                 quantidadeAdionada = 0
                 holder.checkbox.isChecked = true
                 trocabackgroun(

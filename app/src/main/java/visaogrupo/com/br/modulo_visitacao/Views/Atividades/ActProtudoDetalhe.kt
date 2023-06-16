@@ -150,6 +150,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(
                         quatidadeAdicionadaCap.toString()
                     )
+
+                    progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap -2
+                    progressivaAdpter.clicou= false
+                    progressivaAdpter.notifyDataSetChanged()
                 }
             }else{
                 if(quatidadeAdicionadaCap.toInt() == 0){
@@ -167,6 +171,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                     val quantidade:Int = quatidadeAdicionadaCap.toInt() -1
 
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
+
+                    progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap  -2
+                    progressivaAdpter.clicou= false
+                    progressivaAdpter.notifyDataSetChanged()
                 }
             }
         }
