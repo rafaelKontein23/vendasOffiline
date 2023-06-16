@@ -6,10 +6,11 @@ import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.DAIInterface.IProgres
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Progressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
+import java.text.DecimalFormat
 
 class ProgresivaDAO(context: Context):IProgressiva {
     val  dbProgressiva = DataBaseHelber(context)
-    override fun listarProgressiba(query: String): MutableList<ProgressivaLista> {
+    override fun listarProgressiba(query: String,personalizada:Boolean): MutableList<ProgressivaLista> {
         val listaProgresiva = mutableListOf<ProgressivaLista>()
         val cursor = dbProgressiva.readableDatabase.rawQuery(query,null)
 
@@ -21,7 +22,7 @@ class ProgresivaDAO(context: Context):IProgressiva {
          val Valor = cursor.getDouble(4)
          val Quantidade	 = cursor.getInt(5)
          val Desconto  = cursor.getDouble(6)
-         val ProgressivaLista = ProgressivaLista(Produto_codigo,CaixaPadrao,PMC,PF,Valor,Quantidade,Desconto)
+         val ProgressivaLista = ProgressivaLista(Produto_codigo,CaixaPadrao,PMC,PF,Valor,Quantidade,Desconto,personalizada)
          listaProgresiva.add(ProgressivaLista)
         }
         return listaProgresiva
@@ -52,6 +53,13 @@ class ProgresivaDAO(context: Context):IProgressiva {
             e.printStackTrace()
             return false
         }
+
+    }
+
+    override fun deleteProgressiva(query: String, desconto: Double, quantida: Int) {
+
+        val whereClause = "COLUMN_DESCONTO = ${desconto} AND COLUMN_QUANTIDADE = ${quantida}"
+        dbProgressiva.readableDatabase.delete("Tb_Progressiva_Personalizada",whereClause,null)
 
     }
 }

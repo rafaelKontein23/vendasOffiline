@@ -1,36 +1,76 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Adpters
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.CompoundButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlinx.android.synthetic.main.celula_progressiva.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 
-class ProgressivaAdpter (list :List<ProgressivaLista>): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
-     val listaProgrssiva = list
+class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, recyclerview:RecyclerView): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
+
+    var listaProgrssiva = list
+    val personaFalse = 0
+    val  personaTrue = 1
+    val context = context
+    var quantidadeAdionada = 0
+    var pos = 0
+    var positionQuatidade = 0
+    var recyclerview = recyclerview
+    var  clicou = false
+
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgressivaViewholder {
-        val view  = LayoutInflater.from(parent.context).inflate(R.layout.celula_progressiva,parent,false)
-
+        var view =  LayoutInflater.from(parent.context).inflate(R.layout.celula_progressiva,parent,false)
+        if(viewType == personaFalse){
+            view  = LayoutInflater.from(parent.context).inflate(R.layout.celula_progressiva,parent,false)
+        }else{
+            view  = LayoutInflater.from(parent.context).inflate(R.layout.celula_progressivapersona,parent,false)
+        }
         return ProgressivaViewholder(view)
     }
 
     override fun onBindViewHolder(holder: ProgressivaViewholder, position: Int) {
 
-        holder.desconto.text = listaProgrssiva[position].desconto.toString() +"%"
-        holder.quatidade.text = "00" +listaProgrssiva[position].quantidade.toString() +" Desc."
-        holder.valorProgressiva.text = "R$ "  + listaProgrssiva[position].valor.toString()
-        holder.checkbox.setOnClickListener {
-            if (holder.checkbox.isChecked) {
+
+        val descontoFormat = String.format("%.2f",listaProgrssiva[position].desconto)
+        val  valorprogressivaformat = String.format("%.2f",listaProgrssiva[position].valor)
+        holder.desconto.text =  descontoFormat +" %"
+        holder.quatidade.text = listaProgrssiva[position].quantidade.toString() +" Desc."
+        holder.valorProgressiva.text = "R$ "  + valorprogressivaformat
+
+        holder.xProgressiva.setOnClickListener {
+            val position1 = holder.adapterPosition
+            val ProgressivaDAO =  ProgresivaDAO(context)
+            ProgressivaDAO.deleteProgressiva("",listaProgrssiva[position1].desconto,listaProgrssiva[position1].quantidade)
+            listaProgrssiva.removeAt(position1)
+            notifyItemRemoved(position1)
+
+        }
+
+
+
+        holder.container.setOnClickListener {
+            setSelectedItem(position)
+        }
+        // logica de quantidade Adiconada
+        if(clicou){
+
+            if (position == pos){
+
                 holder.checkbox.isChecked = true
                 trocabackgroun(
                     holder.quatidade,
@@ -38,7 +78,8 @@ class ProgressivaAdpter (list :List<ProgressivaLista>): Adapter<ProgressivaAdpte
                     holder.valorProgressiva,
                     holder.container
                 )
-            } else {
+
+            }else{
                 holder.checkbox.isChecked = false
                 trocabackgrounpadrao(
                     holder.quatidade,
@@ -46,32 +87,133 @@ class ProgressivaAdpter (list :List<ProgressivaLista>): Adapter<ProgressivaAdpte
                     holder.valorProgressiva,
                     holder.container
                 )
-            }
-        }
 
-        holder.container.setOnClickListener {
-            if(holder.checkbox.isChecked){
-                holder.checkbox.isChecked = false
-                trocabackgrounpadrao(holder.quatidade, holder.desconto,holder.valorProgressiva, holder.container)
-            }else{
+            }
+            // Logica de alternar click
+        }else{
+            pos  = 0
+            if(quantidadeAdionada +1 == listaProgrssiva[position].quantidade && listaProgrssiva[position].personalizada){
+                positionQuatidade = position
+
+            }
+            if ((position == positionQuatidade) && ( quantidadeAdionada +1 == listaProgrssiva[position].quantidade )){
+                quantidadeAdionada = 0
                 holder.checkbox.isChecked = true
-                trocabackgroun(holder.quatidade, holder.desconto,holder.valorProgressiva, holder.container)
+                trocabackgroun(
+                    holder.quatidade,
+                    holder.desconto,
+                    holder.valorProgressiva,
+                    holder.container
+                )
+
+            }else{
+                holder.checkbox.isChecked = false
+                trocabackgrounpadrao(
+                    holder.quatidade,
+                    holder.desconto,
+                    holder.valorProgressiva,
+                    holder.container
+                )
+
             }
         }
 
+
+
+    }
+
+    /*    fun manipulaPositionQuantidade (quantidade:Int,position :Int,holder:ProgressivaViewholder){
+            if(quantidadeAdionada +1 >= listaProgrssiva[position].quantidade && listaProgrssiva[position].personalizada){
+                pos = position
+
+            }
+
+            holder.container.setOnClickListener {
+                setSelectedItem(position)
+            }
+
+            if(clicou){
+
+                if (position == pos){
+
+                    holder.checkbox.isChecked = true
+                    trocabackgroun(
+                        holder.quatidade,
+                        holder.desconto,
+                        holder.valorProgressiva,
+                        holder.container
+                    )
+
+                }else{
+                    holder.checkbox.isChecked = false
+                    trocabackgrounpadrao(
+                        holder.quatidade,
+                        holder.desconto,
+                        holder.valorProgressiva,
+                        holder.container
+                    )
+
+                }
+
+            }
+        }
+*/
+    override fun getItemViewType(position: Int): Int {
+
+        if(listaProgrssiva[position].personalizada == true){
+            return personaTrue
+        }else{
+            return personaFalse
+        }
     }
 
     override fun getItemCount(): Int {
-       return listaProgrssiva.size
+
+        return listaProgrssiva.size
     }
 
-    class ProgressivaViewholder(itemView: View) : ViewHolder(itemView){
+    inner class ProgressivaViewholder(itemView: View) : ViewHolder(itemView){
         val quatidade = itemView.findViewById<TextView>(R.id.qtdprgressiva)
         val desconto = itemView.findViewById<TextView>(R.id.porCento)
         val valorProgressiva  = itemView.findViewById<TextView>(R.id.valorProgressiva)
         val container = itemView.findViewById<ConstraintLayout>(R.id.containerProgressiva)
         val checkbox = itemView.findViewById<CheckBox>(R.id.checkBoxprogressiva)
+        val xProgressiva = itemView.findViewById<ImageView>(R.id.xProgressiva)
+        init {
+
+            checkbox.setOnClickListener {
+                if (checkbox.isChecked) {
+                    setSelectedItem(adapterPosition)
+                }
+
+            }
+        }
     }
+    fun setSelectedItem(adapterPosition: Int) {
+        clicou = true
+        // if (adapterPosition == RecyclerView.NO_POSITION)  return
+        if(positionQuatidade != 0){
+            notifyItemChanged(positionQuatidade)
+            positionQuatidade= 0
+        }else{
+            notifyItemChanged(pos)
+
+        }
+
+        // Verifique se a posição atual é diferente da anteriormente selecionada
+        // val isDifferentPosition = pos != adapterPosition
+
+        // Atualize a posição selecionada
+        pos = adapterPosition
+
+        // Se a posição atual for diferente da anteriormente selecionada,
+        // desmarque a progressiva anterior
+        // if (isDifferentPosition) {
+        notifyItemChanged(adapterPosition)
+        //  }
+
+    }
+
     fun trocabackgroun(quantidade:TextView,desconto:TextView,valor :TextView,containeter:ConstraintLayout){
         quantidade.setTextColor(Color.parseColor("#00325C"))
         desconto.setTextColor(Color.parseColor("#00325C"))

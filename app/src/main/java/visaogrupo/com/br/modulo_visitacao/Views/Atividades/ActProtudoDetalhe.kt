@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -19,16 +20,19 @@ import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaProg
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
 
 class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
-
+    lateinit var listaProgressiva :MutableList<ProgressivaLista>
     private  lateinit var  binding: ActivityActProtudoDetalheBinding
+    lateinit var  progressivaAdpter:ProgressivaAdpter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding  = ActivityActProtudoDetalheBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -55,23 +59,35 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         // busca progresivas
         CoroutineScope(Dispatchers.IO).launch {
              // recupera progressiva do protudo Selecionado
-             val ProgresivaDAO = ProgresivaDAO(baseContext)
-             val query = "SELECT Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Progressiva.pf,Progressiva.valor, Progressiva.Quantidade,Progressiva.desconto " +
-                     "FROM TB_produtos Produtos " +
-                     "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
-                     "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
-                     "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
-                     "and Progressiva.uf = '${clienteSelecionado.UF}' " +
-                     "and Produtos.Produto_codigo = ${protudoSelecionado.ProdutoCodigo} " +
-                     "order by 6"
-             val listaProgressiva = ProgresivaDAO.listarProgressiba(query)
+            val ProgresivaDAO = ProgresivaDAO(baseContext)
+            var  lista_progressivapresona = mutableListOf<ProgressivaLista>()
+            val job1 = launch {
+                  val query = "SELECT Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Progressiva.pf,Progressiva.valor, Progressiva.Quantidade,Progressiva.desconto " +
+                          "FROM TB_produtos Produtos " +
+                          "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
+                          "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
+                          "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
+                          "and Progressiva.uf = '${clienteSelecionado.UF}' " +
+                          "and Produtos.Produto_codigo = ${protudoSelecionado.ProdutoCodigo} " +
+                          "order by 6"
+                  listaProgressiva = ProgresivaDAO.listarProgressiba(query,false)
+            }
 
-             val ProgressivaAdpter = ProgressivaAdpter(listaProgressiva)
-             val layoutManager = LinearLayoutManager(baseContext)
+            val  job2 = launch {
+                val queryPersona = "SELECT * FROM Tb_Progressiva_Personalizada WHERE Tb_Progressiva_Personalizada.column_produto_codigo = ${protudoSelecionado.ProdutoCodigo} "
+                lista_progressivapresona = ProgresivaDAO.listarProgressiba(queryPersona,true)
+            }
+            job1.join()
+            job2.join()
 
-             CoroutineScope(Dispatchers.Main).launch {
+            listaProgressiva.addAll(lista_progressivapresona)
+
+            progressivaAdpter = ProgressivaAdpter(listaProgressiva,baseContext,binding.recyProgressiva)
+            val layoutManager = LinearLayoutManager(baseContext)
+
+            CoroutineScope(Dispatchers.Main).launch {
                  binding.recyProgressiva.layoutManager = layoutManager
-                 binding.recyProgressiva.adapter = ProgressivaAdpter
+                 binding.recyProgressiva.adapter = progressivaAdpter
              }
 
          }
@@ -89,6 +105,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                 val valorPrecoCovertido:Double =     valorProduto.toDouble()
                 somaProdutos(quatidadeAdicionadaCap,valorPrecoCovertido,true)
                 binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quatidadeAdicionadaCap.toString())
+                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap
+                progressivaAdpter.clicou= false
+
+                progressivaAdpter.notifyDataSetChanged()
 
             }else{
 
@@ -99,6 +119,9 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                 val valorPrecoCovertido:Double =     valorProduto.toDouble()
                 somaProdutos(quantidade,valorPrecoCovertido,true)
                 binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
+                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap.toInt()
+                progressivaAdpter.clicou= false
+                progressivaAdpter.notifyDataSetChanged()
 
             }
         }
@@ -107,7 +130,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
             var quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
 
             if (binding.checkCaixapadrao.isChecked){
-                if(quatidadeAdicionadaCap.toInt() == 0 ){
+                if(quatidadeAdicionadaCap == 0 ){
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable("0")
                 }else{
                     val quantidadecaixapradrao = binding.caixaPadrao.text.toString()
@@ -123,7 +146,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                     } else {
                         quatidadeAdicionadaCap -= resto
                     }
-                    subtrairPrutudos(valorTotalDouble,valorProdutoDouble,true,quantidadecaixapradrao.toInt())
+                    subtrairPrutudos(valorTotalDouble,valorProdutoDouble,true,quatidadeAdicionadaCap)
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(
                         quatidadeAdicionadaCap.toString()
                     )
@@ -154,7 +177,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
             val dialogProgressiva = DialogProgressiva()
             var valorProduto =  binding.PF.text.toString()
             valorProduto = valorProduto.replace("R$","").replace(" ","").replace(",",".")
-            dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado)
+            dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado,this)
         }
 
 
@@ -193,7 +216,29 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
     }
 
-    override fun ProgressivaAtualiza() {
+    override fun ProgressivaAtualiza(
+        ProtudoCodigo: Int,
+        protudoseleciona: ProdutoProgressiva,
+        quatidade: Int,
+        valor: Double,
+        desconto: Double
+    ) {
+        val porgressiva = ProgressivaLista( ProtudoCodigo,
+         protudoseleciona.caixapadrao,
+         protudoseleciona.PMC,
+         protudoseleciona.valor.toDouble(),
+         valor,
+         quatidade,
+         desconto,
+         true)
+
+        Toast.makeText(this,"Progressiva Adiconada com sucesso!", Toast.LENGTH_SHORT).show()
+        if(!listaProgressiva.contains(porgressiva)){
+            listaProgressiva.add(porgressiva)
+        }
+
+       progressivaAdpter.listaProgrssiva = listaProgressiva
+       progressivaAdpter.notifyDataSetChanged()
 
     }
 }

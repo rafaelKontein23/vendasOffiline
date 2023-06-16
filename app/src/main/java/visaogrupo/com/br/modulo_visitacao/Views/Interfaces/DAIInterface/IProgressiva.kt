@@ -5,7 +5,9 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
 
 interface IProgressiva {
 
-    fun listarProgressiba(query:String):MutableList<ProgressivaLista>
+    fun listarProgressiba(query:String,Persona:Boolean):MutableList<ProgressivaLista>
 
     fun insertProgressiva(ProtudoProgressiva: ProdutoProgressiva,valorno:Double,quatidade:Int,desconto:Double):Boolean
+
+    fun deleteProgressiva(query:String,desconto: Double,quantida:Int)
 }

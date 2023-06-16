@@ -14,14 +14,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 
 class DialogProgressiva {
 
-    fun dialog(context:Context,valorpfatual:Double,nomeremedio:String,protudoProgressiva: ProdutoProgressiva){
+    fun dialog(context:Context,valorpfatual:Double,
+               nomeremedio:String,protudoProgressiva: ProdutoProgressiva,AtualizaProgressiva:AtualizaProgressiva){
         var valornovo = 0.0
-        var  descontonovo = 0.0
+
+        var porcentagem = 0.0
         val  dialog =  Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_progressiva);
@@ -52,9 +55,10 @@ class DialogProgressiva {
                 Toast.makeText(context,"O Desconto não Pode está vazia",Toast.LENGTH_SHORT).show()
             }else{
                 val ProgresivaDAO = ProgresivaDAO(context)
-                ProgresivaDAO.insertProgressiva(protudoProgressiva,valornovo, quatidade.toInt(),descontonovo)
-                Toast.makeText(context,"Progressiva Adiconada com sucesso!",Toast.LENGTH_SHORT).show()
+                ProgresivaDAO.insertProgressiva(protudoProgressiva,valornovo, quatidade.toInt(),porcentagem)
+
                 dialog.onBackPressed()
+                AtualizaProgressiva.ProgressivaAtualiza(protudoProgressiva.ProdutoCodigo,protudoProgressiva,quatidade.toInt(),valornovo,porcentagem)
             }
         }
 
@@ -64,8 +68,8 @@ class DialogProgressiva {
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!p0.toString().isEmpty()){
-                    val porcentagem =  p0.toString().toInt()
-                      descontonovo = (valorpfatual * porcentagem) / 100
+                    porcentagem =  p0.toString().toDouble()
+                    val descontonovo = (valorpfatual * porcentagem) / 100
                     valornovo = valorpfatual - descontonovo
                     descontoeValor.text = porcentagem.toString()+"% - R$ " +String.format("%.2f",valornovo)
                 }
