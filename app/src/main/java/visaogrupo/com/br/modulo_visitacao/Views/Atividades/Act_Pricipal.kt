@@ -20,16 +20,18 @@ import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentProtudos
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 
-class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible {
+class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,AtualizaCarrinho {
 
     var list_menu:MutableList<String> = ArrayList<String>()
-    val fragmentLojas =    FragmentLojas(this,this)
+    val fragmentLojas =    FragmentLojas(this,this,this)
     val fragmentCargas =   FragmentCargas()
-    val fragmentClientes = FragmentClientes(this,this)
-    val fragmentProtudos = FragmentProtudos(this)
+    val fragmentClientes = FragmentClientes(this,this, this)
+    val fragmentProtudos = FragmentProtudos(this,this)
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View
@@ -48,6 +50,8 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible {
         viewcarrinho = findViewById(R.id.carrinho)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)
+
+        atualizaQtdCarrinho()
 
         supportFragmentManager.
         beginTransaction()
@@ -253,5 +257,23 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible {
         viewcarrinho.isVisible = false
         qtdNotificacoes.isVisible = false
         viewnotification.isVisible = false
+    }
+
+    override fun atualizaCarrinho() {
+        atualizaQtdCarrinho()
+    }
+    fun  atualizaQtdCarrinho(){
+        val queryQuantidadeNoCarrinho = "SELECT cliente_id, loja_id, COUNT(*) AS total " +
+                "FROM TB_Carrinho " +
+                "GROUP BY cliente_id, loja_id"
+
+        val  carrinhoDAO = CarrinhoDAO(this)
+        val  countCarrinho = carrinhoDAO.countarItenscarrinho(queryQuantidadeNoCarrinho)
+        if(countCarrinho > 9){
+            qtdNotification.text = "9+"
+        }else{
+            qtdNotification.text = countCarrinho.toString()
+        }
+
     }
 }

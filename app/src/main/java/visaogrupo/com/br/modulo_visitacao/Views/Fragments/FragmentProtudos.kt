@@ -17,23 +17,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProtudoAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
-class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAtividade,ExcluiItemcarrinho {
+class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:AtualizaCarrinho) : Fragment(),StartaAtividade,ExcluiItemcarrinho {
+
     private  lateinit var  binding: FragmentProtudosBinding
     val carrinhoVisible = carrinhoVisible
     lateinit var   adpterProtudos :ProtudoAdapter
     var listaProtudos = mutableListOf<ProdutoProgressiva>()
     var query = ""
+    val atualizaCarrinho = atulizaCarrinho
     lateinit var lojaSelecionada:Lojas
     lateinit var produtos:ProdutosDAO
+    lateinit var clienteSelecionado:Clientes
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProtudosBinding.inflate(layoutInflater)
@@ -43,6 +49,8 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         //Recupera produtos da loja Selecionada
         val view  = binding.root
         val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
@@ -51,7 +59,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
         val objetoSerializado = sharedPreferences?.getString("LojaSelecionada", null)
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
-        val clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+         clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
 
         query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
                 "FROM TB_produtos Produtos " +
@@ -68,7 +76,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
         adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),this,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,this)
         val layoutManager = LinearLayoutManager(requireContext())
 
-        atualizaProgressBar()
+
 
         // atualizar o adpter
         binding.recyProtudo.adapter = adpterProtudos
@@ -89,6 +97,9 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
 
         // esconde carrinho (Button flutuante)
         carrinhoVisible.carrinhoVisivel()
+        atualizaProgressBar()
+        quatidadeinCarrinho()
+
         return view
 
     }
@@ -136,9 +147,18 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
         adpterProtudos.notifyDataSetChanged()
 
         atualizaProgressBar()
+        quatidadeinCarrinho()
+        atualizaCarrinho.atualizaCarrinho()
     }
 
     override fun exluiItem() {
-       atualizaItemDaView()
+        atualizaItemDaView()
+        quatidadeinCarrinho()
+        atualizaCarrinho.atualizaCarrinho()
+    }
+    fun  quatidadeinCarrinho(){
+        val carrinhoDAO=  CarrinhoDAO(requireContext())
+        val count = carrinhoDAO.quantidadeItens(clienteSelecionado.Empresa_id, lojaSelecionada.loja_id)
+        binding.quatidadeItens.text = count.toString()
     }
 }

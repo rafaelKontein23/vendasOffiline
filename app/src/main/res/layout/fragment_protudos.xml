@@ -126,9 +126,9 @@
 
         <ImageView
             android:id="@+id/carrinhoProtudo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="41dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="68dp"
             android:padding="5dp"
             android:popupBackground="@drawable/bordas_spiner_personalizada"
@@ -213,6 +213,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView17"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+        <View
+            android:id="@+id/view12"
+            android:layout_width="19dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="28dp"
+            android:background="@drawable/bordas_carga"
+            android:backgroundTint="#D30404"
+            app:layout_constraintBottom_toBottomOf="@+id/carrinhoProtudo"
+            app:layout_constraintStart_toStartOf="@+id/carrinhoProtudo" />
+
+        <TextView
+            android:id="@+id/quatidadeItens"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/view12"
+            app:layout_constraintEnd_toEndOf="@+id/view12"
+            app:layout_constraintStart_toStartOf="@+id/view12"
+            app:layout_constraintTop_toTopOf="@+id/view12" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

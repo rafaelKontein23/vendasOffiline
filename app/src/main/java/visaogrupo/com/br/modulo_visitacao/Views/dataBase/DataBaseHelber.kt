@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    25 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    27 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -182,7 +182,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "formalizacao TEXT, " +
                 "CODLISTAPRECOSYNC INTEGER, " +
                 "ValorTotal REAL, " +
-                "Apontador_codigo TEXT)"
+                "Apontador_codigo TEXT,"+
+                "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
+                ")"
         try {
             db?.execSQL(sqlEstoque)
             db?.execSQL(sqlPRogressiva)

@@ -13,14 +13,16 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.celulaclientes.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogDetalhesClientes
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 
-class ClientesAdpter (list: MutableList<Clientes>,val  idfram:Int, val supoortfragment:FragmentManager,trocarcoritem:TrocarcorItem,carrinhoVisible: carrinhoVisible): RecyclerView.Adapter<ClientesAdpter.ViewClientesHolders>() {
+class ClientesAdpter (list: MutableList<Clientes>,val  idfram:Int, val supoortfragment:FragmentManager,trocarcoritem:TrocarcorItem,carrinhoVisible: carrinhoVisible,atualizaCarrinho: AtualizaCarrinho): RecyclerView.Adapter<ClientesAdpter.ViewClientesHolders>() {
     var listaClientes = list
     val  trocarcoritem = trocarcoritem
     val carrinhoVisible = carrinhoVisible
+    val atualizaCarrinho = atualizaCarrinho
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewClientesHolders {
         val celulaClientes = LayoutInflater.from(parent.context).inflate(R.layout.celulaclientes,parent,false)
@@ -45,7 +47,7 @@ class ClientesAdpter (list: MutableList<Clientes>,val  idfram:Int, val supoortfr
             editor.apply()
 
 
-            dialogDetalhesClientes.dialogDetalhe(holder.cnpjcliente.context,CNPJ,listaClientes[position], idfram,supoortfragment,trocarcoritem, carrinhoVisible  )
+            dialogDetalhesClientes.dialogDetalhe(holder.cnpjcliente.context,CNPJ,listaClientes[position], idfram,supoortfragment,trocarcoritem, carrinhoVisible, atualizaCarrinho  )
         }
     }
 

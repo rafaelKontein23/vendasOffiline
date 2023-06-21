@@ -17,10 +17,15 @@ class Alertas {
         fragmentTransaction.commit()
         try {
             Handler().postDelayed({
-                val removeTransaction = fragmentmeneger.beginTransaction()
-                removeTransaction.setCustomAnimations(R.anim.animsaialert, R.anim.animatealertbaixo)
-                removeTransaction.remove(fragmentAlerta)
-                removeTransaction.commit()
+                try {
+                    val removeTransaction = fragmentmeneger.beginTransaction()
+                    removeTransaction.setCustomAnimations(R.anim.animsaialert, R.anim.animatealertbaixo)
+                    removeTransaction.remove(fragmentAlerta)
+                    removeTransaction.commit()
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+
             }, 3500)
         }catch (e:Exception){
             e.printStackTrace()

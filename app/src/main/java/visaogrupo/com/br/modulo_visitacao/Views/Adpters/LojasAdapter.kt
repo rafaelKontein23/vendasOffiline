@@ -14,16 +14,18 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.MudarFragment
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 
-class LojasAdapter (list :List<Lojas>,trocarcorItem: TrocarcorItem,frameid:Int,supportFragmentManager:FragmentManager,carrinhoVisible: carrinhoVisible) : Adapter<LojasAdapter.LojasViewHolder>() {
+class LojasAdapter (list :List<Lojas>,trocarcorItem: TrocarcorItem,frameid:Int,supportFragmentManager:FragmentManager,carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho) : Adapter<LojasAdapter.LojasViewHolder>() {
     var listaLojas = list
     val trocarcorItem = trocarcorItem
     val  frameid = frameid
     val supportFragmentManager = supportFragmentManager
     val carrinhoVisible = carrinhoVisible
+    val  atualizaCarrinho = atualizaCarrinho
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LojasViewHolder {
      val  view = LayoutInflater.from(parent.context).inflate(R.layout.celula_loja,parent,false)
@@ -46,7 +48,7 @@ class LojasAdapter (list :List<Lojas>,trocarcorItem: TrocarcorItem,frameid:Int,s
             Act_Pricipal.troca = TrocaItemSelecionado.Prodtudos
             trocarcorItem.trocacor()
             val mudarFragment = MudarFragment()
-            mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible)
+            mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
         }
     }
 

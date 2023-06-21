@@ -37,4 +37,32 @@ class CarrinhoDAO (context:Context) {
         val  where = "loja_id = ${loja_id} AND cliente_id = ${cliente_id} AND produto_codigo = ${produto_codigo} "
         dbCarrinho.delete("TB_Carrinho",where,null)
     }
+
+    fun countarItenscarrinho(query:String):Int{
+       val  curso = dbCarrinho.rawQuery(query,null,null)
+        var  count = 0
+       while (curso.moveToNext()){
+            count +=1
+       }
+
+      return count
+
+    }
+
+
+    fun quantidadeItens(cliente_id: Int,loja_id: Int):Int{
+        val query ="SELECT SUM(quantidade) AS total " +
+                "FROM TB_Carrinho " +
+                "WHERE cliente_id = ${cliente_id} AND loja_id = ${loja_id}"
+
+        val  contar = dbCarrinho.rawQuery(query,null)
+        var countagem = 0
+        if (contar.moveToFirst()) {
+            countagem = contar.getInt(0)
+        }
+
+        contar.close()
+
+        return  countagem
+    }
 }

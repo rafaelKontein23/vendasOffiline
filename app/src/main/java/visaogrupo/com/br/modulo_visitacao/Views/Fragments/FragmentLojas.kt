@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_lojas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.LojasAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
@@ -26,13 +27,14 @@ import visaogrupo.com.br.modulo_visitacao.Views.dataBase.LojasDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentLojasBinding
 import kotlin.math.log
 
-class FragmentLojas (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible): Fragment() {
+class FragmentLojas (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho): Fragment() {
 
     private  lateinit var  binding: FragmentLojasBinding
     lateinit var clienteSelecionado:Clientes
     lateinit var  AdapterLojas:LojasAdapter
     val  trocarcorItem = trocarcorItem
     val  carrinhoVisible = carrinhoVisible
+    val atualizaCarrinho = atualizaCarrinho
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,7 @@ class FragmentLojas (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisib
         val listalojas = LojasDAO(requireContext())
         val querylojasClientes = "SELECT LojCli.empresa_id, Lojas.* FROM TB_lojas Lojas inner join TB_lojaporcliente LojCli on Lojas.Loja_id = LojCli.loja_id WHERE LojCli.empresa_id = ${clienteSelecionado.Empresa_id} "
         val listLojas =  listalojas.listarlojas(requireContext(),1,querylojasClientes)
-        AdapterLojas = LojasAdapter(listLojas,trocarcorItem,R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible)
+        AdapterLojas = LojasAdapter(listLojas,trocarcorItem,R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible,atualizaCarrinho)
         val  layoutManager = LinearLayoutManager(requireContext())
         binding.recyLojas.layoutManager = layoutManager
         binding.recyLojas.adapter = AdapterLojas

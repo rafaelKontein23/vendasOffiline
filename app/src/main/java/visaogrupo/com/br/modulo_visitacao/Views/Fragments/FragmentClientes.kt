@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.android.synthetic.main.fragment_clientes.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ClientesAdpter
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
@@ -29,13 +30,14 @@ import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
 
 
-class FragmentClientes (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible) : Fragment() {
+class FragmentClientes (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisible,atualizaCarrinho: AtualizaCarrinho) : Fragment() {
 
     private var  totaldeclientes = 0
     private var loadedItems = 0
     val  trocarcorItem = trocarcorItem
     val carrinhoVisible = carrinhoVisible
     private  lateinit var  binding:FragmentClientesBinding
+    val  atualizaCarrinho = atualizaCarrinho
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +66,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVi
         totaldeclientes = clientes.countar(requireContext())
         view.quatidadeClienetes.text = totaldeclientes.toString() + " Clientes"
         val listaclientes = clientes.listar(requireContext(),queryListaClientes)
-        val adapterCliente = ClientesAdpter(listaclientes,R.id.fragmentContainerViewPrincipal,getParentFragmentManager(), trocarcorItem,carrinhoVisible )
+        val adapterCliente = ClientesAdpter(listaclientes,R.id.fragmentContainerViewPrincipal,getParentFragmentManager(), trocarcorItem,carrinhoVisible, atualizaCarrinho )
         val layoutManegerCliente:LayoutManager = LinearLayoutManager(context)
 
         view.recyClientes.layoutManager = layoutManegerCliente
