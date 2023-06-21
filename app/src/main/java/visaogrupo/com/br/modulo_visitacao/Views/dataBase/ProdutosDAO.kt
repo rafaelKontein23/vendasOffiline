@@ -59,9 +59,14 @@ class ProdutosDAO(context:Context):IProtudos {
             val PMC = curso.getDouble(6)
             val Quantidade = curso.getInt(7)
             val Caixapadrao = curso.getInt(5)
+            val estaCarrinhp = curso.getInt(12)
+            val valorcarrinho = curso.getDouble(9)
+            val quantidadeCarrinho = curso.getInt(10)
+            val  valor_total = curso.getDouble(11)
 
 
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao)
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total
+            )
 
             listaprotudos.add(produtos)
         }

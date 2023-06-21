@@ -26,6 +26,9 @@
 
    <color name="textacaboucarga">#64BC26</color>
     <color name="textclienteselecionado">#336B9B</color>
-
-
+    <color name="amereloAlerta">#FAD202</color>
+    <color name="verdenutoon">#34D399</color>
+    <color name="corlinhaorigin">#A4E6EDF3</color>
+    <color name="corprodto">#38A7F3D0</color>
+    <color name="transparente">#00A7F3D0</color>
 </resources>

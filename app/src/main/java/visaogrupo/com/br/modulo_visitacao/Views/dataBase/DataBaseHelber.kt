@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    18 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela
+    25 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -142,7 +142,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Promocao INTEGER NOT NULL" +
                 ");"
 
-        val sqlProgressivaPersonalizada= "CREATE TABLE Tb_Progressiva_Personalizada (" +
+        val sqlProgressivaPersonalizada= "CREATE TABLE IF NOT EXISTS  Tb_Progressiva_Personalizada (" +
                 "COLUMN_PRODUTO_CODIGO INTEGER, " +
                 "COLUMN_CAIXA_PADRAO INTEGER, " +
                 "COLUMN_PMC REAL, " +
@@ -158,6 +158,31 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Quantidade INTEGER NOT NULL," +
                 "Loja_id INTEGER NOT NULL" +
                 ");"
+
+
+        val sqlCarrinho = "CREATE TABLE IF NOT EXISTS TB_Carrinho(" +
+                "loja_id INTEGER NOT NULL," +
+                "cliente_id INTEGER NOT NULL," +
+                "OperadorLogistigo INTEGER NOT NULL," +
+                "Usuario_id INTEGER NOT NULL,"+
+                "UF INTEGER NOT NULL,"+
+                "Comissao REAL, " +
+                "ComissaoPorcentagem REAL, " +
+                "MarcasXComissoes_id INTEGER, " +
+                "Produto_codigo INTEGER, " +
+                "Barra TEXT, " +
+                "Quantidade INTEGER, " +
+                "PF REAL NOT NULL, " +
+                "Valor REAL NOT NULL, " +
+                "ValorOriginal REAL NOT NULL, " +
+                "Grupo_Codigo INTEGER, " +
+                "Desconto REAL NOT NULL, " +
+                "DescontoOriginal REAL NOT NULL, " +
+                "ST REAL, " +
+                "formalizacao TEXT, " +
+                "CODLISTAPRECOSYNC INTEGER, " +
+                "ValorTotal REAL, " +
+                "Apontador_codigo TEXT)"
         try {
             db?.execSQL(sqlEstoque)
             db?.execSQL(sqlPRogressiva)
@@ -168,7 +193,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlClientePorLojas)
             db?.execSQL(sqlCliente)
             db?.execSQL(sqllojas)
+            db?.execSQL(sqlCarrinho)
             db?.execSQL(sqlProgressivaPersonalizada)
+
 
 
         }catch (e:Exception)

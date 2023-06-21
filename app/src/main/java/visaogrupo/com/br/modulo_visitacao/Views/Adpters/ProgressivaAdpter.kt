@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Adpters
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.celula_progressiva.view.*
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
+import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaSelecionada
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 
 class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, recyclerview:RecyclerView): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
@@ -52,6 +55,8 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
         holder.quatidade.text = listaProgrssiva[position].quantidade.toString() +" Desc."
         holder.valorProgressiva.text = "R$ "  + valorprogressivaformat
 
+
+
         holder.xProgressiva.setOnClickListener {
             val position1 = holder.adapterPosition
             val ProgressivaDAO =  ProgresivaDAO(context)
@@ -61,7 +66,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
 
         }
 
-
+        Log.d("quantiddae",quantidadeAdionada.toString())
 
         holder.container.setOnClickListener {
             setSelectedItem(position)
@@ -72,6 +77,11 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
             if (position == pos){
 
                 holder.checkbox.isChecked = true
+                val descontoProgreesivaSelecionada = listaProgrssiva[position].desconto
+                val valorProgressivaSelecionada  = listaProgrssiva[position].valor
+                val quantidadeProgressivaSelecionbada  = listaProgrssiva[position].quantidade
+                val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
+                ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
                 trocabackgroun(
                     holder.quatidade,
                     holder.desconto,
@@ -98,6 +108,13 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
             }
             if ((position == positionQuatidade) && ( quantidadeAdionada +1 ==  listaProgrssiva[position].quantidade )){
                 quantidadeAdionada = 0
+
+                val descontoProgreesivaSelecionada = listaProgrssiva[position].desconto
+                val valorProgressivaSelecionada  = listaProgrssiva[position].valor
+                val quantidadeProgressivaSelecionbada  = listaProgrssiva[position].quantidade
+                val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
+                ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
+
                 holder.checkbox.isChecked = true
                 trocabackgroun(
                     holder.quatidade,
@@ -114,7 +131,6 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
                     holder.valorProgressiva,
                     holder.container
                 )
-
             }
         }
 
@@ -122,42 +138,6 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
 
     }
 
-    /*    fun manipulaPositionQuantidade (quantidade:Int,position :Int,holder:ProgressivaViewholder){
-            if(quantidadeAdionada +1 >= listaProgrssiva[position].quantidade && listaProgrssiva[position].personalizada){
-                pos = position
-
-            }
-
-            holder.container.setOnClickListener {
-                setSelectedItem(position)
-            }
-
-            if(clicou){
-
-                if (position == pos){
-
-                    holder.checkbox.isChecked = true
-                    trocabackgroun(
-                        holder.quatidade,
-                        holder.desconto,
-                        holder.valorProgressiva,
-                        holder.container
-                    )
-
-                }else{
-                    holder.checkbox.isChecked = false
-                    trocabackgrounpadrao(
-                        holder.quatidade,
-                        holder.desconto,
-                        holder.valorProgressiva,
-                        holder.container
-                    )
-
-                }
-
-            }
-        }
-*/
     override fun getItemViewType(position: Int): Int {
 
         if(listaProgrssiva[position].personalizada == true){
@@ -191,26 +171,20 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>,context: Context, r
     }
     fun setSelectedItem(adapterPosition: Int) {
         clicou = true
-        // if (adapterPosition == RecyclerView.NO_POSITION)  return
+        if (adapterPosition == RecyclerView.NO_POSITION)  return
         if(positionQuatidade != 0){
+
             notifyItemChanged(positionQuatidade)
             positionQuatidade= 0
+
         }else{
+
             notifyItemChanged(pos)
 
         }
 
-        // Verifique se a posição atual é diferente da anteriormente selecionada
-        // val isDifferentPosition = pos != adapterPosition
-
-        // Atualize a posição selecionada
         pos = adapterPosition
-
-        // Se a posição atual for diferente da anteriormente selecionada,
-        // desmarque a progressiva anterior
-        // if (isDifferentPosition) {
         notifyItemChanged(adapterPosition)
-        //  }
 
     }
 

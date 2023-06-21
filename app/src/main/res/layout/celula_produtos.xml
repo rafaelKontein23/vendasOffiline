@@ -70,8 +70,6 @@
         android:textColor="#2E3642"
         android:textSize="16dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.033"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/barraProduto" />
 
@@ -85,4 +83,32 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PrudutoValor" />
+
+    <TextView
+        android:id="@+id/quatidadeadicionada"
+        android:layout_width="64dp"
+        android:layout_height="28dp"
+        android:background="@color/verdenutoon"
+        android:fontFamily="@font/inter_bold"
+        android:gravity="center"
+        android:text="x 12"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/excluirItem"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:background="@drawable/bordas_lixeira"
+        android:backgroundTint="#EF4444"
+        android:drawableStart="@drawable/lixeira"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/quatidadeadicionada"
+        app:layout_constraintEnd_toStartOf="@+id/quatidadeadicionada"
+        app:layout_constraintTop_toTopOf="@+id/quatidadeadicionada" />
 </androidx.constraintlayout.widget.ConstraintLayout>

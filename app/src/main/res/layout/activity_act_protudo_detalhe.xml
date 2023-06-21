@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Views.Atividades.ActProtudoDetalhe">
 
-
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
@@ -412,7 +410,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:elevation="10dp"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/voltarcompra" />
@@ -426,13 +424,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/historic" />
-
-
-
-
-
-
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragentalert"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_alerta" />
 
 
 

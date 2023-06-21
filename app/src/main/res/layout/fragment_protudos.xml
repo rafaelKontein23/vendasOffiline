@@ -151,11 +151,11 @@
             android:id="@+id/progressBarValorminimo"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:background="#B539D510"
-            android:layout_height="3dp"
-            android:progress="3"
-            android:max="10"
-            android:progressTint="#08E40B"
+            android:background="#A7F3D0"
+            android:layout_height="5dp"
+            android:progress="0"
+
+            android:progressTint="#00FBA0"
             app:layout_constraintBottom_toBottomOf="@+id/recyProtudo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -203,15 +203,15 @@
 
         <TextView
             android:id="@+id/TotalCarrinho"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="108dp"
             android:text="R$ -"
             android:textColor="@color/white"
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView17"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

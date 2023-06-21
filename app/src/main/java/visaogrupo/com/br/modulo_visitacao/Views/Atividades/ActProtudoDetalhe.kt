@@ -1,36 +1,36 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProgressivaAdpter
+import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaProgressiva
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
-import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
-import visaogrupo.com.br.modulo_visitacao.Views.Models.ProgressivaLista
+import visaogrupo.com.br.modulo_visitacao.Views.Models.*
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
-import visaogrupo.com.br.modulo_visitacao.databinding.FragmentClientesBinding
 
 class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
-    lateinit var listaProgressiva :MutableList<ProgressivaLista>
-    private  lateinit var  binding: ActivityActProtudoDetalheBinding
-    lateinit var  progressivaAdpter:ProgressivaAdpter
-
+   lateinit var listaProgressiva :MutableList<ProgressivaLista>
+   private  lateinit var  binding: ActivityActProtudoDetalheBinding
+   lateinit var  progressivaAdpter:ProgressivaAdpter
+   lateinit var login:Login
+    companion object {
+        lateinit var progressivaSelecionada:ProgressivaSelecionada
+    }
 
    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,9 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val gsonclientes = Gson()
+        val gsonuserid = Gson()
+        val objetoSerializadoLogin = sharedPreferences?.getString("UserLogin", null)
+        login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
         val objetoSerializado = sharedPreferences?.getString("LojaSelecionada", null)
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         val lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
@@ -105,7 +108,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                 val valorPrecoCovertido:Double =     valorProduto.toDouble()
                 somaProdutos(quatidadeAdicionadaCap,valorPrecoCovertido,true)
                 binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quatidadeAdicionadaCap.toString())
-                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap
+                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap -1
                 progressivaAdpter.clicou= false
 
                 progressivaAdpter.notifyDataSetChanged()
@@ -125,7 +128,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
             }
         }
-
+       // logica de botao menos
         binding.btnmenos.setOnClickListener {
             var quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
 
@@ -156,7 +159,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                     progressivaAdpter.notifyDataSetChanged()
                 }
             }else{
-                if(quatidadeAdicionadaCap.toInt() == 0){
+                if(quatidadeAdicionadaCap == 0){
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable("0")
                 }else{
                     val valorTotal = binding.valorTotal.text.toString().replace("R$","").replace(" ","").replace(",",".")
@@ -168,7 +171,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                     subtrairPrutudos(valorTotalDouble,valorProdutoDouble,false,0)
 
 
-                    val quantidade:Int = quatidadeAdicionadaCap.toInt() -1
+                    val quantidade:Int = quatidadeAdicionadaCap -1
 
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
 
@@ -180,7 +183,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         }
 
 
-        //nova Prgressiva
+        //Para adicionar nova Progressiva
         binding.adicionarProgressiva.setOnClickListener {
             val dialogProgressiva = DialogProgressiva()
             var valorProduto =  binding.PF.text.toString()
@@ -188,6 +191,40 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
             dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado,this)
         }
 
+       // Para Adiconar ao carrinho
+        binding.adiconarCarrinho.setOnClickListener {
+           val quatidadeadd =  binding.edtQuantidade.text.toString()
+           if(quatidadeadd.isEmpty() || quatidadeadd.toInt() == 0 ){
+               Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
+           } else{
+
+               Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+               val valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
+               val  carrinho = Carrinho(lojaSelecionada.loja_id,
+                   clienteSelecionado.Empresa_id,
+                   protudoSelecionado.ProdutoCodigo,"",
+                   login.Usuario_id.toString().toInt(),clienteSelecionado.UF,
+                   0.0,0.0,0,
+                   protudoSelecionado.barra,quatidadeadd.toString().toInt(),protudoSelecionado.valor.toDouble(),
+                   progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
+                   progressivaSelecionada.porcentagemProgressivaSelecionda,
+                   0.0 /*Lembra de colocar a faixa desconto original aqui*/,0.0,"",1,"",valortotal.toDouble())
+
+               val carrinhoDAO = CarrinhoDAO(this)
+               carrinhoDAO.insertCarrinho(carrinho)
+               val intent = Intent()
+               setResult(Activity.RESULT_OK, intent)
+               finish()
+               this.onBackPressed()
+           }
+
+        }
+
+
+       // botao voltar
+       binding.voltarProtudo.setOnClickListener {
+           this.onBackPressed()
+       }
 
     }
 
@@ -240,6 +277,11 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
          desconto,
          true)
 
+        if (desconto > 10.00){ // trocar esse 10.00 por um valor correto
+            val alertas = Alertas()
+            alertas.alerta(supportFragmentManager)
+        }
+
         Toast.makeText(this,"Progressiva Adiconada com sucesso!", Toast.LENGTH_SHORT).show()
         if(!listaProgressiva.contains(porgressiva)){
             listaProgressiva.add(porgressiva)
@@ -249,4 +291,5 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
        progressivaAdpter.notifyDataSetChanged()
 
     }
+
 }

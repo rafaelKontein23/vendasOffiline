@@ -9,4 +9,8 @@ data class ProdutoProgressiva(
     val valor:String,
     val PMC:Double,
     val quatidade:Int,
-    val caixapadrao:Int):java.io.Serializable
+    val caixapadrao:Int,
+    val  estaNoCarrinho:Int,
+    val  valorcarrinho:Double,
+    val  quantidadeCarrinho:Int,
+    val  valorTotal:Double):java.io.Serializable
