@@ -15,14 +15,21 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.ActProtudoDetalhe
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import java.io.Serializable
+import kotlin.system.exitProcess
 
-class ProtudoAdapter(list:List<ProdutoProgressiva>,context: Context,start :StartaAtividade): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
+class ProtudoAdapter(list:List<ProdutoProgressiva>,context:
+Context,start :StartaAtividade,loja_id:Int,cliente_id:Int,excluiItemcarrinho: ExcluiItemcarrinho): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
     val  context = context
     val start =  start
+    val  loja_id = loja_id
+    val  cliente_id = cliente_id
+    val excluiItemcarrinho = excluiItemcarrinho
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
        val view =  LayoutInflater.from(parent.context).inflate(R.layout.celula_produtos,parent,false)
 
@@ -54,6 +61,12 @@ class ProtudoAdapter(list:List<ProdutoProgressiva>,context: Context,start :Start
          intent.putExtra("ProtudoSelecionado_bundle", bundle)
          start.atividade(intent)
 
+        }
+
+        holder.excluiritem.setOnClickListener {
+            val carrinhoDAO = CarrinhoDAO(context)
+            carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
+            excluiItemcarrinho.exluiItem()
         }
     }
 

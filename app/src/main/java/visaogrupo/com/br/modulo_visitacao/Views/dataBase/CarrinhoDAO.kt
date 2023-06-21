@@ -32,4 +32,9 @@ class CarrinhoDAO (context:Context) {
         valoresCarrinhos.put("ValorTotal",carrinho.valortotal)
         dbCarrinho.insert("TB_Carrinho",null,valoresCarrinhos)
     }
+
+    fun excluirItem(loja_id :Int,cliente_id:Int,produto_codigo:Int){
+        val  where = "loja_id = ${loja_id} AND cliente_id = ${cliente_id} AND produto_codigo = ${produto_codigo} "
+        dbCarrinho.delete("TB_Carrinho",where,null)
+    }
 }

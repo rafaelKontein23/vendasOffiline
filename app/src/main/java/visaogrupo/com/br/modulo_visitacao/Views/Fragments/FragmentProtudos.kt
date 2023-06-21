@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProtudoAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
@@ -25,7 +26,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
-class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAtividade {
+class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAtividade,ExcluiItemcarrinho {
     private  lateinit var  binding: FragmentProtudosBinding
     val carrinhoVisible = carrinhoVisible
     lateinit var   adpterProtudos :ProtudoAdapter
@@ -64,7 +65,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
 
         produtos = ProdutosDAO(requireContext())
         listaProtudos = produtos.litar(query)
-        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),this)
+        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),this,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,this)
         val layoutManager = LinearLayoutManager(requireContext())
 
         atualizaProgressBar()
@@ -95,14 +96,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Log.d("Atualiza","Atuliza os produtos adicionados")
-            produtos = ProdutosDAO(requireContext())
-            listaProtudos.clear()
-            listaProtudos = produtos.litar(query)
-            adpterProtudos.listaProtudos =listaProtudos
-            adpterProtudos.notifyDataSetChanged()
-
-            atualizaProgressBar()
+         atualizaItemDaView()
         }
     }
 
@@ -132,5 +126,19 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible) : Fragment(),StartaAti
                 animator.start()
             }
         }
+    }
+    fun atualizaItemDaView(){
+        Log.d("Atualiza","Atuliza os produtos adicionados")
+        produtos = ProdutosDAO(requireContext())
+        listaProtudos.clear()
+        listaProtudos = produtos.litar(query)
+        adpterProtudos.listaProtudos =listaProtudos
+        adpterProtudos.notifyDataSetChanged()
+
+        atualizaProgressBar()
+    }
+
+    override fun exluiItem() {
+       atualizaItemDaView()
     }
 }
