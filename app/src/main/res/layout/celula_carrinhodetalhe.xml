@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/bordas_carga"
+    android:backgroundTint="#20336B9B"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/imagemItem"
+        android:layout_width="45dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/protudoteste" />
+
+    <TextView
+        android:id="@+id/nomedoRemedio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="Remedio Teste 12x 36"
+        android:textColor="@color/textclienteselecionado"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
+        app:layout_constraintStart_toEndOf="@+id/imagemItem"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/valorProgressiva"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/inter"
+        android:text="R$ -"
+        android:textColor="@color/textclienteselecionado"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/nomedoRemedio"
+        app:layout_constraintStart_toEndOf="@+id/imagemItem"
+        app:layout_constraintTop_toBottomOf="@+id/nomedoRemedio" />
+
+    <TextView
+        android:id="@+id/valorTotal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/inter"
+        android:text="R$ -"
+
+        android:textColor="#044780"
+        android:textSize="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/valorProgressiva"
+        app:layout_constraintStart_toStartOf="@+id/valorProgressiva"
+        app:layout_constraintTop_toBottomOf="@+id/valorProgressiva" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="106dp"
+
+        android:layout_height="28dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/valorTotal"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+
+            android:id="@+id/edtQuantidade"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bordasedit"
+            android:inputType="number"
+            android:text="0"
+            android:textAlignment="center"
+            android:textSize="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnMais"
+            app:layout_constraintStart_toEndOf="@+id/btnmenos"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+        </EditText>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnmenos"
+            android:layout_width="25dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bordas_lados_esquerdo"
+
+            android:paddingStart="5dp"
+            android:text="-"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/edtQuantidade"
+            app:layout_constraintEnd_toStartOf="@+id/edtQuantidade"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edtQuantidade">
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMais"
+            android:layout_width="25dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bordas_lado_direito"
+
+            android:paddingStart="5dp"
+            android:text="+"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/edtQuantidade"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edtQuantidade">
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/xcarrinhodetalhes"
+        android:layout_width="33dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/xprogressiva" />
+</androidx.constraintlayout.widget.ConstraintLayout>

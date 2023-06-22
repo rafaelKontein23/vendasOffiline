@@ -126,14 +126,13 @@
 
         <ImageView
             android:id="@+id/carrinhoProtudo"
-            android:layout_width="41dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="68dp"
-            android:padding="5dp"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="60dp"
+            android:padding="2dp"
             android:popupBackground="@drawable/bordas_spiner_personalizada"
             android:scaleType="centerCrop"
-
             android:src="@drawable/carrinhoproduto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -218,8 +217,8 @@
             android:id="@+id/view12"
             android:layout_width="19dp"
             android:layout_height="18dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="29dp"
             android:background="@drawable/bordas_carga"
             android:backgroundTint="#D30404"
             app:layout_constraintBottom_toBottomOf="@+id/carrinhoProtudo"
@@ -233,6 +232,7 @@
             android:textSize="10dp"
             android:textColor="@color/white"
             android:textStyle="bold"
+
             app:layout_constraintBottom_toBottomOf="@+id/view12"
             app:layout_constraintEnd_toEndOf="@+id/view12"
             app:layout_constraintStart_toStartOf="@+id/view12"

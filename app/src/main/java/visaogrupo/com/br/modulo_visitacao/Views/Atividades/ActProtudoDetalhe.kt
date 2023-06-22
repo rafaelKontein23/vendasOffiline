@@ -208,7 +208,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                    protudoSelecionado.barra,quatidadeadd.toString().toInt(),protudoSelecionado.valor.toDouble(),
                    progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
                    progressivaSelecionada.porcentagemProgressivaSelecionda,
-                   0.0 /*Lembra de colocar a faixa desconto original aqui*/,0.0,"",1,"",valortotal.toDouble())
+                   0.0 /*Lembra de colocar a faixa desconto original aqui*/,0.0,"",1,"",valortotal.toDouble(),protudoSelecionado.nome)
 
                val carrinhoDAO = CarrinhoDAO(this)
                carrinhoDAO.insertCarrinho(carrinho)

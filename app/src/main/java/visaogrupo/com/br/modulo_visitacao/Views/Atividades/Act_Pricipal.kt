@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -129,7 +130,9 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
 
         icon_produtos.setOnClickListener (clickListenerprodutos)
         text_protudo.setOnClickListener(clickListenerprodutos)
+        carrinho.setOnClickListener {
 
+        }
         // clik do do spiner
 
         val items = listOf(
