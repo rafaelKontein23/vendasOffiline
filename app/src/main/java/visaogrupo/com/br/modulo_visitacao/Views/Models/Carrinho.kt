@@ -22,6 +22,6 @@ data class Carrinho(
     val formalizacao: String,
     val codListaPrecoSync: Int,
     val apontadorCodigo: String,
-    val valortotal:Double,
+    var valortotal:Double,
     val nomeProduto:String
 )

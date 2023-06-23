@@ -61,7 +61,12 @@ class FragmentLojas (trocarcorItem: TrocarcorItem,carrinhoVisible: carrinhoVisib
 
         // recupera lisat de lojas
         val listalojas = LojasDAO(requireContext())
-        val querylojasClientes = "SELECT LojCli.empresa_id, Lojas.* FROM TB_lojas Lojas inner join TB_lojaporcliente LojCli on Lojas.Loja_id = LojCli.loja_id WHERE LojCli.empresa_id = ${clienteSelecionado.Empresa_id} "
+        val querylojasClientes = "SELECT LojCli.empresa_id, Lojas.* FROM TB_lojas Lojas " +
+                "inner join TB_lojaporcliente LojCli on Lojas.Loja_id = LojCli.loja_id " +
+                "INNER JOIN TB_clientes CLIENTES on Clientes.Empresa_id = LojCli.empresa_id " +
+                "INNER JOIN TB_OperadorLogistico Operador on operador.loja_id = Lojas.loja_id and operador.estado = clientes.uf " +
+                "WHERE LojCli.empresa_id = ${clienteSelecionado.Empresa_id} "
+
         val listLojas =  listalojas.listarlojas(requireContext(),1,querylojasClientes)
         AdapterLojas = LojasAdapter(listLojas,trocarcorItem,R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible,atualizaCarrinho)
         val  layoutManager = LinearLayoutManager(requireContext())

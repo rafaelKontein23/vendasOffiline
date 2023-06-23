@@ -10,5 +10,5 @@ interface IFormaDePagamento {
 
     fun atualizar (FormaDePagaemnto: FormaDePagaemnto):Boolean
 
-    fun remover (FormaDePagaemnto: FormaDePagaemnto):Boolean
+    fun listar (loja_id:Int):MutableList<FormaDePagaemnto>
 }

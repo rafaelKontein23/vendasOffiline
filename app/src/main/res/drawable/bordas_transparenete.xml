@@ -1,0 +1,22 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+      <!-- Parte preenchida do ProgressBar -->
+
+      <item android:id="@android:id/background">
+            <shape>
+                  <solid android:color="#2D7A7A7A" />
+                  <corners android:radius="4dp" /> <!-- Cor de fundo da parte preenchida -->
+            </shape>
+      </item>
+      <!-- Parte não preenchida do ProgressBar -->
+      <item android:id="@android:id/progress">
+
+            <clip>
+                  <shape>
+                        <solid android:color="#BF1403" />
+                        <corners android:radius="4dp" /> <!-- Raio dos cantos -->
+
+                  </shape>
+
+            </clip>
+      </item>
+</layer-list>

@@ -1,7 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models
 
 data class FormaDePagaemnto(
-    val Alternativa: Boolean,
+    val Alternativa: Int,
     val Cod_FormaPgto: String,
     val FormaPgto: String,
     val ValorMinimo: Double,
