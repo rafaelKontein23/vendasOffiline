@@ -18,6 +18,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProtudoAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_CarrinhoDetalhe
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pedido
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.StartaAtividade
@@ -78,7 +80,6 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
         val layoutManager = LinearLayoutManager(requireContext())
 
 
-
         // atualizar o adpter
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager
@@ -105,6 +106,11 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
         // clicks
 
         binding.carrinhoProtudo.setOnClickListener {
+            Act_Pricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
+            Act_Pricipal.clienteUF = clienteSelecionado.UF
+            Act_Pricipal.cliente_id = clienteSelecionado.Empresa_id
+            Act_Pricipal.loja_id =lojaSelecionada.loja_id
+
             startActivity(Intent(requireContext(), Act_CarrinhoDetalhe::class.java))
         }
 

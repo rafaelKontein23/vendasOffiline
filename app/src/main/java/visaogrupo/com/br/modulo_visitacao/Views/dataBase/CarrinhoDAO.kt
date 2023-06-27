@@ -2,12 +2,20 @@ package visaogrupo.com.br.modulo_visitacao.Views.dataBase
 
 import android.content.ContentValues
 import android.content.Context
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Carrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CarrinhoDAO (context:Context) {
     val  dbCarrinho = DataBaseHelber(context).writableDatabase
     fun insertCarrinho (carrinho: Carrinho){
+
+        val  daataformat = DataAtual()
+        val  data = daataformat.recuperaData()
         val valoresCarrinhos = ContentValues()
+
         valoresCarrinhos.put("loja_id",carrinho.lojaId)
         valoresCarrinhos.put("cliente_id",carrinho.clienteId)
         valoresCarrinhos.put("OperadorLogistigo",carrinho.operadorLogistigo)
@@ -31,6 +39,11 @@ class CarrinhoDAO (context:Context) {
         valoresCarrinhos.put("CODLISTAPRECOSYNC",carrinho.codListaPrecoSync)
         valoresCarrinhos.put("ValorTotal",carrinho.valortotal)
         valoresCarrinhos.put("Nome",carrinho.nomeProduto)
+        valoresCarrinhos.put("nomeLoja",carrinho.nomeLoja)
+        valoresCarrinhos.put("razaosocial",carrinho.razaoSolcial)
+        valoresCarrinhos.put("cnpj",carrinho.cnpj)
+        valoresCarrinhos.put("dataPedido",data)
+        valoresCarrinhos.put("valorminimoLoja",carrinho.valorMinimoLoja)
         dbCarrinho.insert("TB_Carrinho",null,valoresCarrinhos)
     }
 
@@ -72,6 +85,8 @@ class CarrinhoDAO (context:Context) {
         val  cursor = dbCarrinho.rawQuery(query,null)
         val listaProdutosCArrinhos : MutableList<Carrinho> = mutableListOf<Carrinho>()
 
+
+
         while (cursor.moveToNext()){
             val  loja_id  = cursor.getInt(0)
             val cliente_id = cursor.getInt(1)
@@ -95,7 +110,12 @@ class CarrinhoDAO (context:Context) {
             val codListaOrecosSync =cursor.getInt(19)
             val valorTotal = cursor.getDouble(20)
             val nome = cursor.getString(21)
-            val  apontador =""
+            val nomeLoja =  cursor.getString(23)
+            val razaoSocial = cursor.getString(24)
+            val cnpj = cursor.getString(25)
+            val apontador =""
+            val data  = cursor.getString(26)
+            val valoloja = cursor.getDouble(27)
             val  carrinho= Carrinho(loja_id,cliente_id,produto_codigo,
                 opf,usuario_if,UF,
                 Comiisao,
@@ -106,7 +126,7 @@ class CarrinhoDAO (context:Context) {
                 grupo_codigo,desconto,
                 descontoOriginal,St,formalizacao,
                 codListaOrecosSync,apontador,
-                valorTotal,nome)
+                valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,valoloja)
 
             listaProdutosCArrinhos.add(carrinho)
         }

@@ -13,6 +13,13 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31">
         <activity
+            android:name=".Views.Atividades.Act_Pedido"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Views.Atividades.Act_CarrinhoDetalhe"
             android:exported="false">
             <meta-data
@@ -51,8 +58,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

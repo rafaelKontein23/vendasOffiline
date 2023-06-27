@@ -1,13 +1,18 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_protudos.*
+import kotlinx.android.synthetic.main.fragment_protudos.view.*
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.CarrinhoDetalheAdpter
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogOperadorLogistico
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizadetalhesProdutos
@@ -22,35 +27,30 @@ class Act_CarrinhoDetalhe:  AppCompatActivity(), AtualizadetalhesProdutos , Star
     private  lateinit var  binding: ActivityActCarrinhoDetalheBinding
     lateinit var adpterCarrinhoDetalhes:CarrinhoDetalheAdpter
     lateinit var   listaProdutoCarrinho :MutableList<Carrinho>
+    var valorminimo = 0.0
     override fun onPostCreate(savedInstanceState: Bundle?) {
         binding  = ActivityActCarrinhoDetalheBinding.inflate(layoutInflater)
         setContentView(binding.root)
         super.onPostCreate(savedInstanceState)
 
-        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val gsonclientes = Gson()
-        val objetoSerializado = sharedPreferences?.getString("LojaSelecionada", null)
-        val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
-        val  lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
-        val clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
 
         val  carrinhoDAO = CarrinhoDAO(this)
-        listaProdutoCarrinho = carrinhoDAO.listaritensCarrinho(lojaSelecionada.loja_id,clienteSelecionado.Empresa_id)
+        listaProdutoCarrinho = carrinhoDAO.listaritensCarrinho(Act_Pricipal.loja_id,Act_Pricipal.cliente_id)
 
         val linearLayoutManager = LinearLayoutManager(this)
         adpterCarrinhoDetalhes =  CarrinhoDetalheAdpter(listaProdutoCarrinho,binding.root,this,this,this)
         binding.recyprotudo.layoutManager = linearLayoutManager
         binding.recyprotudo.adapter = adpterCarrinhoDetalhes
-        val  valorformatMinimo = String.format("%.2f",lojaSelecionada.MinimoValor)
+        val  valorformatMinimo = String.format("%.2f",Act_Pricipal.lojavalorMinimo)
         binding.ValorMinimoCarrinho.text = "R$ "  + valorformatMinimo
 
         binding.continuarCarrinho.setOnClickListener {
             val dialogOperadorLogistico = DialogOperadorLogistico()
-            dialogOperadorLogistico.dialog(this,lojaSelecionada,clienteSelecionado)
+            dialogOperadorLogistico.dialog(this,listaProdutoCarrinho)
         }
+        valorminimo = Act_Pricipal.lojavalorMinimo
+        atualzza(listaProdutoCarrinho,Act_Pricipal.lojavalorMinimo)
 
-        atualzza(listaProdutoCarrinho)
 
     }
 
@@ -62,14 +62,14 @@ class Act_CarrinhoDetalhe:  AppCompatActivity(), AtualizadetalhesProdutos , Star
     ) {
         if(!atualiza){
             lista[position].valortotal = valor
-            atualzza(lista)
+            atualzza(lista,valorminimo)
         }else{
             adpterCarrinhoDetalhes.notifyDataSetChanged()
 
         }
 
     }
-    fun atualzza(lista: MutableList<Carrinho>){
+    fun atualzza(lista: MutableList<Carrinho>,valorMinimo: Double){
         var valorTotal = 0.0
         var valorDesconto = 0.0
         var quantidade = 0
@@ -87,6 +87,29 @@ class Act_CarrinhoDetalhe:  AppCompatActivity(), AtualizadetalhesProdutos , Star
         binding.valorTotalitens.text = "R$ " + valorTot
         binding.desconto.text =  valorTotDesc +"%"
         binding.unidadesTotasi.text = quantidade.toString() + " Uni."
+        binding.progressBarValorminimo.max = valorMinimo.toInt()
+        binding.progressBarValorminimo.progress = valorTotal.toInt()
+
+        val resultado = (valorminimo * 40) / 100
+
+        if(valorTotal<=resultado ){
+
+            val greenColor = Color.parseColor("#B40101")
+            val colorStateList = ColorStateList.valueOf(greenColor)
+
+            binding.progressBarValorminimo.progressTintList = colorStateList
+        }else if(valorTotal > resultado && valorTotal <valorMinimo){
+            val greenColor = Color.parseColor("#CF7001")
+            val colorStateList = ColorStateList.valueOf(greenColor)
+
+            binding.progressBarValorminimo.progressTintList = colorStateList
+        }else{
+            val greenColor = Color.parseColor("#01B45E")
+            val colorStateList = ColorStateList.valueOf(greenColor)
+
+            binding.progressBarValorminimo.progressTintList = colorStateList
+        }
+
     }
 
     override fun atividade(intent: Intent) {

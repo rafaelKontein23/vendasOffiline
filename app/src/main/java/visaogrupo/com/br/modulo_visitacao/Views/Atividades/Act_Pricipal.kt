@@ -38,6 +38,10 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
     lateinit var viewnotification :View
     companion object {
         var  troca = TrocaItemSelecionado.home
+        var clienteUF =""
+        var cliente_id = 0
+        var loja_id    =0
+        var lojavalorMinimo =0.0
     }
 
 
@@ -48,7 +52,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         list_menu.add("")
         list_menu.add("")
         list_menu.add("")
-        viewcarrinho = findViewById(R.id.carrinho)
+        viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)
 
@@ -95,6 +99,10 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
             }
         }
 
+        viewcarrinho.setOnClickListener {
+            startActivity(Intent(this,Act_Pedido::class.java))
+        }
+
         icon_clientes.setOnClickListener(clickListenerclientes)
         text_clientes.setOnClickListener  (clickListenerclientes)
 
@@ -130,9 +138,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
 
         icon_produtos.setOnClickListener (clickListenerprodutos)
         text_protudo.setOnClickListener(clickListenerprodutos)
-        carrinho.setOnClickListener {
 
-        }
         // clik do do spiner
 
         val items = listOf(

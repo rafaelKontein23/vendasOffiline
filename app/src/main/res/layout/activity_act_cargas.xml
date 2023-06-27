@@ -238,7 +238,7 @@
 
 
     <TextView
-        android:id="@+id/carrinho"
+        android:id="@+id/carrinhoO"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
@@ -265,7 +265,7 @@
         android:elevation="10dp"
 
         android:background="@drawable/bordas_carga"
-        app:layout_constraintBottom_toBottomOf="@+id/carrinho"
+        app:layout_constraintBottom_toBottomOf="@+id/carrinhoO"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/bordas_spiner_personalizada" />
 

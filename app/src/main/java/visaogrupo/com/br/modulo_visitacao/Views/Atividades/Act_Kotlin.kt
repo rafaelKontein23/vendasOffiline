@@ -23,6 +23,9 @@ class Act_Kotlin:  AppCompatActivity() , Ondismiss{
     private var carregandoprogress: ProgressBar? = null
     private var entrar: Button? = null
     val login_erro = Login_Erro.Erro
+    companion object {
+        val  versao = "3.0.0"
+    }
 
 
     protected override fun onCreate(savedInstanceState: Bundle?) {

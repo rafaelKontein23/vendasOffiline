@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    29 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    35 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -52,7 +52,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Minimo_Aprovacao FLOAT," +
                 "Valida_Estoque Bolean," +
                 "Loja_Preco Bolean," +
-                "Exibe_Estoque Bolean" +
+                "Exibe_Estoque Bolean," +
+                "cliente_id INT" +
                 ");"
         // Tabele de lojas
         val sqlCliente = "CREATE TABLE if NOT EXISTS TB_clientes(" +
@@ -184,6 +185,11 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "ValorTotal REAL, " +
                 "Nome TEXT, " +
                 "Apontador_codigo TEXT,"+
+                "nomeLoja TEXT,"+
+                "razaosocial TEXT,"+
+                "cnpj TEXT,"+
+                "dataPedido TEXT,"+
+                "valorminimoLoja REAL,"+
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
         try {

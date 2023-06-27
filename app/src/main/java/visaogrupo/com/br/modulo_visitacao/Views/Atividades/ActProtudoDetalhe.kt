@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProgressivaAdpter
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaProgressiva
@@ -21,6 +22,8 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.*
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
@@ -200,6 +203,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
                Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
                val valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
+
+               val  daataformat = DataAtual()
+               val  data = daataformat.recuperaData()
+
                val  carrinho = Carrinho(lojaSelecionada.loja_id,
                    clienteSelecionado.Empresa_id,
                    protudoSelecionado.ProdutoCodigo,"",
@@ -208,7 +215,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                    protudoSelecionado.barra,quatidadeadd.toString().toInt(),protudoSelecionado.valor.toDouble(),
                    progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
                    progressivaSelecionada.porcentagemProgressivaSelecionda,
-                   0.0 /*Lembra de colocar a faixa desconto original aqui*/,0.0,"",1,"",valortotal.toDouble(),protudoSelecionado.nome)
+                   0.0
+                   /*Lembra de colocar a faixa desconto original aqui*/,0.0,
+                   "",1,"",valortotal.toDouble(),
+                   protudoSelecionado.nome,lojaSelecionada.nome,clienteSelecionado.RazaoSocial,clienteSelecionado.CNPJ,data,lojaSelecionada.MinimoValor)
 
                val carrinhoDAO = CarrinhoDAO(this)
                carrinhoDAO.insertCarrinho(carrinho)
