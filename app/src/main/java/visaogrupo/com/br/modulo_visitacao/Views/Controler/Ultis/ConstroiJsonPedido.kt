@@ -1,17 +1,12 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.gson.Gson
-import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Kotlin
+import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
-import java.lang.ref.Cleaner
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ConstroiJsonPedido {
 
@@ -74,7 +69,7 @@ class ConstroiJsonPedido {
                 "\"TipoLoja\": ${lojaSelecionada.loja_id},\n"+
                 "\"UF\": \"${clientesSelecionado.UF}\",\n"+
                 "\"Usuario_id\": ${login.Usuario_id},\n"+
-                "\"Versao\": \"${Act_Kotlin.versao}\"\n"+
+                "\"Versao\": \"${Act_Login.versao}\"\n"+
                 "}"
 
         return Pair(json, chavekey)

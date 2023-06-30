@@ -1,5 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models
 
+import java.util.Base64
+
 data class ProdutoProgressiva(
     val nome:String,
     val aprensentacao:String,
@@ -13,4 +15,5 @@ data class ProdutoProgressiva(
     val  estaNoCarrinho:Int,
     val  valorcarrinho:Double,
     val  quantidadeCarrinho:Int,
-    val  valorTotal:Double):java.io.Serializable
+    val  valorTotal:Double,
+    val base64 :String):java.io.Serializable

@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Task_Login
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.Ondismiss
@@ -15,7 +17,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Funcao_erro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber
 
-class Act_Kotlin:  AppCompatActivity() , Ondismiss{
+class Act_Login:  AppCompatActivity() , Ondismiss{
 
 
     private var email: EditText? = null
@@ -30,14 +32,19 @@ class Act_Kotlin:  AppCompatActivity() , Ondismiss{
 
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(visaogrupo.com.br.recursos.R.layout.tela_login)
+        setContentView(R.layout.tela_login)
 
-        email = findViewById<EditText>(visaogrupo.com.br.recursos.R.id.email_login)
-        senha = findViewById<EditText>(visaogrupo.com.br.recursos.R.id.senha)
-        entrar = findViewById<Button>(visaogrupo.com.br.recursos.R.id.entrar)
-        carregandoprogress = findViewById<ProgressBar>(visaogrupo.com.br.recursos.R.id.progressBar_carregando_login)
+        email = findViewById(R.id.email_login)
+        senha = findViewById(R.id.senha)
+        entrar = findViewById(R.id.entrar)
+        carregandoprogress = findViewById(R.id.progressBar_carregando_login)
         // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
+
+        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        editor?.putBoolean("cargafeita", true)
+        editor?.apply()
 
 
         entrar!!.setOnClickListener {
@@ -51,7 +58,7 @@ class Act_Kotlin:  AppCompatActivity() , Ondismiss{
             var conect_boll = isconectado.isOnline(baseContext)
             if(conect_boll){
                 val task_login = Task_Login()
-                // Request de login que Para Verificar o usuario
+                // Request de login
                 try {
                     task_login.Request_login(captuere_email, capture_senha, "", this,this)
                 } catch (e: Exception) {

@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.modulo_visitacao.R
@@ -41,6 +42,10 @@ class DialogDetalhesClientes {
            val endereco =  dialog.findViewById<TextView>(R.id.enderecodetalhe)
            val Telefone =  dialog.findViewById<TextView>(R.id.telefonecelular)
            val vender = dialog.findViewById<TextView>(R.id.vender)
+           val  xdetalhe = dialog.findViewById<ImageView>(R.id.xdetalhe)
+           xdetalhe.setOnClickListener {
+               dialog.onBackPressed()
+           }
            vender.setOnClickListener {
                dialog.onBackPressed()
 

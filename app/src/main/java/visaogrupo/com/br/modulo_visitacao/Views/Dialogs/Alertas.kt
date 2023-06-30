@@ -1,14 +1,18 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Dialogs
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Handler
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentAlerta
+import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 
 class Alertas {
 
-    fun alerta(fragmentmeneger:FragmentManager){
-        val fragmentAlerta = FragmentAlerta()
+    fun alerta(fragmentmeneger:FragmentManager,textoalert:String, cortexto: String, imagem: Int, corbackground: String){
+        val fragmentAlerta = FragmentAlerta(textoalert,cortexto,imagem,corbackground)
+
         val fragmentTransaction = fragmentmeneger.beginTransaction()
         fragmentTransaction.setCustomAnimations(R.anim.animatealertbaixo,R.anim.animsaialert)
 
@@ -22,6 +26,7 @@ class Alertas {
                     removeTransaction.setCustomAnimations(R.anim.animsaialert, R.anim.animatealertbaixo)
                     removeTransaction.remove(fragmentAlerta)
                     removeTransaction.commit()
+                    FragmentCargas.alertvisible = false
                 }catch (e:Exception){
                     e.printStackTrace()
                 }
@@ -30,7 +35,6 @@ class Alertas {
         }catch (e:Exception){
             e.printStackTrace()
         }
-
 
     }
 }

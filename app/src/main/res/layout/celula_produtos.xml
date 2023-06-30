@@ -6,109 +6,130 @@
     android:id="@+id/contanerProduto"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/PrudutoValor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/protudoteste" />
-
-    <TextView
-        android:id="@+id/codigoProtudo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/inter_medium"
-        android:text="-"
-        android:textColor="#0196B4"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/NomeProtudo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:fontFamily="@font/inter_medium"
-        android:text="-"
-        android:textColor="#2E3642"
-        android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="@+id/codigoProtudo"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/codigoProtudo" />
-
-    <TextView
-        android:id="@+id/barraProduto"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/inter"
-        android:text="-"
-        android:textColor="#737880"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/NomeProtudo" />
-
-    <TextView
-        android:id="@+id/PrudutoValor"
-        style="@style/textbold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="-"
-        android:textColor="#2E3642"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/barraProduto" />
-
-    <View
-        android:id="@+id/linhaProtudos"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="#A4E6EDF3"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PrudutoValor" />
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
+                android:background="#DDDDDD"
+                app:layout_constraintBottom_toBottomOf="@+id/PrudutoValor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                 />
 
-    <TextView
-        android:id="@+id/quatidadeadicionada"
-        android:layout_width="64dp"
-        android:layout_height="28dp"
-        android:background="@color/verdenutoon"
-        android:fontFamily="@font/inter_bold"
-        android:gravity="center"
-        android:text="x 12"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/codigoProtudo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/inter_medium"
+                android:background="#DDDDDD"
+                android:textColor="#0196B4"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/excluirItem"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        android:background="@drawable/bordas_lixeira"
-        android:backgroundTint="#EF4444"
-        android:drawableStart="@drawable/lixeira"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        app:layout_constraintBottom_toBottomOf="@+id/quatidadeadicionada"
-        app:layout_constraintEnd_toStartOf="@+id/quatidadeadicionada"
-        app:layout_constraintTop_toTopOf="@+id/quatidadeadicionada" />
+            <TextView
+                android:id="@+id/NomeProtudo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:background="#DDDDDD"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="#2E3642"
+                android:textSize="14dp"
+                app:layout_constraintEnd_toEndOf="@+id/codigoProtudo"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/codigoProtudo" />
+
+            <TextView
+                android:id="@+id/barraProduto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
+                android:background="#DDDDDD"
+
+                android:fontFamily="@font/inter"
+                android:textColor="#737880"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/NomeProtudo" />
+
+            <TextView
+                android:id="@+id/PrudutoValor"
+                style="@style/textbold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:background="#DDDDDD"
+                android:textColor="#2E3642"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/barraProduto" />
+
+
+
+            <TextView
+                android:id="@+id/quatidadeadicionada"
+                android:layout_width="64dp"
+                android:layout_height="28dp"
+                android:background="@color/verdenutoon"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:text="x 12"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/excluirItem"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:background="@drawable/bordas_lixeira"
+                android:backgroundTint="#EF4444"
+                android:drawableStart="@drawable/lixeira"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                app:layout_constraintBottom_toBottomOf="@+id/quatidadeadicionada"
+                app:layout_constraintEnd_toStartOf="@+id/quatidadeadicionada"
+                app:layout_constraintTop_toTopOf="@+id/quatidadeadicionada" />
+            <View
+                android:id="@+id/linhaProtudos"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="#A4E6EDF3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PrudutoValor" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

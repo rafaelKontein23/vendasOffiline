@@ -16,9 +16,10 @@ public interface Insync_Task {
     @POST("catarinense/login")
     Call<ResponseBody> P_Login_factory(@Body RequestBody body);
 
-    @GET("Progressivas/Progressiva_{id}_SP.json")
-    Call<List<Progressiva>> progressivas(@Path("id")  int id);
 
+
+    @POST("catarinense/modelopedido")
+    Call<ResponseBody> P_RetornaListaDesejoTablet(@Body RequestBody body);
 
 
 

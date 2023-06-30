@@ -1,0 +1,29 @@
+package visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request
+
+import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+
+
+class Retrofit_imagens {
+    companion object {
+        private val url = "https://catarinenseonline.com.br/"
+
+        private val client = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS).writeTimeout(5, TimeUnit.SECONDS).build()
+        var gson = GsonBuilder()
+            .setLenient()
+            .create()
+        private val builder = Retrofit.Builder().client(client).baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+
+        private val retrofit = builder.build()
+
+        fun <S> createService(serviceClass: Class<S>?): S {
+            return retrofit.create(serviceClass)
+        }
+    }
+
+}

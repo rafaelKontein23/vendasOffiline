@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProgressivaAdpter
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
@@ -175,9 +176,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
 
                     val quantidade:Int = quatidadeAdicionadaCap -1
-
                     binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
-
                     progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap  -2
                     progressivaAdpter.clicou= false
                     progressivaAdpter.notifyDataSetChanged()
@@ -200,8 +199,6 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
            if(quatidadeadd.isEmpty() || quatidadeadd.toInt() == 0 ){
                Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
            } else{
-
-               Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
                val valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
 
                val  daataformat = DataAtual()
@@ -212,7 +209,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                    protudoSelecionado.ProdutoCodigo,"",
                    login.Usuario_id.toString().toInt(),clienteSelecionado.UF,
                    0.0,0.0,0,
-                   protudoSelecionado.barra,quatidadeadd.toString().toInt(),protudoSelecionado.valor.toDouble(),
+                   protudoSelecionado.barra,quatidadeadd.toInt(),protudoSelecionado.valor.toDouble(),
                    progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
                    progressivaSelecionada.porcentagemProgressivaSelecionda,
                    0.0
@@ -225,6 +222,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                val intent = Intent()
                setResult(Activity.RESULT_OK, intent)
                finish()
+               Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
                this.onBackPressed()
            }
 
@@ -289,7 +287,8 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
 
         if (desconto > 10.00){ // trocar esse 10.00 por um valor correto
             val alertas = Alertas()
-            alertas.alerta(supportFragmentManager)
+            alertas.alerta(supportFragmentManager,"O desconto irá passar por aprovação","#B89A00",
+                R.drawable.atencao,"#FDF6D2")
         }
 
         Toast.makeText(this,"Progressiva Adiconada com sucesso!", Toast.LENGTH_SHORT).show()

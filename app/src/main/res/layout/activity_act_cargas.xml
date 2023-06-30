@@ -44,6 +44,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/clientes"
+        android:tint="#BEC1C4"
         app:layout_constraintEnd_toStartOf="@+id/icon_lojas"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/icon_pedidos"
@@ -55,6 +56,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/lojas"
+        android:tint="#BEC1C4"
         app:layout_constraintEnd_toStartOf="@+id/icon_produtos"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/icon_clientes"
@@ -66,6 +68,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/produtos"
+        android:tint="#BEC1C4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/icon_lojas"
@@ -105,6 +108,7 @@
         android:letterSpacing=".15"
         android:text="CLIENTES"
         android:gravity="center"
+        android:textColor="#BEC1C4"
         android:textSize="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="@+id/icon_clientes"
@@ -118,6 +122,7 @@
         android:letterSpacing=".15"
         android:text="LOJAS"
         android:textSize="10dp"
+        android:textColor="#BEC1C4"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/icon_lojas"
@@ -132,6 +137,7 @@
         android:text="PRODUTOS"
         android:gravity="center"
         android:textSize="10dp"
+        android:textColor="#BEC1C4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/icon_produtos"
         app:layout_constraintStart_toStartOf="@+id/icon_produtos"
@@ -285,6 +291,16 @@
         app:layout_constraintEnd_toEndOf="@+id/viewnotification"
         app:layout_constraintStart_toStartOf="@+id/viewnotification"
         app:layout_constraintTop_toTopOf="@+id/viewnotification" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragentalert"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_alerta" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

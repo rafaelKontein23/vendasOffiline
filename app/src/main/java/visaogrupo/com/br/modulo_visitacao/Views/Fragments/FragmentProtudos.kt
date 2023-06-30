@@ -16,10 +16,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Adpters.ProtudoAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_CarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
+import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.StartaAtividade
@@ -28,6 +30,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ImagensDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
@@ -42,6 +45,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
     lateinit var lojaSelecionada:Lojas
     lateinit var produtos:ProdutosDAO
     lateinit var clienteSelecionado:Clientes
+    val contextThis = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,27 +66,53 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
         val objetoSerializado = sharedPreferences?.getString("LojaSelecionada", null)
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
-         clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+        clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
 
-        query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
-                "FROM TB_produtos Produtos " +
-                "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
-                "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
-                "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
-                "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
-                "and Progressiva.uf = '${clienteSelecionado.UF}' " +
-                "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
-                "order by 1 "
-
-        produtos = ProdutosDAO(requireContext())
-        listaProtudos = produtos.litar(query)
-        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),this,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,this,view)
+        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),contextThis,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,contextThis,view)
         val layoutManager = LinearLayoutManager(requireContext())
 
-
-        // atualizar o adpter
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager
+
+        CoroutineScope(Dispatchers.IO).launch{
+            val imagensDao = ImagensDAO()
+            val istotalImagens = imagensDao.hasDataInImagesTable(requireContext())
+            if(istotalImagens){
+                query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
+                        "FROM TB_produtos Produtos " +
+                        "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
+                        "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
+                        "inner join TB_Imagens imagens on Produtos.barra = imagens.barra "+
+                        "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
+                        "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
+                        "and Progressiva.uf = '${clienteSelecionado.UF}' " +
+                        "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
+                        "order by 1 "
+            }else{
+                query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
+                        "FROM TB_produtos Produtos " +
+                        "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
+                        "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
+                        "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
+                        "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
+                        "and Progressiva.uf = '${clienteSelecionado.UF}' " +
+                        "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
+                        "order by 1 "
+            }
+
+
+            produtos = ProdutosDAO(requireContext())
+            listaProtudos = produtos.litar(query)
+            CoroutineScope(Dispatchers.Main).launch {
+
+                adpterProtudos.count = listaProtudos.size
+                adpterProtudos.listaProtudos = listaProtudos
+                adpterProtudos.carregando =false
+                adpterProtudos.notifyDataSetChanged()
+            }
+        }
+
+
         // atualiza a view
         try {
             val cnpj = clienteSelecionado.CNPJ.substring(0,2)+"."+clienteSelecionado.CNPJ.substring(2,5)+
@@ -103,15 +133,22 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
         quatidadeinCarrinho()
 
 
-        // clicks
-
         binding.carrinhoProtudo.setOnClickListener {
-            Act_Pricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
-            Act_Pricipal.clienteUF = clienteSelecionado.UF
-            Act_Pricipal.cliente_id = clienteSelecionado.Empresa_id
-            Act_Pricipal.loja_id =lojaSelecionada.loja_id
+            val capcarrinhoitem = binding.quatidadeItens.text
 
-            startActivity(Intent(requireContext(), Act_CarrinhoDetalhe::class.java))
+            if(capcarrinhoitem.equals(0)){
+                val alertas = Alertas()
+                alertas.alerta(requireActivity().supportFragmentManager,"Por favor, Adicione ao menos um item no carrinho!","#B89A00",
+                    R.drawable.atencao,"#FDF6D2")
+            }else{
+                Act_Pricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
+                Act_Pricipal.clienteUF = clienteSelecionado.UF
+                Act_Pricipal.cliente_id = clienteSelecionado.Empresa_id
+                Act_Pricipal.loja_id =lojaSelecionada.loja_id
+
+                startActivity(Intent(requireContext(), Act_CarrinhoDetalhe::class.java))
+            }
+
         }
 
         return view

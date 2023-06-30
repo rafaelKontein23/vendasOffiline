@@ -1,13 +1,18 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import visaogrupo.com.br.modulo_visitacao.R
@@ -15,21 +20,24 @@ import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaIt
 
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Obejtos.Personalizacao.CustomSpinnerItem
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.CustomSpinnerAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Trocar_cor_de_icon
+import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogDetalhesClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentProtudos
-import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
-import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
-import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
+import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.*
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActPedidoBinding
 
-class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,AtualizaCarrinho {
+class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,AtualizaCarrinho,
+    FragmentCargas.MyCallback {
 
     var list_menu:MutableList<String> = ArrayList<String>()
-    val fragmentLojas =    FragmentLojas(this,this,this)
+    val fragmentLojas =    FragmentLojas(
+        this,this,this)
     val fragmentCargas =   FragmentCargas()
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
@@ -52,21 +60,23 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         list_menu.add("")
         list_menu.add("")
         list_menu.add("")
+
         viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)
+        fragmentCargas.callback =this
 
         atualizaQtdCarrinho()
-
         supportFragmentManager.
         beginTransaction()
             .replace(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
+
 
         val clickListenerhome = View.OnClickListener {
             seleciona(text_home,view_home,icon_home);
             Deseleciona_itens(text_pedidos,text_clientes,text_lojas,text_protudo,view_prdidos,
                 view_clientes,view_lojas,view_produto,icon_pedidos,icon_clientes,icon_lojas,icon_produtos)
-
+             itensVisible()
             if(!fragmentCargas.isVisible){
                 supportFragmentManager.
                 beginTransaction()
@@ -88,15 +98,26 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         text_pedidos.setOnClickListener (clickListenerpedidos)
 
         val clickListenerclientes = View.OnClickListener {
-            seleciona(text_clientes,view_clientes,icon_clientes);
-            Deseleciona_itens(text_home,text_pedidos,text_lojas,text_protudo,view_home,
-                view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
-            itensVisible()
-            if(!fragmentClientes.isVisible){
-                supportFragmentManager.
-                beginTransaction()
-                    .replace(R.id.fragmentContainerViewPrincipal, fragmentClientes).addToBackStack(null).commit()
+            val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
+            if(feitacarga == false){
+                if (!FragmentCargas.alertvisible){
+                    FragmentCargas.alertvisible = true
+                    val alertas = Alertas()
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                }
+            }else{
+                seleciona(text_clientes,view_clientes,icon_clientes);
+                Deseleciona_itens(text_home,text_pedidos,text_lojas,text_protudo,view_home,
+                    view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
+                itensVisible()
+                if(!fragmentClientes.isVisible){
+                    supportFragmentManager.
+                    beginTransaction()
+                        .replace(R.id.fragmentContainerViewPrincipal, fragmentClientes).addToBackStack(null).commit()
+                }
             }
+
         }
 
         viewcarrinho.setOnClickListener {
@@ -108,16 +129,27 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
 
 
         val clickListenerlojas = View.OnClickListener {
-            seleciona(text_lojas,view_lojas,icon_lojas);
-            Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
-                view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
-            itensVisible()
-            val visivel =fragmentLojas.isVisible
-            if(!visivel){
-                supportFragmentManager.
-                beginTransaction()
-                    .replace(R.id.fragmentContainerViewPrincipal, fragmentLojas).addToBackStack(null).commit()
+            val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
+            if(feitacarga == false){
+                if (!FragmentCargas.alertvisible){
+                    FragmentCargas.alertvisible = true
+                    val alertas = Alertas()
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                }
+            }else{
+                seleciona(text_lojas,view_lojas,icon_lojas);
+                Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
+                    view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
+                itensVisible()
+                val visivel =fragmentLojas.isVisible
+                if(!visivel){
+                    supportFragmentManager.
+                    beginTransaction()
+                        .replace(R.id.fragmentContainerViewPrincipal, fragmentLojas).addToBackStack(null).commit()
+                }
             }
+
 
         }
 
@@ -125,15 +157,25 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         text_lojas.setOnClickListener(clickListenerlojas)
 
         val clickListenerprodutos = View.OnClickListener {
-            seleciona(text_protudo,view_produto,icon_produtos);
-            Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
-                view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
-            itensInvisible()
-            if(!fragmentProtudos.isVisible){
-                supportFragmentManager.
-                beginTransaction()
-                    .replace(R.id.fragmentContainerViewPrincipal, fragmentProtudos).addToBackStack(null).commit()
+            val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
+            if(feitacarga == false){
+                if (!FragmentCargas.alertvisible){
+                    FragmentCargas.alertvisible = true
+                    val alertas = Alertas()
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                }
+            }else{
+                seleciona(text_protudo,view_produto,icon_produtos);
+                Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
+                    view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
+                itensInvisible()
+                if(!fragmentProtudos.isVisible){
+                    val mudarFragment = MudarFragment()
+                    mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+                }
             }
+
         }
 
         icon_produtos.setOnClickListener (clickListenerprodutos)
@@ -263,9 +305,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
     }
 
     override fun carrinhoVisivel() {
-        viewcarrinho.isVisible = false
-        qtdNotificacoes.isVisible = false
-        viewnotification.isVisible = false
+        itensInvisible()
     }
 
     override fun atualizaCarrinho() {
@@ -283,6 +323,28 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         }else{
             qtdNotification.text = countCarrinho.toString()
         }
+
+    }
+
+
+
+    fun trocacorItensAposCarga(img: ImageView,texviw:TextView){
+        trocar_cor_iten(img,img.drawable,"#737880")
+        texviw.setTextColor(Color.parseColor("#737880"))
+
+
+    }
+    private fun trocar_cor_iten(icon:ImageView, drawable: Drawable, cor:String){
+        val wrappedDrawable = DrawableCompat.wrap(drawable.mutate())
+        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(cor))
+        icon.setImageDrawable(wrappedDrawable)
+
+    }
+
+    override fun onActionDone() {
+        trocacorItensAposCarga(icon_clientes,text_clientes)
+        trocacorItensAposCarga(icon_lojas,text_lojas)
+        trocacorItensAposCarga(icon_produtos,text_protudo)
 
     }
 }

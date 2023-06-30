@@ -41,7 +41,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.Act_Kotlin"
+            android:name=".Views.Atividades.Act_Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

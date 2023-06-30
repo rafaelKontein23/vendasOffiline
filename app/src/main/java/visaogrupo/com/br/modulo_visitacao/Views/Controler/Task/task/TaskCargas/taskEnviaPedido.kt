@@ -53,7 +53,7 @@ class taskEnviaPedido {
                   bodyJson
               )
               val request: Request = Request.Builder()
-                  .url("https://wwwe.visaogrupo.com.br/ws/theraskin/envio/novo/pedido")
+                  .url("https://wwwe.visaogrupo.com.br/ws/catarinense/envio/pedido")
                   .method("POST", body)
                   .addHeader("Autorizacao", "J0#o14:*6")
                   .addHeader("Content-Type", "application/json")

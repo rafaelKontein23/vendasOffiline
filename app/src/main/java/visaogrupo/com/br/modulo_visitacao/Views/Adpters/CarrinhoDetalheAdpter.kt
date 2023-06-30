@@ -90,7 +90,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>,view:View,context:Conte
                 24/*lembrar de colocar ovalor aqui*/,1,
                 listaProdutoCarrinho[position].valor,
                 listaProdutoCarrinho[position].quantidade,
-                listaProdutoCarrinho[position].valortotal)
+                listaProdutoCarrinho[position].valortotal,"")
             bundle.putSerializable("ProtudoSelecionado", produto as Serializable)
             intent.putExtra("ProtudoSelecionado_bundle", bundle)
             start.atividade(intent)
