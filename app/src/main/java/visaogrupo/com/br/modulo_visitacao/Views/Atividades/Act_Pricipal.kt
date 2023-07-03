@@ -104,7 +104,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 if (!FragmentCargas.alertvisible){
                     FragmentCargas.alertvisible = true
                     val alertas = Alertas()
-                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
                 seleciona(text_clientes,view_clientes,icon_clientes);
@@ -135,7 +135,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 if (!FragmentCargas.alertvisible){
                     FragmentCargas.alertvisible = true
                     val alertas = Alertas()
-                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
                 seleciona(text_lojas,view_lojas,icon_lojas);
@@ -163,7 +163,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 if (!FragmentCargas.alertvisible){
                     FragmentCargas.alertvisible = true
                     val alertas = Alertas()
-                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
                 seleciona(text_protudo,view_produto,icon_produtos);

@@ -139,7 +139,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible,atulizaCarrinho:Atualiz
             if(capcarrinhoitem.equals(0)){
                 val alertas = Alertas()
                 alertas.alerta(requireActivity().supportFragmentManager,"Por favor, Adicione ao menos um item no carrinho!","#B89A00",
-                    R.drawable.atencao,"#FDF6D2")
+                    R.drawable.atencao,R.drawable.bordas_amerala_alert)
             }else{
                 Act_Pricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
                 Act_Pricipal.clienteUF = clienteSelecionado.UF

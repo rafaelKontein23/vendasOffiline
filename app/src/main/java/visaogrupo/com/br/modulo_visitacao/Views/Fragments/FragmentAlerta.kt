@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import visaogrupo.com.br.modulo_visitacao.R
 
-class FragmentAlerta (textoalert:String, cortexto: String, imagem: Int, corbackground: String) : Fragment() {
+class FragmentAlerta (textoalert:String, cortexto: String, imagem: Int,bordasback:Int) : Fragment() {
     val  textoalert = textoalert
     val cortexto = cortexto
     val imagem = imagem
-    val corbackground = corbackground
+    val  bordasback = bordasback
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,7 +34,7 @@ class FragmentAlerta (textoalert:String, cortexto: String, imagem: Int, corbackg
         tituloalerta.setTextColor(Color.parseColor(cortexto))
         val drawable = resources.getDrawable(imagem, null)
         iconalert.setImageDrawable(drawable)
-        backgroundalerta.setBackgroundColor(Color.parseColor(corbackground))
+        backgroundalerta.background  = ContextCompat.getDrawable(requireContext(),bordasback)
 
         return view
     }

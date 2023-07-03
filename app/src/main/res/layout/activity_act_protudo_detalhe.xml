@@ -25,7 +25,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/imgprodto"
                 android:layout_width="174dp"
                 android:layout_height="141dp"
                 android:layout_marginTop="56dp"
@@ -33,12 +33,13 @@
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/photo" />
+                app:srcCompat="@drawable/padrao" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/linearLayoutCompat2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/bordas_cima"
                 android:clipToPadding="false"
                 android:orientation="vertical"
@@ -46,9 +47,20 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView7">
+                app:layout_constraintTop_toBottomOf="@+id/imgprodto">
 
 
+                <CheckBox
+                    android:id="@+id/checkCaixapadrao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:background="#80EAEBEC"
+                    android:buttonTint="#496683"
+                    android:text="Caixa Padrão 24 uni."
+                    android:textColor="#9FA3A8"
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/codigoProduto"
@@ -79,6 +91,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/codigoProduto" />
 
+
                 <TextView
                     android:id="@+id/barra"
                     android:layout_width="match_parent"
@@ -108,9 +121,39 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barra" />
 
+                <TextView
+                    android:id="@+id/valorTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="R$ 0,00"
+                    android:textAlignment="center"
+                    android:textColor="#2E3642"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtQuantidade" />
 
+                <TextView
+                    android:id="@+id/adiconarCarrinho"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
 
+                    android:background="@drawable/bordas_carga"
+                    android:backgroundTint="@color/corazultext"
+                    android:padding="12dp"
+                    android:text="Adicionar "
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/valorTotal">
 
+                </TextView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -229,17 +272,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <CheckBox
-                    android:id="@+id/checkCaixapadrao"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#80EAEBEC"
-                    android:layout_marginTop="12dp"
-                    android:layout_height="25dp"
-                    android:textSize="12dp"
-                    android:buttonTint="#496683"
-                    android:textColor="#9FA3A8"
-                    android:text="Caixa Padrão 24 uni." />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -293,39 +325,6 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <TextView
-                    android:id="@+id/valorTotal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/inter_medium"
-                    android:text="R$ 0,00"
-                    android:textAlignment="center"
-                    android:textColor="#2E3642"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtQuantidade" />
-
-                <TextView
-                    android:id="@+id/adiconarCarrinho"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-
-                    android:background="@drawable/bordas_carga"
-                    android:backgroundTint="@color/corazultext"
-                    android:padding="12dp"
-                    android:text="Adicionar "
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/valorTotal">
-
-                </TextView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -351,17 +350,6 @@
                         android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyProgressiva"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="24dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView27" />
-
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/adicionarProgressiva"
@@ -394,6 +382,18 @@
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyProgressiva"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView27" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

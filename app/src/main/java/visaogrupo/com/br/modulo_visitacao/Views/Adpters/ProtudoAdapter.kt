@@ -15,17 +15,13 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.transition.Transition
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.ActProtudoDetalhe
@@ -61,7 +57,6 @@ Context,start :StartaAtividade,loja_id:Int,cliente_id:Int,excluiItemcarrinho: Ex
             holder.barra.background = ContextCompat.getDrawable(context,R.color.transparente)
             holder.valor.background = ContextCompat.getDrawable(context,R.color.transparente)
             holder.imgProduto.background = ContextCompat.getDrawable(context,R.color.transparente)
-
             holder.nomeProtudo.text = listaProtudos[position].nome
             holder.codigoProduto.text = listaProtudos[position].ProdutoCodigo.toString()
             holder.barra.text = listaProtudos[position].barra
@@ -85,6 +80,10 @@ Context,start :StartaAtividade,loja_id:Int,cliente_id:Int,excluiItemcarrinho: Ex
                 val bundle = Bundle()
                 bundle.putSerializable("ProtudoSelecionado", listaProtudos[position] as Serializable)
                 intent.putExtra("ProtudoSelecionado_bundle", bundle)
+
+                bundle.putSerializable("ImagemProd", listaProtudos[position].base64)
+                intent.putExtra("ProtudoSelecionado_bundle", bundle)
+                intent.putExtra("ImagemProd_bundle", bundle)
                 start.atividade(intent)
 
             }
@@ -95,8 +94,12 @@ Context,start :StartaAtividade,loja_id:Int,cliente_id:Int,excluiItemcarrinho: Ex
                         holder.imgProduto.setImageBitmap(bitmapimage)
                     }
 
-                }
+                }else{
+                    CoroutineScope(Dispatchers.Main).launch {
+                        holder.imgProduto.setImageResource(R.drawable.padrao)
+                    }
 
+                }
             }
 
 

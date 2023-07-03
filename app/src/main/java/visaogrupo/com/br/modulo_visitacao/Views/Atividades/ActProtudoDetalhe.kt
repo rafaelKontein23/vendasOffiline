@@ -3,13 +3,16 @@ package visaogrupo.com.br.modulo_visitacao.Views.Atividades
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Base64
+import android.webkit.URLUtil.decode
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.*
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
-import java.text.SimpleDateFormat
+import java.lang.Byte.decode
 import java.util.*
 
 class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
@@ -43,6 +46,8 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         // busca itens necessarios para montar a tela
         val bundle = intent.getBundleExtra("ProtudoSelecionado_bundle")
         val protudoSelecionado = bundle?.getSerializable("ProtudoSelecionado") as ProdutoProgressiva
+        val bundleiamgem = intent.getBundleExtra("ImagemProd_bundle")
+        val imagemBase64 = bundleiamgem?.getString("ImagemProd")
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val gsonclientes = Gson()
@@ -62,6 +67,10 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         binding.nomeProtudo.text = protudoSelecionado.nome
         binding.barra.text=  protudoSelecionado.barra
         binding.codigoProduto.text = protudoSelecionado.ProdutoCodigo.toString()
+        if(!imagemBase64?.isEmpty()!!){
+            val bitmap =exibirImagemBase64(imagemBase64.toString())
+            binding.imgprodto.setImageBitmap(bitmap)
+        }
 
         // busca progresivas
         CoroutineScope(Dispatchers.IO).launch {
@@ -288,7 +297,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
         if (desconto > 10.00){ // trocar esse 10.00 por um valor correto
             val alertas = Alertas()
             alertas.alerta(supportFragmentManager,"O desconto irá passar por aprovação","#B89A00",
-                R.drawable.atencao,"#FDF6D2")
+                R.drawable.atencao,R.drawable.bordas_amerala_alert)
         }
 
         Toast.makeText(this,"Progressiva Adiconada com sucesso!", Toast.LENGTH_SHORT).show()
@@ -300,5 +309,13 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
        progressivaAdpter.notifyDataSetChanged()
 
     }
+    fun exibirImagemBase64(imagemBase64: String): Bitmap {
+        // Decodificar a string Base64 em um array de bytes
+        val imageBytes = Base64.decode(imagemBase64, Base64.DEFAULT)
 
+        // Converter o array de bytes em um objeto Bitmap
+        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return  bitmap
+
+    }
 }

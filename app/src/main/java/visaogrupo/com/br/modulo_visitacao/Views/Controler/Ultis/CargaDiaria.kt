@@ -17,6 +17,8 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.TaskEstoque
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.Task_Cargadiaria
+import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.*
 import java.text.SimpleDateFormat
@@ -28,7 +30,13 @@ class CargaDiaria {
     fun fazCargaDiaria(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView, animador: ObjectAnimator,terminouCarga: TerminouCarga){
         CoroutineScope(Dispatchers.IO).launch {
             //Faz request de Zip
-            var patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
+            val patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
+
+            // Atualiza progress
+            FragmentCargas.progresspush += 1
+            FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+
+
             Log.d("Caminho Zip","${patch}")
             if(!patch.isEmpty()){
                 val excluiDadosTabelas = ExcluiDados(context)
@@ -45,6 +53,7 @@ class CargaDiaria {
                 var jsonFormaDePagamento = ""
                 var jsonOperadorLogistico = ""
 
+
                 try {
                     //grava no banco lojas
                     val lendoLojas =launch {
@@ -56,7 +65,9 @@ class CargaDiaria {
 
                         if(islojasdb){
                             Log.d("Terminou lojas","")
-
+                            // atuliza progress push
+                             FragmentCargas.progresspush += 1
+                             FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
                         }
 
                     }
@@ -69,6 +80,8 @@ class CargaDiaria {
                         val jsonArrayCliente = JSONArray(jsonObjectClientesUser.getString("EMPRESA"))
                         val isCliente = clientesDAO.insert(jsonArrayCliente)
                         if (isCliente){
+                            FragmentCargas.progresspush += 1
+                            FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
                             Log.d("Terminou Clientes","")
                         }
                     }
@@ -79,6 +92,8 @@ class CargaDiaria {
                         val jsonArrayProtudos = JSONArray(jsonObjectProtudos.getString("PRODUTOS"))
                         val isProtudos = protudosDAO.insert(jsonArrayProtudos)
                         if (isProtudos){
+                            FragmentCargas.progresspush += 1
+                            FragmentCargas.showNotification(context,"2","Titulo1","")
                             Log.d("Terminou Protudos","")
                         }
 
@@ -112,9 +127,11 @@ class CargaDiaria {
                             }catch (e:Exception){
                                 e.printStackTrace()
                             }
-
-
                         }
+
+                        FragmentCargas.progresspush += 1
+                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+
                         Log.d("Terminou"," FormaDePagamento")
                     }
                     val lendoOperadorLogistico = launch {
@@ -136,6 +153,8 @@ class CargaDiaria {
                             val jsonArrayOperadorLogistico = JSONArray(jsonOP.getString("OPERADORES"))
                             operadorLogisticoDAO.insert(jsonArrayOperadorLogistico,lojaID,ufs)
                         }
+                        FragmentCargas.progresspush += 1
+                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
 
                         Log.d("Terminou"," OPL")
 
@@ -166,7 +185,7 @@ class CargaDiaria {
                             val loja_id = curso.getInt(0)
                             count = count +1
 
-                            Log.d("adad",count.toString())
+                            Log.d("Progress",count.toString())
                             val lendpo =   async{
                                 val taskProgressivas = TaskProgressivas(context)
                                 val jsonArray =taskProgressivas.recuperaProgressiva(loja_id,uf)
@@ -186,6 +205,10 @@ class CargaDiaria {
 
                         Log.d("Terminou", jsonarayProgressiva?.size.toString())
                         Log.d("Terminou","Progressiva")
+
+                        FragmentCargas.progresspush += 1
+                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+
                         val db_Progreesivas = DataBaseHelber(context).writableDatabase
                         db_Progreesivas.beginTransaction()
                         try {
@@ -228,6 +251,8 @@ class CargaDiaria {
 
 
                     }
+                    FragmentCargas.progresspush += 1
+                    FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
                     lendoProgressiva.join()
                     // lendo estoque
                     val lendoEstoque = launch {
@@ -294,7 +319,8 @@ class CargaDiaria {
                         }finally {
                             db_Estoque.endTransaction()
                         }
-
+                        FragmentCargas.progresspush += 3
+                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
                     }
                     lendoEstoque.join()
 
@@ -332,6 +358,7 @@ class CargaDiaria {
             val editor = sharedPreferences?.edit()
             editor?.putBoolean("cargafeita", true)
             editor?.apply()
+            FragmentCargas.progresspush  =0
         }
 
 

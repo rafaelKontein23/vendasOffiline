@@ -10,8 +10,8 @@ import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 
 class Alertas {
 
-    fun alerta(fragmentmeneger:FragmentManager,textoalert:String, cortexto: String, imagem: Int, corbackground: String){
-        val fragmentAlerta = FragmentAlerta(textoalert,cortexto,imagem,corbackground)
+    fun alerta(fragmentmeneger:FragmentManager,textoalert:String, cortexto: String, imagem: Int, backcor: Int){
+        val fragmentAlerta = FragmentAlerta(textoalert,cortexto,imagem,backcor)
 
         val fragmentTransaction = fragmentmeneger.beginTransaction()
         fragmentTransaction.setCustomAnimations(R.anim.animatealertbaixo,R.anim.animsaialert)
@@ -19,6 +19,8 @@ class Alertas {
         fragmentTransaction.replace(R.id.fragentalert, fragmentAlerta)
 
         fragmentTransaction.commit()
+
+        // Para fechar o alerta
         try {
             Handler().postDelayed({
                 try {
@@ -31,7 +33,7 @@ class Alertas {
                     e.printStackTrace()
                 }
 
-            }, 3500)
+            }, 4000)
         }catch (e:Exception){
             e.printStackTrace()
         }

@@ -23,6 +23,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="12dp"
                 android:background="#DDDDDD"
+
                 app:layout_constraintBottom_toBottomOf="@+id/PrudutoValor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

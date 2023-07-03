@@ -13,10 +13,7 @@
         android:id="@+id/backgroundalerta"
         android:layout_width="match_parent"
         android:background ="@drawable/bordas_carga"
-        android:backgroundTint="#FDF6D2"
         android:elevation="8dp"
-        android:outlineAmbientShadowColor="#795E00"
-        android:outlineSpotShadowColor="#FFDE05"
         android:layout_margin="16dp"
         android:layout_marginBottom="12dp"
         android:layout_height="wrap_content">

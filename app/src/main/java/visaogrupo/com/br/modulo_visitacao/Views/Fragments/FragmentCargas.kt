@@ -1,7 +1,10 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Fragments
 
 import android.animation.ObjectAnimator
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -11,10 +14,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.RemoteViews
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
@@ -35,6 +42,25 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
     private  lateinit var binding: FragmentCargasBinding
     companion object {
         var alertvisible = false
+        var progresspush = 0
+        // exibi push
+        fun showNotification(context: Context, channelId: String, title: String, message: String) {
+            val contentView = RemoteViews(context.packageName, R.layout.celula_notificacao_carga)
+            contentView.setTextViewText(R.id.notification_title,"Atualizando")
+            contentView.setProgressBar(R.id.notification_content,10, progresspush,false)
+            val notificationBuilder = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.atencao) // Ícone da notificação
+                .setContentTitle(title) // Título da notificação
+                .setCustomBigContentView(contentView)
+                .setContentText(message)
+
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Prioridade da notificação
+                .setAutoCancel(true) // Fechar notificação automaticamente ao ser clicada
+
+            val notificationManager = NotificationManagerCompat.from(context)
+            notificationManager.notify(1, notificationBuilder.build())
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +82,7 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
         val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
 
 
-
+         // verifica se a carga ja esta feita
         if(feitacarga ==true){
             trocaCoritensCargaFeita(binding.imgCargaiImagem,binding.textcargaImagem,binding.infoTextCargaImagem)
             trocaCoritensCargaFeita(binding.imgCargamodelo,binding.textcargamodelo,binding.infoTextCargamodelo)
@@ -75,7 +101,7 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
                 if (!alertvisible){
                     alertvisible = true
                     val alertas = Alertas()
-                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
                 // fazer carga de imagem aqui
@@ -92,7 +118,7 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
                 if (!alertvisible){
                     alertvisible = true
                     val alertas = Alertas()
-                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,"#FDF6D2")
+                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
 
             }else{
@@ -105,6 +131,8 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
             }
         }
         binding.caragDiaria.setOnClickListener {
+            creadordepush(requireContext())
+            showNotification(requireContext(),"TESTE1","Titulo1","sff")
             binding.caragDiaria.isEnabled =false
             val animatdor = animandoCarregando(view.carregandocargadiaria)
             atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)
@@ -136,9 +164,9 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
         trocaCoritensCargaFeita(binding.imgCargaiImagem,binding.textcargaImagem,binding.infoTextCargaImagem)
         trocaCoritensCargaFeita(binding.imgCargamodelo,binding.textcargamodelo,binding.infoTextCargamodelo)
         callback?.onActionDone()
+        val alerta = Alertas()
+        alerta.alerta(requireActivity().supportFragmentManager,"Carga feita! Boas Vendas =)","#4DA310",R.drawable.certo,R.drawable.bordas_verde_alert)
         binding.caragDiaria.isEnabled = true
-
-
     }
 
     fun trocaCoritensCargaFeita(img:ImageView,texttitulo:TextView,descricao:TextView){
@@ -158,8 +186,23 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
         DrawableCompat.setTint(wrappedDrawable, Color.parseColor(cor))
         icon.setImageDrawable(wrappedDrawable)
     }
+    // call back na tela de carga principal
     interface MyCallback {
         fun onActionDone()
-
     }
+    // cria push
+    fun creadordepush(context: Context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val channel = NotificationChannel("TESTE1", "DADAAKJNJ", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+
+
+
 }
