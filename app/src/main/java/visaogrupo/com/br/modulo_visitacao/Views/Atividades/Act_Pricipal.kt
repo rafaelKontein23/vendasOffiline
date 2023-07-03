@@ -4,16 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
@@ -29,6 +33,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.*
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActPedidoBinding
 
@@ -44,6 +49,8 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View
+    lateinit var  spniner :Spinner
+    lateinit var login:Login
     companion object {
         var  troca = TrocaItemSelecionado.home
         var clienteUF =""
@@ -64,6 +71,11 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
         viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)
+        spniner = findViewById(R.id.menucim_spnier)
+        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val objetoSerializado = sharedPreferences?.getString("UserLogin", null)
+        login =  gson.fromJson(objetoSerializado, Login::class.java)
         fragmentCargas.callback =this
 
         atualizaQtdCarrinho()
@@ -192,7 +204,29 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
             // adicionar mais itens personalizados aqui
         )
         val adapter = CustomSpinnerAdapter(this, R.layout.custom_spinner_item, items)
-        menucim_spnier.adapter = adapter
+        spniner.adapter = adapter
+
+        spniner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // Lógica a ser executada quando um item é selecionado
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                if(selectedItem.contains("Portal")){
+                    val url = "https://wwwi.catarinenseonline.com.br/autenticacao/AcessoTablet=?l=${login.Email}&senha=${login.Senha}"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }else if(selectedItem.contains("Adm")){
+
+                }else if(selectedItem.contains("Sobre")){
+
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Lógica a ser executada quando nenhum item é selecionado
+            }
+        }
+
+
 
     }
 
@@ -348,3 +382,4 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
 
     }
 }
+

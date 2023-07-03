@@ -46,21 +46,13 @@
                 android:padding="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgprodto">
+                app:layout_constraintTop_toBottomOf="@+id/imgprodto"
+                app:layout_constraintVertical_bias="1.0">
 
 
-                <CheckBox
-                    android:id="@+id/checkCaixapadrao"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="12dp"
-                    android:background="#80EAEBEC"
-                    android:buttonTint="#496683"
-                    android:text="Caixa Padrão 24 uni."
-                    android:textColor="#9FA3A8"
-                    android:textSize="12dp" />
+
 
                 <TextView
                     android:id="@+id/codigoProduto"
@@ -104,8 +96,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nomeProtudo" />
-
-
                 <TextView
                     android:id="@+id/textView20"
                     android:layout_width="wrap_content"
@@ -121,39 +111,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barra" />
 
-                <TextView
-                    android:id="@+id/valorTotal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/inter_medium"
-                    android:text="R$ 0,00"
-                    android:textAlignment="center"
-                    android:textColor="#2E3642"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edtQuantidade" />
 
-                <TextView
-                    android:id="@+id/adiconarCarrinho"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
 
-                    android:background="@drawable/bordas_carga"
-                    android:backgroundTint="@color/corazultext"
-                    android:padding="12dp"
-                    android:text="Adicionar "
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/valorTotal">
 
-                </TextView>
+
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -272,7 +234,17 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
+                <CheckBox
+                    android:id="@+id/checkCaixapadrao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:background="#80EAEBEC"
+                    android:buttonTint="#496683"
+                    android:text="Caixa Padrão 24 uni."
+                    android:textColor="#9FA3A8"
+                    android:textSize="12dp" />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -325,7 +297,39 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/valorTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="R$ 0,00"
+                    android:textAlignment="center"
+                    android:textColor="#2E3642"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtQuantidade" />
 
+                <TextView
+                    android:id="@+id/adiconarCarrinho"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+
+                    android:background="@drawable/bordas_carga"
+                    android:backgroundTint="@color/corazultext"
+                    android:padding="12dp"
+                    android:text="Adicionar "
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/valorTotal">
+
+                </TextView>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -224,7 +224,7 @@ class ActProtudoDetalhe : AppCompatActivity(),AtualizaProgressiva {
                    0.0
                    /*Lembra de colocar a faixa desconto original aqui*/,0.0,
                    "",1,"",valortotal.toDouble(),
-                   protudoSelecionado.nome,lojaSelecionada.nome,clienteSelecionado.RazaoSocial,clienteSelecionado.CNPJ,data,lojaSelecionada.MinimoValor)
+                   protudoSelecionado.nome,lojaSelecionada.nome,clienteSelecionado.RazaoSocial,clienteSelecionado.CNPJ,data,lojaSelecionada.MinimoValor,imagemBase64,protudoSelecionado.PMC,protudoSelecionado.caixapadrao)
 
                val carrinhoDAO = CarrinhoDAO(this)
                carrinhoDAO.insertCarrinho(carrinho)

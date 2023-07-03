@@ -86,11 +86,18 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>,view:View,context:Conte
                 "",listaProdutoCarrinho[position].barra,"",
                 listaProdutoCarrinho[position].produtoCodigo,
                 listaProdutoCarrinho[position].pf.toString(),
-                0.0/*lembrar de colocar ovalor aqui*/,listaProdutoCarrinho[position].quantidade,
-                24/*lembrar de colocar ovalor aqui*/,1,
+                listaProdutoCarrinho[position].pmc,listaProdutoCarrinho[position].quantidade,
+                listaProdutoCarrinho[position].caixapadrao,1,
                 listaProdutoCarrinho[position].valor,
                 listaProdutoCarrinho[position].quantidade,
                 listaProdutoCarrinho[position].valortotal,"")
+
+
+
+
+            bundle.putSerializable("ImagemProd", listaProdutoCarrinho[position].base64)
+            intent.putExtra("ProtudoSelecionado_bundle", bundle)
+            intent.putExtra("ImagemProd_bundle", bundle)
             bundle.putSerializable("ProtudoSelecionado", produto as Serializable)
             intent.putExtra("ProtudoSelecionado_bundle", bundle)
             start.atividade(intent)

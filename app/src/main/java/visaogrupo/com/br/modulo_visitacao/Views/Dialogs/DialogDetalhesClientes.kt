@@ -2,13 +2,16 @@ package visaogrupo.com.br.modulo_visitacao.Views.Dialogs
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
@@ -18,6 +21,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarr
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Clientes
+
 
 class DialogDetalhesClientes {
 
@@ -43,6 +47,41 @@ class DialogDetalhesClientes {
            val Telefone =  dialog.findViewById<TextView>(R.id.telefonecelular)
            val vender = dialog.findViewById<TextView>(R.id.vender)
            val  xdetalhe = dialog.findViewById<ImageView>(R.id.xdetalhe)
+           val email = dialog.findViewById<TextView>(R.id.email)
+           val maps= dialog.findViewById<ImageView>(R.id.maps)
+
+           email.setOnClickListener {
+               val subject = "Comprar remedios"
+               val body = "Olá, como posso tirar uma duvida?"
+               val intent = Intent(Intent.ACTION_SENDTO)
+               intent.data = Uri.parse("mailto:")
+
+               intent.putExtra(
+                   Intent.EXTRA_EMAIL,
+                   arrayOf<String>(email.text.toString())
+               )
+               intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+               intent.putExtra(Intent.EXTRA_TEXT, body)
+               context.startActivity(Intent.createChooser(intent, "Enviar email"))
+           }
+
+           Telefone.setOnClickListener {
+               val intent = Intent(Intent.ACTION_DIAL)
+               intent.data = Uri.parse("tel:" + Telefone.text.toString())
+
+               context.startActivity(intent)
+
+           }
+
+           maps.setOnClickListener {
+               val address = endereco.text.toString()
+               val uri = Uri.parse("geo:0,0?q=" + Uri.encode(address))
+               val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+               mapIntent.setPackage("com.google.android.apps.maps")
+               context.startActivity(mapIntent)
+
+           }
+
            xdetalhe.setOnClickListener {
                dialog.onBackPressed()
            }
@@ -59,6 +98,7 @@ class DialogDetalhesClientes {
            razaoSocial.text = cliente.RazaoSocial
            endereco.text = "${cliente.Endereco}, ${cliente.Numero} ${cliente.Cidade},${cliente.Bairro}, ${cliente.UF}"
            Telefone.text = cliente.Telefone
+           email.text = cliente.Email
 
 
 

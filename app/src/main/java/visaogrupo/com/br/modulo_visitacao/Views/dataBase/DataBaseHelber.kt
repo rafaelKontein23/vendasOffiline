@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "Carga.db",
     null,
-    38 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    39 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -190,6 +190,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "cnpj TEXT,"+
                 "dataPedido TEXT,"+
                 "valorminimoLoja REAL,"+
+                "base64 TEXT,"+
+                "caixapadrao INT,"+
+                "pmc REAL,"+
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
 

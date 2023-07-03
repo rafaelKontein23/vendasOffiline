@@ -1,5 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models
 
+import java.util.Base64
+
 data class Carrinho(
     val lojaId: Int,
     val clienteId: Int,
@@ -28,5 +30,8 @@ data class Carrinho(
     val razaoSolcial:String,
     val cnpj:String,
     val data:String,
-    val valorMinimoLoja:Double
+    val valorMinimoLoja:Double,
+    val base64: String,
+    val pmc: Double,
+    val caixapadrao:Int
 )

@@ -201,35 +201,7 @@
         app:layout_constraintEnd_toEndOf="@+id/icon_produtos"
         app:layout_constraintStart_toStartOf="@+id/icon_produtos" />
 
-    <Spinner
-        android:id="@+id/menucim_spnier"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bordas_menu_cima"
-        android:gravity="left"
-        android:popupBackground="@drawable/bordas_spiner_personalizada"
-        android:rotationX="187"
-        android:rotationY="182"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
 
-    <ImageView
-        android:id="@+id/menu_cima"
-        android:layout_width="18dp"
-
-        android:layout_height="18dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="3dp"
-        android:src="@drawable/icon_pontos"
-        app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
-        app:layout_constraintEnd_toEndOf="@+id/menucim_spnier"
-        app:layout_constraintStart_toStartOf="@+id/menucim_spnier"
-        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerViewPrincipal"
@@ -296,11 +268,40 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="10dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_alerta" />
 
+    <Spinner
+        android:id="@+id/menucim_spnier"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bordas_menu_cima"
+        android:gravity="left"
+        android:popupBackground="@drawable/bordas_spiner_personalizada"
+        android:rotationX="187"
+        android:rotationY="182"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
 
+    <ImageView
+        android:id="@+id/menu_cima"
+        android:layout_width="18dp"
+
+        android:layout_height="18dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/icon_pontos"
+        app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
+        app:layout_constraintEnd_toEndOf="@+id/menucim_spnier"
+        app:layout_constraintStart_toStartOf="@+id/menucim_spnier"
+        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

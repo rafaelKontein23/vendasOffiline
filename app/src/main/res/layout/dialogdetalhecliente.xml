@@ -42,11 +42,10 @@
         style="@style/TextrazaoSocial"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="rafa farma"
-        android:layout_marginTop="0dp"
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.375"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cnpjdetalhe" />
 
@@ -103,10 +102,9 @@
         android:layout_height="wrap_content"
 
         android:layout_marginTop="8dp"
-        android:textSize="14dp"
         android:text="(11) 94312-9558"
         android:textColor="#2E3642"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
@@ -124,26 +122,88 @@
         android:id="@+id/vender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/botaovender"
 
+        android:background="@drawable/botaovender"
         android:drawableStart="@drawable/vender"
         android:drawablePadding="10dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
         android:elevation="10dp"
         android:outlineAmbientShadowColor="@color/corazultext"
         android:outlineSpotShadowColor="@color/corazultext"
+        android:paddingStart="24dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="24dp"
+
+        android:paddingBottom="14dp"
 
         android:text="Vender"
-
         android:textColor="@color/white"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <TextView
+        android:id="@+id/textView39"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:drawableStart="@drawable/email"
+        android:drawablePadding="10dp"
+        android:fontFamily="@font/inter"
+        android:text="Email"
+        android:textColor="#585E68"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/telefonecelular"
         app:layout_constraintTop_toBottomOf="@+id/telefonecelular" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="rafael@gmail.com"
+        android:textColor="#2E3642"
+        app:layout_constraintEnd_toEndOf="@+id/textView39"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView39"
+        app:layout_constraintTop_toBottomOf="@+id/textView39" />
+
+    <View
+        android:id="@+id/view16"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/corazultext"
+        app:layout_constraintEnd_toEndOf="@+id/email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <View
+        android:id="@+id/view17"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/corazultext"
+        app:layout_constraintEnd_toEndOf="@+id/telefonecelular"
+        app:layout_constraintStart_toStartOf="@+id/telefonecelular"
+        app:layout_constraintTop_toBottomOf="@+id/telefonecelular" />
+
+
+    <ImageView
+        android:id="@+id/maps"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+
+        android:elevation="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/vender"
+        app:layout_constraintEnd_toStartOf="@+id/vender"
+        app:layout_constraintTop_toTopOf="@+id/vender"
+        app:srcCompat="@drawable/mapsicon" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,6 +44,9 @@ class CarrinhoDAO (context:Context) {
         valoresCarrinhos.put("cnpj",carrinho.cnpj)
         valoresCarrinhos.put("dataPedido",data)
         valoresCarrinhos.put("valorminimoLoja",carrinho.valorMinimoLoja)
+        valoresCarrinhos.put("base64",carrinho.base64)
+        valoresCarrinhos.put("caixapadrao",carrinho.caixapadrao)
+        valoresCarrinhos.put("pmc",carrinho.pmc)
         dbCarrinho.insert("TB_Carrinho",null,valoresCarrinhos)
     }
 
@@ -116,6 +119,9 @@ class CarrinhoDAO (context:Context) {
             val apontador =""
             val data  = cursor.getString(26)
             val valoloja = cursor.getDouble(27)
+            val base64 = cursor.getString(28)
+            val caixapadrao = cursor.getInt(29)
+            val pmc  = cursor.getDouble(30)
             val  carrinho= Carrinho(loja_id,cliente_id,produto_codigo,
                 opf,usuario_if,UF,
                 Comiisao,
@@ -126,7 +132,7 @@ class CarrinhoDAO (context:Context) {
                 grupo_codigo,desconto,
                 descontoOriginal,St,formalizacao,
                 codListaOrecosSync,apontador,
-                valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,valoloja)
+                valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,valoloja,base64,pmc,caixapadrao)
 
             listaProdutosCArrinhos.add(carrinho)
         }
