@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONObject
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.ConstroiJsonPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Incript
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Carrinho
@@ -53,7 +54,7 @@ class taskEnviaPedido {
                   bodyJson
               )
               val request: Request = Request.Builder()
-                  .url("https://wwwe.visaogrupo.com.br/ws/catarinense/envio/pedido")
+                  .url(URLs.urlEnviaPedido)
                   .method("POST", body)
                   .addHeader("Autorizacao", "J0#o14:*6")
                   .addHeader("Content-Type", "application/json")

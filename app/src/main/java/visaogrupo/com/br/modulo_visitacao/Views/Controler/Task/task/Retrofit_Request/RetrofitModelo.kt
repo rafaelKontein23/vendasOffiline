@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitModelo {
 
     companion object {
-        val url = "https://wwwe.visaogrupo.com.br/ws/"
+        val url = URLs.url
 
 
         val builder = Retrofit.Builder().baseUrl(url)

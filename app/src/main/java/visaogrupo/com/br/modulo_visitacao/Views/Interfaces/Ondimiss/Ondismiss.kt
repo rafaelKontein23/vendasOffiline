@@ -1,6 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss
 
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns.Login_Erro
 
 interface Ondismiss {
 

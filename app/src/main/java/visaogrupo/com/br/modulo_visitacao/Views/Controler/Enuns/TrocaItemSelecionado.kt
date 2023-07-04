@@ -1,4 +1,4 @@
-package visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro
+package visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns
 
 enum class TrocaItemSelecionado {
 

@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.URLs
 
 class TaskEstoque {
 
@@ -14,7 +15,7 @@ class TaskEstoque {
             val client =  OkHttpClient().newBuilder()
                 .build();
             val request =  Request.Builder()
-                .url("https://catarinenseonline.com.br/Docs/Tablet/Carga/estoque/estoque_${loja_id}.json")
+                .url("${URLs.urlEstoque}${loja_id}.json")
                 .method("GET", null)
                 .build();
 

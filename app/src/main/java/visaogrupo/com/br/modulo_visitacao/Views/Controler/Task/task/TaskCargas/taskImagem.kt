@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.apache.commons.codec.binary.Base64.encodeBase64String
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber
 import java.io.ByteArrayOutputStream
@@ -41,7 +42,7 @@ class taskImagem (context:Context){
                 while (cursor.moveToNext()){
                     try {
                         val barra = cursor.getString(0)
-                        val imageUrl = URL("https://catarinenseonline.com.br/ImagensEan/${barra}.jpg")
+                        val imageUrl = URL("${URLs.urlimagens}${barra}.jpg")
                         val connection = imageUrl.openConnection()
 
                         val inputStream = connection.getInputStream()

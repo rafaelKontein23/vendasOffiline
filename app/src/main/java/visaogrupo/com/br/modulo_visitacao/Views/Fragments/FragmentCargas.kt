@@ -31,6 +31,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.T
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas.taskImagem
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.CargaDiaria
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogMudarAmbienteSenha
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentCargasBinding
@@ -40,6 +41,7 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
     lateinit var  login: Login
     var callback: MyCallback? = null
     private  lateinit var binding: FragmentCargasBinding
+    var trocaAmbienteCount =0
     companion object {
         var alertvisible = false
         var progresspush = 0
@@ -93,6 +95,16 @@ class FragmentCargas () : Fragment() ,TerminouCarga{
 
         binding.nomeVendedor.text = login.Nome
         binding.emailUsuario.text = login.Email
+
+        // troca ambiente
+        binding.trocaAmbiente.setOnClickListener {
+            trocaAmbienteCount +=1
+            if (trocaAmbienteCount ==5){
+                trocaAmbienteCount =0
+                val  dialog = DialogMudarAmbienteSenha()
+                dialog.dialogSenha(requireContext())
+            }
+        }
 
         //clicks cargas
         binding.cargaImagem.setOnClickListener {

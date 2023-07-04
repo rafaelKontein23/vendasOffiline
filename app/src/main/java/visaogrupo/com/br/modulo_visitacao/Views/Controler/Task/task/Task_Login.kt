@@ -16,7 +16,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Incript
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.Ondismiss
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Request.Insync_Task
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns.Login_Erro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.Retrofit_URL
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException

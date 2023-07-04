@@ -1,18 +1,12 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.TaskCargas
 
-import android.content.ContentValues
 import android.content.Context
-import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Response
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.Retrofit_Progressiva
-import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Request.IsyncService
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Progressiva
-import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.URLs
+
 
 class TaskProgressivas (context: Context) {
 
@@ -22,7 +16,7 @@ class TaskProgressivas (context: Context) {
             val client =  OkHttpClient().newBuilder()
                 .build();
             val request =  Request.Builder()
-                .url("https://wwwi.catarinenseonline.com.br/Progressivas/Progressiva_${loja_id}_${uf}.json")
+                .url("${URLs.urlProgressiva}${loja_id}_${uf}.json")
                 .method("GET", null)
                 .build();
 

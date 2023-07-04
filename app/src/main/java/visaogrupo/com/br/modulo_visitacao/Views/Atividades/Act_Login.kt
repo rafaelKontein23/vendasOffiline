@@ -12,7 +12,7 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Task_Login
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.Ondismiss
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns.Login_Erro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Funcao_erro
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.DataBaseHelber

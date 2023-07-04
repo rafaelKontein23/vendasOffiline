@@ -11,11 +11,10 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Atividades.Act_Pricipal
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns.TrocaItemSelecionado
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.TrocarcorItem
@@ -99,8 +98,5 @@ class DialogDetalhesClientes {
            endereco.text = "${cliente.Endereco}, ${cliente.Numero} ${cliente.Cidade},${cliente.Bairro}, ${cliente.UF}"
            Telefone.text = cliente.Telefone
            email.text = cliente.Email
-
-
-
        }
 }

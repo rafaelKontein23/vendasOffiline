@@ -6,28 +6,27 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import visaogrupo.com.br.modulo_visitacao.R
-import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns_Cadastro.TrocaItemSelecionado
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Enuns.TrocaItemSelecionado
 
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Obejtos.Personalizacao.CustomSpinnerItem
+import visaogrupo.com.br.modulo_visitacao.Views.Controler.Task.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.CustomSpinnerAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Controler.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.Alertas
-import visaogrupo.com.br.modulo_visitacao.Views.Dialogs.DialogDetalhesClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentLojas
@@ -35,7 +34,6 @@ import visaogrupo.com.br.modulo_visitacao.Views.Fragments.FragmentProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Interfaces.Ondimiss.*
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Login
 import visaogrupo.com.br.modulo_visitacao.Views.dataBase.CarrinhoDAO
-import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActPedidoBinding
 
 class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,AtualizaCarrinho,
     FragmentCargas.MyCallback {
@@ -90,9 +88,17 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 view_clientes,view_lojas,view_produto,icon_pedidos,icon_clientes,icon_lojas,icon_produtos)
              itensVisible()
             if(!fragmentCargas.isVisible){
-                supportFragmentManager.
-                beginTransaction()
-                    .replace(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
+                val fragmentManager: FragmentManager = supportFragmentManager
+                val fragmentTransaction: FragmentTransaction =
+                    fragmentManager.beginTransaction()
+                fragmentTransaction.setCustomAnimations(
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right
+                )
+
+                fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentCargas, "h")
+                fragmentTransaction.addToBackStack("h")
+                fragmentTransaction.commit()
             }
         }
 
@@ -124,9 +130,19 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                     view_prdidos,view_lojas,view_produto,icon_home,icon_pedidos,icon_lojas,icon_produtos)
                 itensVisible()
                 if(!fragmentClientes.isVisible){
-                    supportFragmentManager.
-                    beginTransaction()
-                        .replace(R.id.fragmentContainerViewPrincipal, fragmentClientes).addToBackStack(null).commit()
+
+                    val fragmentManager: FragmentManager = supportFragmentManager
+                    val fragmentTransaction: FragmentTransaction =
+                        fragmentManager.beginTransaction()
+                    fragmentTransaction.setCustomAnimations(
+                        android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right
+                    )
+
+                    fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentClientes, "h")
+                    fragmentTransaction.addToBackStack("h")
+                    fragmentTransaction.commit()
+
                 }
             }
 
@@ -156,9 +172,17 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 itensVisible()
                 val visivel =fragmentLojas.isVisible
                 if(!visivel){
-                    supportFragmentManager.
-                    beginTransaction()
-                        .replace(R.id.fragmentContainerViewPrincipal, fragmentLojas).addToBackStack(null).commit()
+                    val fragmentManager: FragmentManager = supportFragmentManager
+                    val fragmentTransaction: FragmentTransaction =
+                        fragmentManager.beginTransaction()
+                    fragmentTransaction.setCustomAnimations(
+                        android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right
+                    )
+
+                    fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
+                    fragmentTransaction.addToBackStack("h")
+                    fragmentTransaction.commit()
                 }
             }
 
@@ -211,7 +235,7 @@ class Act_Pricipal : AppCompatActivity(), TrocarcorItem,carrinhoVisible,Atualiza
                 // Lógica a ser executada quando um item é selecionado
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 if(selectedItem.contains("Portal")){
-                    val url = "https://wwwi.catarinenseonline.com.br/autenticacao/AcessoTablet=?l=${login.Email}&senha=${login.Senha}"
+                    val url = "${URLs.urlportal}${login.Email}&senha=${login.Senha}"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
                 }else if(selectedItem.contains("Adm")){
