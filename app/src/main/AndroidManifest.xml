@@ -15,35 +15,35 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31">
         <activity
-            android:name=".Views.Atividades.Act_Pedido"
+            android:name=".Views.View.Atividades.ActPedido"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.Act_CarrinhoDetalhe"
+            android:name=".Views.View.Atividades.ActCarrinhoDetalhe"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.ActProtudoDetalhe"
+            android:name=".Views.View.Atividades.ActProtudoDetalhe"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.Act_Pricipal"
+            android:name=".Views.View.Atividades.ActPricipal"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Views.Atividades.Act_Login"
+            android:name=".Views.View.Atividades.ActLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

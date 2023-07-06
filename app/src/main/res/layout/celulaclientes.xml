@@ -47,11 +47,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textRazaosocialcliente" />
 
     <View
-        android:id="@+id/view5"
+        android:id="@+id/linhacliente"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
         android:background="#E6EDF3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enderecoCliente" />

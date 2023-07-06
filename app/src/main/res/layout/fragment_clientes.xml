@@ -4,117 +4,134 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.Fragments.FragmentClientes">
-
-    <!-- TODO: Update blank fragment layout -->
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout8"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+>
 
-        <ImageView
-            android:id="@+id/carregandoCliente"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:src="@drawable/carregando"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textcarregandoclientes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            style="@style/text_sub_titulo"
-            android:textColor="@color/azul_seleciona"
-            android:visibility="gone"
-
-            android:fontFamily="@font/inter_medium"
-            android:text="Carregando Clientes... "
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/carregandoCliente">
-
-        </TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyClientes"
-            android:layout_width="0dp"
-            android:layout_height="510dp"
-            android:layout_marginStart="24dp"
-
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="@drawable/celulasbordasclientes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buscaClientesedt" />
-
-        <TextView
-            android:id="@+id/textView5"
-            style="@style/text_sub_titulo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="29dp"
-            android:fontFamily="@font/inter_medium"
-            android:text="Clientes"
-            android:textColor="#2E3642"
-
-            android:textFontWeight="@integer/material_motion_duration_long_1"
-            android:textSize="20dp"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/buscaClientesedt"
-            style="@style/editinputbusca"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView3"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:hint="Buscar clientes..."
-            android:padding="10dp"
-            android:drawableEnd="@drawable/buscaedit"
-            android:drawablePadding="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5">
-
-        </EditText>
-
-
-        <TextView
-            android:id="@+id/quatidadeClienetes"
-            android:layout_width="116dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/quatidadeclientes"
-            android:backgroundTint="#55B9CD"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
-            android:elevation="10dp"
-
-            android:text="214 clientes"
-            android:textColor="@color/white"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyClientes"
-            app:layout_constraintVertical_bias="0.2" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:id="@+id/buscaClientesedt"
+                    style="@style/editinputbusca"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="68dp"
+                    android:layout_marginEnd="24dp"
+                    android:drawableEnd="@drawable/buscaedit"
+                    android:drawablePadding="20dp"
+                    android:hint="Buscar clientes..."
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </EditText>
 
 
+                <TextView
+                    android:id="@+id/textView5"
+                    style="@style/text_sub_titulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="29dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="Clientes"
+                    android:textColor="#2E3642"
+
+                    android:textFontWeight="@integer/material_motion_duration_long_1"
+                    android:textSize="20dp"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyClientes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="128dp"
+                    android:background="@drawable/celulasbordasclientes"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buscaClientesedt"
+                    app:layout_constraintVertical_bias="0.037" />
 
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="33dp"
+
+                    android:layout_height="39dp"
+                    android:layout_marginBottom="72dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.501"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/textovazio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="24dp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="Não achamos nehum CNPj com essas informações.."
+                    android:textAlignment="center"
+                    android:textColor="#004682"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buscaClientesedt" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/quatidadeClienetes"
+        android:layout_width="116dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/quatidadeclientes"
+        android:backgroundTint="#55B9CD"
+        android:elevation="10dp"
+        android:gravity="center"
 
-
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:layout_gravity="bottom|center"
+        android:text="214 clientes"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 </FrameLayout>
