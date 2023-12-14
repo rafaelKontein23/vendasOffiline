@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerProgressiva"
+    android:layout_width="match_parent"
+    android:layout_marginTop="12dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/xProgressiva"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/xprogressiva" />
+
+    <CheckBox
+        android:id="@+id/checkBoxprogressiva"
+        android:layout_width="42dp"
+        android:layout_height="38dp"
+        android:buttonTint="@color/corazultext"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/qtdprgressiva"
+        style="@style/text_comum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="0 Desc."
+        android:textColor="#585E68"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkBoxprogressiva"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.448" />
+
+    <EditText
+        android:id="@+id/porCento"
+        style="@style/text_sub_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:inputType="number"
+        android:text="0"
+        android:maxLength="2"
+        android:textAlignment="center"
+        android:textColor="#585E68"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/valorProgressiva"
+        style="@style/text_sub_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="R$ 0,00"
+        android:gravity="center"
+        android:textColor="#585E68"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:inputType="number"
+        android:text="%"
+        android:textSize="16dp"
+        android:textStyle="bold"
+
+        android:gravity="center"
+        android:paddingBottom="4dp"
+        android:textAlignment="center"
+        android:textColor="#585E68"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/porCento"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.526" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
