@@ -23,7 +23,7 @@ data class Clientes(
     val Email: String,
     val Empresa_id: Int,
     val Endereco: String,
-    val ExibeAlerta: Boolean,
+    val ExibeAlerta: String,
     val Fantasia: String,
     val Formalizacao: Int,
     val Formalizado: Int,
@@ -43,5 +43,6 @@ data class Clientes(
     val TurnoPreferenciaVisita: String,
     val UF: String,
     val UltimoPedido: String,
-    val VendaDireta: String
+    val VendaDireta: String,
+    val FormaPagamentoExclusiva : Int
 )

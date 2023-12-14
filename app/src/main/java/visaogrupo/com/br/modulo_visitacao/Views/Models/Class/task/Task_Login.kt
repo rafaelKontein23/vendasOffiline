@@ -12,8 +12,13 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.Ondismiss
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Insync_Task
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Incript
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_URL
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
@@ -35,66 +40,65 @@ class Task_Login {
         BadPaddingException::class,
         InvalidKeyException::class
     )
-    fun Request_login(email: String?, senha: String?, device: String?, ondismiss: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.Ondismiss, context:Context) {
-        var enum = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro
-        var retro =
-            visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_URL()
-        val isyncs_tasks: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Insync_Task = retro.createService(
-            visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Insync_Task::class.java)
+    fun Request_login(email: String?, senha: String?, device: String?, ondismiss: Ondismiss, context:Context) {
+        var enum = Login_Erro.Erro
+        var retro = Retrofit_URL()
+        val isyncs_tasks: Insync_Task = retro.createService(Insync_Task::class.java)
         val jsonObject = JSONObject()
-        jsonObject.put("Login", email)
+        jsonObject.put("email", email)
         jsonObject.put("Senha", senha)
-        jsonObject.put("DeviceToken", device)
+        jsonObject.put("IP", "Teste")
+        jsonObject.put("Origem", "app")
+        jsonObject.put("Device", "")
+        val mensagemErro = arrayOf("")
+
 
         val mensagemIncript = incript.encryptCBC(jsonObject.toString())
 
         val mediaType = MediaType.parse("text/plain; charset=utf-8")
         val requestBody = RequestBody.create(mediaType, mensagemIncript)
-        val call = isyncs_tasks.P_Login_factory(requestBody)
+        val call = isyncs_tasks.P_Login_Pasta(requestBody)
         call!!.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     try {
-                        // descripta o json de login
-                        val json_resposta: String = incript.decryptCBC(response.body()!!.string())
+                        val responsedata = incript.decryptCBC(response.body()!!.string())
+                        val jsonObjectResponse = JSONObject(responsedata)
+                        mensagemErro[0] = jsonObjectResponse.getString("Mensagem")
+                        val jsonObjectDados = jsonObjectResponse.getJSONObject("Dados")
+                        val jsonArrayresponse = jsonObjectDados.getJSONArray("LOGIN")
 
-                        Log.d("Json", json_resposta)
-                        val jsonObject1 = JSONObject(json_resposta)
-                        val Dados = jsonObject1.getString("Dados")
-                        val jsonArray = JSONArray(Dados)
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject2 = jsonArray.optJSONObject(i)
-                            val Usuario_id = jsonObject2.getString("Usuario_id")
-                            val Nome = jsonObject2.getString("Nome")
-                            val Email = jsonObject2.getString("Email")
-                            val Senha = jsonObject2.getString("Senha")
-                            val UF = jsonObject2.getString("UF")
-                            val Linha_id = jsonObject2.getString("Linha_id")
-                            val LinhaVendedor = jsonObject2.getString("LinhaVendedor")
-                            val Institucional = jsonObject2.getString("Institucional")
-                            val Setor = jsonObject2.getString("Setor")
-                            val FlagMerchan = jsonObject2.getString("FlagMerchan")
-                            val AlterarSenha = jsonObject2.getString("AlterarSenha")
-                            val Teste = jsonObject2.getString("Teste")
-                            val TipoCadastro_id = jsonObject2.getString("TipoCadastro_id")
-                            val Feriado = jsonObject2.getString("Feriado")
-                            val FinalDeSemana = jsonObject2.getString("FinalDeSemana")
-                            val login = Login(Usuario_id, Nome, Email, Senha, UF, Linha_id, LinhaVendedor, Institucional, Setor, FlagMerchan, AlterarSenha, Teste, TipoCadastro_id, Feriado, FinalDeSemana)
-                            // grava na preferencia do usuarios os dados de Login
-                            val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-                            val gson = Gson()
-                            val objetoSerializado = gson.toJson(login)
-                            val editor = sharedPreferences.edit()
-                            editor.putString("UserLogin", objetoSerializado)
-                            editor.apply()
-                            enum = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Sucesso
-                            ondismiss.ondismiss(enum)
+                        for (i in 0 until jsonArrayresponse.length()) {
+                            val jsonObjectresponse = jsonArrayresponse.optJSONObject(i)
+                            val mensagem = jsonObjectresponse.getString("Mensagem")
+                            if (mensagem.isEmpty()) {
+                                val usuarioId = jsonObjectresponse.getString("Usuario_id")
 
+                                val login = Login(
+                                    usuarioId, "Vendedor", email,senha,"",
+                                    "","","","",
+                                    "","","","","","" )
 
+                                val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                                val gson = Gson()
+                                val objetoSerializado = gson.toJson(login)
+                                val editor = sharedPreferences.edit()
+                                editor.putString("UserLogin", objetoSerializado)
+                                editor.apply()
+                                enum = Login_Erro.Sucesso
+                                ondismiss.ondismiss(enum)
+                            } else {
+
+                                val dialogErro = DialogErro()
+                                dialogErro.Dialog(context, "Atenção", mensagem,"aceitar","cancelar",{})
+                            }
+
+                            break
                         }
+
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        enum = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro
+                        enum = Login_Erro.Erro
                         ondismiss.ondismiss(enum)
 
                     }
@@ -102,7 +106,7 @@ class Task_Login {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                enum = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro
+                enum = Login_Erro.Erro
                 ondismiss.ondismiss(enum)
             }
         })

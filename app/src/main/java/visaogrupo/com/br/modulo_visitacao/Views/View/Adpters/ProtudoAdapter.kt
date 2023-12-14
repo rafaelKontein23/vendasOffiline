@@ -24,13 +24,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import java.io.Serializable
 
 class ProtudoAdapter(list:MutableList<ProdutoProgressiva>, context:
-Context, start : visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinho: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho, fragmentView:View): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
+Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinho: ExcluiItemcarrinho, fragmentView:View): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
     val  context = context
     val start =  start
@@ -50,93 +52,97 @@ Context, start : visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interface
         if(!carregando){
             holder.efeito.hideShimmer()
 
-            holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
-            holder.codigoProduto.background = ContextCompat.getDrawable(context,R.color.transparente)
-            holder.barra.background = ContextCompat.getDrawable(context,R.color.transparente)
-            holder.valor.background = ContextCompat.getDrawable(context,R.color.transparente)
-            holder.imgProduto.background = ContextCompat.getDrawable(context,R.color.transparente)
-            holder.nomeProtudo.text = listaProtudos[position].nome
-            holder.codigoProduto.text = listaProtudos[position].ProdutoCodigo.toString()
-            holder.barra.text = listaProtudos[position].barra
-            holder.valor.text = "R$ " + listaProtudos[position].valor.toString().replace(".",",")
-            holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
+            if (listaProtudos != null){
+                holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
+                holder.codigoProduto.background = ContextCompat.getDrawable(context,R.color.transparente)
+                holder.barra.background = ContextCompat.getDrawable(context,R.color.transparente)
+                holder.valor.background = ContextCompat.getDrawable(context,R.color.transparente)
+                holder.imgProduto.background = ContextCompat.getDrawable(context,R.color.transparente)
+                holder.nomeProtudo.text = listaProtudos[position].nome
+                holder.codigoProduto.text = listaProtudos[position].ProdutoCodigo.toString()
+                holder.barra.text = listaProtudos[position].barra
+                holder.valor.text = "R$ " + listaProtudos[position].valor.toString().replace(".",",")
+                holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
 
-            if (listaProtudos[position].estaNoCarrinho  == 1){
-                holder.quantidade.isVisible = true
-                holder.excluiritem.isVisible = true
-                holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
-                holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
-                holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
-            }else{
-                holder.quantidade.isVisible = false
-                holder.excluiritem.isVisible = false
-                holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
-                holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
-            }
-            holder.constrainProtudos.setOnClickListener {
-                val intent = Intent(context, ActProtudoDetalhe::class.java)
-                val bundle = Bundle()
-                bundle.putSerializable("ProtudoSelecionado", listaProtudos[position] as Serializable)
-                intent.putExtra("ProtudoSelecionado_bundle", bundle)
-
-                bundle.putSerializable("ImagemProd", listaProtudos[position].base64)
-                intent.putExtra("ProtudoSelecionado_bundle", bundle)
-                intent.putExtra("ImagemProd_bundle", bundle)
-                start.atividade(intent)
-
-            }
-            CoroutineScope(Dispatchers.IO).launch {
-                if(!listaProtudos[position].base64.isEmpty()){
-                    val bitmapimage = exibirImagemBase64(listaProtudos[position].base64)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        holder.imgProduto.setImageBitmap(bitmapimage)
-                    }
-
+                if (listaProtudos[position].estaNoCarrinho  == 1){
+                    holder.quantidade.isVisible = true
+                    holder.excluiritem.isVisible = true
+                    holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
+                    holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
+                    holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
                 }else{
-                    CoroutineScope(Dispatchers.Main).launch {
-                        holder.imgProduto.setImageResource(R.drawable.padrao)
-                    }
+                    holder.quantidade.isVisible = false
+                    holder.excluiritem.isVisible = false
+                    holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
+                    holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
+                }
+                holder.constrainProtudos.setOnClickListener {
+                    val intent = Intent(context, ActProtudoDetalhe::class.java)
+                    val bundle = Bundle()
+                    bundle.putSerializable("ProtudoSelecionado", listaProtudos[position] as Serializable)
+                    intent.putExtra("ProtudoSelecionado_bundle", bundle)
 
+                    bundle.putSerializable("ImagemProd", listaProtudos[position].base64)
+                    intent.putExtra("ProtudoSelecionado_bundle", bundle)
+                    intent.putExtra("ImagemProd_bundle", bundle)
+                    start.atividade(intent)
+
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    if(!listaProtudos[position].base64.isEmpty()){
+                        val bitmapimage = exibirImagemBase64(listaProtudos[position].base64)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            holder.imgProduto.setImageBitmap(bitmapimage)
+                        }
+
+                    }else{
+                        CoroutineScope(Dispatchers.Main).launch {
+                            holder.imgProduto.setImageResource(R.drawable.padrao)
+                        }
+
+                    }
+                }
+
+
+                holder.excluiritem.setOnClickListener {
+
+                    holder.quantidade.isVisible = false
+                    holder.excluiritem.isVisible = false
+                    holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
+                    holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
+
+                    val  snackbar =Snackbar.make(fragmentView, "Item excluído", Snackbar.LENGTH_LONG).setBackgroundTint(Color.WHITE).setTextColor(Color.BLACK)
+                        .setAction("Desfazer") {
+
+                            holder.quantidade.isVisible = true
+                            holder.excluiritem.isVisible = true
+                            holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
+                            holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
+                            holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
+                        }
+                        .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                super.onDismissed(transientBottomBar, event)
+                                if (event != DISMISS_EVENT_ACTION) {
+                                    val carrinhoDAO = CarrinhoDAO(context)
+                                    carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
+                                    excluiItemcarrinho.exluiItem()
+                                }
+                            }
+                        })
+                    val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.setMargins(
+                        layoutParams.leftMargin,
+                        layoutParams.topMargin,
+                        layoutParams.rightMargin,
+                        200
+                    )
+                    snackbar.view.layoutParams = layoutParams
+                    snackbar.show()
                 }
             }
 
 
-            holder.excluiritem.setOnClickListener {
-
-                holder.quantidade.isVisible = false
-                holder.excluiritem.isVisible = false
-                holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
-                holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
-
-                val  snackbar =Snackbar.make(fragmentView, "Item excluído", Snackbar.LENGTH_LONG).setBackgroundTint(Color.WHITE).setTextColor(Color.BLACK)
-                    .setAction("Desfazer") {
-
-                        holder.quantidade.isVisible = true
-                        holder.excluiritem.isVisible = true
-                        holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
-                        holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
-                        holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
-                    }
-                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            super.onDismissed(transientBottomBar, event)
-                            if (event != DISMISS_EVENT_ACTION) {
-                                val carrinhoDAO = CarrinhoDAO(context)
-                                carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
-                                excluiItemcarrinho.exluiItem()
-                            }
-                        }
-                    })
-                val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-                layoutParams.setMargins(
-                    layoutParams.leftMargin,
-                    layoutParams.topMargin,
-                    layoutParams.rightMargin,
-                    200
-                )
-                snackbar.view.layoutParams = layoutParams
-                snackbar.show()
-            }
         }
 
 
@@ -145,7 +151,7 @@ Context, start : visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interface
     }
 
     override fun getItemCount(): Int {
-       return  count
+       return  listaProtudos.size
     }
     // nao esta sendo usado
     fun addItems(newItems: List<ProdutoProgressiva>) {

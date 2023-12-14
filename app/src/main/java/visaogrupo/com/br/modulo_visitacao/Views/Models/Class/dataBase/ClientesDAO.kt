@@ -4,11 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import org.json.JSONArray
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.LojaXCliente
 
-class ClientesDAO (context: Context):
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IClientes {
+class ClientesDAO (context: Context): IClientes {
     val DBClientes = DataBaseHelber(context).writableDatabase
     override fun insert(jsoncCientes: JSONArray): Boolean {
         try {
@@ -17,11 +17,13 @@ class ClientesDAO (context: Context):
             for (i in 0 until jsoncCientes.length()){
                 try {
                     val jsonClientesRetorno = jsoncCientes.optJSONObject(i)
+                    val FormaPagamentoExclusiva = jsonClientesRetorno.getBoolean("FormaPagamentoExclusiva")
 
                     valoresClientes.put("Empresa_id",jsonClientesRetorno.optInt("Empresa_id"))
                     valoresClientes.put("cnpj",jsonClientesRetorno.optString("CNPJ"))
                     valoresClientes.put("RazaoSocial",jsonClientesRetorno.optString("RazaoSocial"))
                     valoresClientes.put("Cep",jsonClientesRetorno.optString("Cep"))
+                    valoresClientes.put("Compra",jsonClientesRetorno.optInt("Compra"))
                     valoresClientes.put("Fantasia",jsonClientesRetorno.optString("Fantasia"))
                     valoresClientes.put("Endereco",jsonClientesRetorno.optString("Endereco"))
                     valoresClientes.put("Numero",jsonClientesRetorno.optString("Numero"))
@@ -29,7 +31,7 @@ class ClientesDAO (context: Context):
                     valoresClientes.put("Bairro",jsonClientesRetorno.optString("Bairro"))
                     valoresClientes.put("Cidade",jsonClientesRetorno.optString("Cidade"))
                     valoresClientes.put("UF",jsonClientesRetorno.optString("UF"))
-                    valoresClientes.put("CompraControlado",jsonClientesRetorno.optBoolean("CompraControlado"))
+                    valoresClientes.put("CompraControlado",jsonClientesRetorno.optInt("CompraControlado"))
                     valoresClientes.put("LimiteCredito",jsonClientesRetorno.optInt("LimiteCredito"))
                     valoresClientes.put("UltimoPedido",jsonClientesRetorno.optString("UltimoPedido"))
                     valoresClientes.put("VendaDireta",jsonClientesRetorno.optString("VendaDireta"))
@@ -37,9 +39,15 @@ class ClientesDAO (context: Context):
                     valoresClientes.put("Telefone",jsonClientesRetorno.optString("Telefone"))
                     valoresClientes.put("Email",jsonClientesRetorno.optString("Email"))
                     valoresClientes.put("Formalizado",jsonClientesRetorno.optString("Formalizado"))
-                    valoresClientes.put("Investimento",jsonClientesRetorno.getBoolean("Investimento"))
                     valoresClientes.put("DuplicataVencida",jsonClientesRetorno.optInt("DuplicataVencida"))
                     valoresClientes.put("SanitarioData",jsonClientesRetorno.optString("SanitarioData"))
+                    valoresClientes.put("Codigo",jsonClientesRetorno.optInt("CODLISTAPRECOSYNC"))
+                    valoresClientes.put("CodEstoque",jsonClientesRetorno.optInt("CODEMPRESASYNC"))
+                    valoresClientes.put("ExibeAlerta",jsonClientesRetorno.optString("ExibeAlerta"))
+                    valoresClientes.put("LimiteCredito",jsonClientesRetorno.optString("LimiteCredito"))
+                    valoresClientes.put("LimiteDisponivel",jsonClientesRetorno.optString("LimiteDisponivel"))
+                    valoresClientes.put("UltimoPedido",jsonClientesRetorno.optString("UltimoPedido"))
+                    valoresClientes.put("FormaPagamentoExclusiva",FormaPagamentoExclusiva)
 
                     val jsonClienteporloja = JSONArray(jsonClientesRetorno.optString("LOJA"))
 
@@ -106,20 +114,24 @@ class ClientesDAO (context: Context):
             val Telefone = cursor.getString(16)
             val Email =  cursor.getString(17)
             val DuplicataVencida =  cursor.getInt(20)
-
+            val Compra  = cursor.getInt(23)
+            val Exbibelerta = cursor.getString(24)
+            val  FormaPagamentoExclusiva = cursor.getInt(26)
 
             val clientes = Clientes(
                 "",Associativismo,Bairro,"",Cep,cnpj,
                 "",0,
                 0,Cidade,0,"",Complemento,
-                0, false,
+                Compra, false,
                 "","","",
                 DuplicataVencida,Email,Empresa_id,
-                Endereco,false,
+                Endereco,Exbibelerta,
                 Fantasia,0,
                 0,"",""
                 ,1,lojaxcliente,"",
-                "","","",Numero,RazaoSocial,Telefone,"","","",UF,UltimoPedido,VendaDireta)
+                "","","",Numero,RazaoSocial,Telefone,"","","",
+                UF,UltimoPedido,
+                VendaDireta, FormaPagamentoExclusiva)
             clientesList.add(clientes)
         }
         return clientesList
@@ -171,20 +183,24 @@ class ClientesDAO (context: Context):
                     val Telefone = cursor.getString(16)
                     val Email =  cursor.getString(17)
                     val DuplicataVencida =  cursor.getInt(20)
+                    val Compra = cursor.getInt(23)
+                    val FormaPagamentoExclusiva = cursor.getInt(26)
+
 
 
                     val clientes = Clientes(
                         "",Associativismo,Bairro,"",Cep,cnpj,
                         "",0,
                         0,Cidade,0,"",Complemento,
-                        0, false,
+                        Compra, false,
                         "","","",
                         DuplicataVencida,Email,Empresa_id,
-                        Endereco,false,
+                        Endereco,"",
                         Fantasia,0,
                         0,"",""
                         ,1,lojasxclienets,"",
-                        "","","",Numero,RazaoSocial,Telefone,"","","",UF,UltimoPedido,VendaDireta)
+                        "","","",Numero,RazaoSocial,Telefone,"","","",UF,
+                        UltimoPedido,VendaDireta,FormaPagamentoExclusiva)
                     clientesList.add(clientes)
 
                 }

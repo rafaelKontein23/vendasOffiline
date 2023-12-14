@@ -4,8 +4,11 @@ data class ProgressivaLista(val produtoCodigo: Int,
                             val caixaPadrao: Int,
                             val pmc: Double,
                             val pf: Double,
-                            val valor: Double,
+                            var valor: Double,
                             val quantidade: Int,
-                            val desconto: Double,
+                            var desconto: Double,
                             var personalizada:Boolean,
-                            var isSelected: Boolean = false)
+                            var isSelected: Boolean = false,
+                            val DescontoMaximo:Double,
+                            var ProgressivaSelecionad:Boolean = false
+                        )

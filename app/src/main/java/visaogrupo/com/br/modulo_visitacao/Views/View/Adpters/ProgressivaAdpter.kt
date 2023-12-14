@@ -5,33 +5,49 @@ import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaQuantidadeProduto
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaValorProduto
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProgressivaLista
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProgressivaSelecionada
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProgresivaDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
-class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, recyclerview:RecyclerView): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
+class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, recyclerview:RecyclerView,
+                         fragmentmeneger:FragmentManager,atualizaValorProduto: AtualizaValorProduto,
+                         edtQuatidade :EditText,atualizaQuantidadeProduto: AtualizaQuantidadeProduto ): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
 
     var listaProgrssiva = list
     val personaFalse = 0
     val  personaTrue = 1
     val context = context
-    var quantidadeAdionada = 0
+    var quantidadeAdionada = listaProgrssiva[0].quantidade
     var pos = 0
     var positionQuatidade = 0
     var recyclerview = recyclerview
     var  clicou = false
+    var fragmentmeneger = fragmentmeneger
+    var soma = true
+    var anr= false
+    var atualizaQuantidadeProduto = atualizaQuantidadeProduto
 
+    val atualizaValorProduto = atualizaValorProduto
+    val edtQuatidade = edtQuatidade
 
 
 
@@ -50,11 +66,41 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
 
         val descontoFormat = String.format("%.2f",listaProgrssiva[position].desconto)
         val  valorprogressivaformat = String.format("%.2f",listaProgrssiva[position].valor)
-        holder.desconto.text =  descontoFormat +" %"
+        holder.desconto.setText( descontoFormat)
         holder.quatidade.text = listaProgrssiva[position].quantidade.toString() +" Desc."
-        holder.valorProgressiva.text = "R$ "  + valorprogressivaformat
+        holder.valorProgressiva.setText("R$ "  + valorprogressivaformat)
 
 
+
+        holder.desconto.setOnFocusChangeListener(object  : OnFocusChangeListener{
+            override fun onFocusChange(v: View?, hasFocus: Boolean) {
+                if (!hasFocus){
+                    val descontoCap =  holder.desconto.text.toString().toDouble()
+                    if (!anr){
+                        if (descontoCap >=  listaProgrssiva [position].DescontoMaximo){
+                            val alertas = Alertas()
+                            alertas.alerta(fragmentmeneger,"Desconto Fora da politica !","#B89A00",
+                                R.drawable.atencao,R.drawable.bordas_amerala_alert)
+                            holder.desconto.setText(listaProgrssiva[position].desconto.toString())
+
+                        }else {
+                            editaDesc(position,descontoCap, holder )
+                        }
+                    }else{
+                        editaDesc(position,descontoCap, holder )
+                    }
+
+                }
+            }
+
+        })
+
+        holder.checkbox.setOnClickListener {
+            quantidadeAdionada = listaProgrssiva [position].quantidade
+
+            notifyDataSetChanged()
+            atualizaQuantidadeProduto.AtuliazaQuantidaProduto(quantidadeAdionada)
+        }
 
         holder.xProgressiva.setOnClickListener {
             val position1 = holder.adapterPosition
@@ -64,6 +110,8 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
             notifyItemRemoved(position1)
 
         }
+        edtQuatidade.isEnabled = true
+
 
         Log.d("quantiddae",quantidadeAdionada.toString())
 
@@ -71,59 +119,46 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
             setSelectedItem(position)
         }
         // logica de quantidade Adiconada
-        if(clicou){
 
-            if (position == pos){
-
-                holder.checkbox.isChecked = true
-                val descontoProgreesivaSelecionada = listaProgrssiva[position].desconto
-                val valorProgressivaSelecionada  = listaProgrssiva[position].valor
-                val quantidadeProgressivaSelecionbada  = listaProgrssiva[position].quantidade
-                val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
-                ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
-                trocabackgroun(
-                    holder.quatidade,
-                    holder.desconto,
-                    holder.valorProgressiva,
-                    holder.container
-                )
-
-            }else{
-                holder.checkbox.isChecked = false
-                trocabackgrounpadrao(
-                    holder.quatidade,
-                    holder.desconto,
-                    holder.valorProgressiva,
-                    holder.container
-                )
-
-            }
-            // Logica de alternar click
-        }else{
             pos  = 0
-            if(quantidadeAdionada +1 == listaProgrssiva[position].quantidade && listaProgrssiva[position].personalizada){
+            if(quantidadeAdionada >= listaProgrssiva[position].quantidade ){
                 positionQuatidade = position
 
             }
-            if ((position == positionQuatidade) && ( quantidadeAdionada +1 ==  listaProgrssiva[position].quantidade )){
-                quantidadeAdionada = 0
 
-                val descontoProgreesivaSelecionada = listaProgrssiva[position].desconto
-                val valorProgressivaSelecionada  = listaProgrssiva[position].valor
-                val quantidadeProgressivaSelecionbada  = listaProgrssiva[position].quantidade
-                val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
-                ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
+                for (progressiva in listaProgrssiva) {
+                    if(quantidadeAdionada >= progressiva.quantidade  ){
 
-                holder.checkbox.isChecked = true
+                        listaProgrssiva.forEach() { progressivaLista ->
+                            progressivaLista.ProgressivaSelecionad = false
+                        }
+                        progressiva.ProgressivaSelecionad = true
+                        val descontoProgreesivaSelecionada =progressiva.desconto
+                        val valorProgressivaSelecionada  = progressiva.valor
+                        val quantidadeProgressivaSelecionbada  =progressiva.quantidade
+                        val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
+                        ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
+                        if (soma){
+                            atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, true)
+                        }else {
+                            atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, false)
+
+                        }
+                    }
+                }
+
+
+
+
+            holder.checkbox.isChecked = listaProgrssiva[position].ProgressivaSelecionad
+            if (listaProgrssiva[position].ProgressivaSelecionad){
                 trocabackgroun(
                     holder.quatidade,
                     holder.desconto,
                     holder.valorProgressiva,
                     holder.container
                 )
-
             }else{
-                holder.checkbox.isChecked = false
                 trocabackgrounpadrao(
                     holder.quatidade,
                     holder.desconto,
@@ -131,7 +166,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
                     holder.container
                 )
             }
-        }
+
 
 
 
@@ -153,7 +188,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
 
     inner class ProgressivaViewholder(itemView: View) : ViewHolder(itemView){
         val quatidade = itemView.findViewById<TextView>(R.id.qtdprgressiva)
-        val desconto = itemView.findViewById<TextView>(R.id.porCento)
+        val desconto = itemView.findViewById<EditText>(R.id.porCento)
         val valorProgressiva  = itemView.findViewById<TextView>(R.id.valorProgressiva)
         val container = itemView.findViewById<ConstraintLayout>(R.id.containerProgressiva)
         val checkbox = itemView.findViewById<CheckBox>(R.id.checkBoxprogressiva)
@@ -201,5 +236,14 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
         valor.setTextColor(Color.parseColor("#585E68"))
         containeter.background = ContextCompat.getDrawable(containeter.context, R.color.corviewicon)
 
+    }
+    fun editaDesc(position:Int,descontoCap:Double, holder :ProgressivaViewholder ){
+        listaProgrssiva[position].desconto = descontoCap
+        val valorPf = listaProgrssiva[position].pf
+        val valorTotDesc = valorPf  *(descontoCap/ 100)
+        val valorFinal =  valorPf - valorTotDesc
+        holder.valorProgressiva.setText(String.format("%.2f", valorFinal))
+        listaProgrssiva[position].valor = valorFinal
+        atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,valorFinal,true, false)
     }
 }

@@ -3,6 +3,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase
 import android.content.ContentValues
 import android.content.Context
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagExclusiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 
 class CarrinhoDAO (context:Context) {
@@ -44,6 +45,15 @@ class CarrinhoDAO (context:Context) {
         valoresCarrinhos.put("base64",carrinho.base64)
         valoresCarrinhos.put("caixapadrao",carrinho.caixapadrao)
         valoresCarrinhos.put("pmc",carrinho.pmc)
+        valoresCarrinhos.put("FormaPagamentoExclusiva", carrinho.FormaPagamentoExclusiva)
+        valoresCarrinhos.put("Qtd_Minima_Operador",carrinho.QtdMinima_Operador)
+        valoresCarrinhos.put("Qtd_Maxima_Operador",carrinho.QtdMaxima_Operador)
+        valoresCarrinhos.put("ANR",carrinho.Anr)
+        valoresCarrinhos.put("RegraPrazo",carrinho.RegraPrazo)
+        valoresCarrinhos.put("LojaTipo",carrinho.LojaTipo)
+
+
+
         dbCarrinho.insert("TB_Carrinho",null,valoresCarrinhos)
     }
 
@@ -119,6 +129,12 @@ class CarrinhoDAO (context:Context) {
             val base64 = cursor.getString(28)
             val caixapadrao = cursor.getInt(29)
             val pmc  = cursor.getDouble(30)
+            val Qtd_Minima_Operador  = cursor.getInt(31)
+            val Qtd_Maxima_Operador  = cursor.getInt(32)
+            val anr  = cursor.getInt(33)
+            val RegraPrazo  = cursor.getInt(35)
+            val FormaDePagExclusiva = cursor.getInt(34)
+            val lojaTipo = cursor.getInt(36)
             val  carrinho= Carrinho(loja_id,cliente_id,produto_codigo,
                 opf,usuario_if,UF,
                 Comiisao,
@@ -129,11 +145,17 @@ class CarrinhoDAO (context:Context) {
                 grupo_codigo,desconto,
                 descontoOriginal,St,formalizacao,
                 codListaOrecosSync,apontador,
-                valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,valoloja,base64,pmc,caixapadrao)
+                valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,
+                valoloja,base64,pmc,FormaDePagExclusiva,caixapadrao,
+                Qtd_Minima_Operador,Qtd_Maxima_Operador,anr,RegraPrazo,lojaTipo)
 
             listaProdutosCArrinhos.add(carrinho)
         }
 
         return listaProdutosCArrinhos
+    }
+    fun excluirItemCarrinho(cliente_id: Int,loja_id: Int){
+        val queryCarrinho = "DELETE from TB_Carrinho WHERE cliente_id = ${cliente_id} And loja_id = ${loja_id}"
+        dbCarrinho.execSQL(queryCarrinho)
     }
 }

@@ -20,7 +20,8 @@ class ProgresivaDAO(context: Context):
          val Valor = cursor.getDouble(4)
          val Quantidade	 = cursor.getInt(5)
          val Desconto  = cursor.getDouble(6)
-         val ProgressivaLista = ProgressivaLista(Produto_codigo,CaixaPadrao,PMC,PF,Valor,Quantidade,Desconto,personalizada)
+         val DescontoMaxima = cursor.getDouble(7)
+         val ProgressivaLista = ProgressivaLista(Produto_codigo,CaixaPadrao,PMC,PF,Valor,Quantidade,Desconto,personalizada,false,DescontoMaxima)
          listaProgresiva.add(ProgressivaLista)
         }
         return listaProgresiva
@@ -43,7 +44,7 @@ class ProgresivaDAO(context: Context):
             valoresProgressivaPersonalizada.put("COLUMN_VALOR",valorno)
             valoresProgressivaPersonalizada.put("COLUMN_QUANTIDADE",quatidade)
             valoresProgressivaPersonalizada.put("COLUMN_DESCONTO",desconto)
-
+            valoresProgressivaPersonalizada.put("COLUMN_DESCONTO",desconto)
             dbProgressiva.writableDatabase.insert("Tb_Progressiva_Personalizada",null,valoresProgressivaPersonalizada)
             return true
 

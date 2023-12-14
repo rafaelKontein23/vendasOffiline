@@ -7,11 +7,17 @@ import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONObject
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.PedidoSucesso
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ConstroiJsonPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Incript
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MontaHeader
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -20,19 +26,22 @@ import java.util.*
 class taskEnviaPedido {
 
    @RequiresApi(Build.VERSION_CODES.O)
-   suspend fun eviarPedido(list: MutableList<Carrinho>, context: Context, OPL:String, Observacao :String, formPag:String){
+   suspend fun eviarPedido(pedidoFinalizado:PedidoFinalizado, context: Context,):Triple<Int,String,String>{
            val constroiJsonPedido = ConstroiJsonPedido()
            val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-           val gson = Gson()
-           val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
-           val  clientesSelecionado =  gson.fromJson(objetoSerializadoCliente, Clientes::class.java)
+
            val gsonuserid = Gson()
            val objetoSerializadoLogin = sharedPreferences?.getString("UserLogin", null)
-            val login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
+           val login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
+           val pedidoDao  =PedidosFinalizadosDAO(context)
+           val listaProdutos=  pedidoDao.listarPedidosProdutos(pedidoFinalizado.pedidoID)
+           val stringSeparada = pedidoFinalizado.operadorLogistico
 
-           var ( json,chave ) = constroiJsonPedido.envairPedidoJson(list,context,OPL,Observacao,formPag)
+           val listaOpls= stringSeparada.split(",")
+
+          var ( json,chave ) = constroiJsonPedido.envairPedidoJson(listaProdutos, context,listaOpls,pedidoFinalizado)
            chave = chave.replace("/","").replace(":","")
-           val path = java.lang.String.format("%s\\%s", clientesSelecionado.CNPJ, login.Usuario_id)
+           val path = java.lang.String.format("%s\\%s",pedidoFinalizado.cnpj, login.Usuario_id)
            val  incript = Incript()
            json = json.replace("\n","")
            json = json.replace("\t","")
@@ -52,24 +61,32 @@ class taskEnviaPedido {
                   mediaType,
                   bodyJson
               )
+              var heraderVersion = MontaHeader.montaHeader(pedidoFinalizado.usuarioId.toString())
+              heraderVersion = heraderVersion.replace("\n","")
               val request: Request = Request.Builder()
-                  .url(visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.urlEnviaPedido)
+                  .url(URLs.urlEnviaPedido)
                   .method("POST", body)
                   .addHeader("Autorizacao", "J0#o14:*6")
+                  .addHeader("Usuario", heraderVersion)
                   .addHeader("Content-Type", "application/json")
+
                   .build()
               try {
                   val response = client.newCall(request).execute()
 
                   val descript = incript.decryptCBC(response.body()!!.string().toString())
+                  val jsonRetornoPedido = JSONObject(descript)
+                  val  valido = jsonRetornoPedido.getInt("Valido")
+                  val  menssagem = jsonRetornoPedido.getString("Mensagem")
                   Log.d("descript :", descript)
+                  return Triple(valido, menssagem,chave)
               } catch (e: IOException) {
                   e.printStackTrace()
               }
           }catch (e :Exception){
               e.printStackTrace()
           }
-
+       return Triple(0, "Algo deu errado no momento","")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

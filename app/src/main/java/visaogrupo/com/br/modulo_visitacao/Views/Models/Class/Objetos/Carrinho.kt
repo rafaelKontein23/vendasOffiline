@@ -33,5 +33,12 @@ data class Carrinho(
     val valorMinimoLoja:Double,
     val base64: String,
     val pmc: Double,
-    val caixapadrao:Int
+    val FormaPagamentoExclusiva:Int,
+    val caixapadrao:Int,
+    val QtdMinima_Operador:Int,
+    val QtdMaxima_Operador:Int,
+    val Anr:Int,
+    val  RegraPrazo:Int,
+    val  LojaTipo:Int
+
 )

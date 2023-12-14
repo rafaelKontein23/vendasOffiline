@@ -7,9 +7,9 @@ import android.util.Log
 
 class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
-    "Carga.db",
+    "CargaHertz27.db",
     null,
-    39 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    95 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -52,7 +52,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Minimo_Aprovacao FLOAT," +
                 "Valida_Estoque Bolean," +
                 "Loja_Preco Bolean," +
+                "ANR INT,"+
                 "Exibe_Estoque Bolean," +
+                "RegraPrazoMedio Bolean,"+
                 "cliente_id INT" +
                 ");"
         // Tabele de lojas
@@ -69,26 +71,45 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "UF VARCHAR (2)," +
                 "Cep VARCHAR(90)," +
                 "CompraControlado Bolean," +
-                "LimiteCredito INT ," +
-                "UltimoPedido VARCHAR," +
+                "UltimoPedido VARCHAR(50)," +
                 "VendaDireta VARCHAR (20)," +
                 "Associativismo VARCHAR(10)," +
                 "Telefone VARCHAR (20)," +
                 "Email VARCHAR (255)," +
                 "Formalizado VARCHAR (2)," +
                 "Investimento Bolean," +
-                "DuplicataVencida Int," +
-                "SanitarioData INT"+
+                "DuplicataVencida INTEGER," +
+                "Codigo INTEGER," +
+                "SanitarioData INTEGER,"+
+                "Compra INTEGER,"+
+                "ExibeAlerta Bolean,"+
+                "LimiteCredito REAL,"+
+                "LimiteDisponivel REAL,"+
+                "FormaPagamentoExclusiva Bolean," +
+                "CodEstoque INTEGER"+
                 ");"
         // clientes por lojas
 
         val apagaTabelea = "DROP TABLE IF EXISTS TB_lojaporcliente;"
+
+        val  prazoMedio = "CREATE TABLE IF NOT EXISTS TB_PrazoMedioXValor(" +
+                "ValorDe REAL," +
+                "ValorAte REAL," +
+                "PrazoMedio INTEGER" +
+                ")"
+
 
 
         val sqlClientePorLojas = "CREATE TABLE IF NOT EXISTS TB_lojaporcliente (" +
                 "CLIENTE_LOJA_ID INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 "empresa_id INTEGER NOT NULL,"+
                 "loja_id INTEGER NOT NULL"+
+                ");"
+
+        val sqlFormpagExclusivo ="CREATE TABLE IF NOT EXISTS TB_FormPag(" +
+                "CNPJ varchar(24) PRIMARY KEY,"+
+                "Cod_FormaPgto varchar(50),"+
+                "FormaPgto VARCHAR(255)"+
                 ");"
 
         val sqlProtudos = "CREATE TABLE IF NOT EXISTS TB_produtos(" +
@@ -109,6 +130,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Cod_FormaPgto VARCHAR(40) NOT NULL," +
                 "FormaPgto VARCHAR(40) NOT NULL," +
                 "ValorMinimo DOUBLE NOT NULL," +
+                "PrazoMedio INTEGER,"+
                 "Alternativa  Boolean NOT NULL" +
                 ");"
 
@@ -140,7 +162,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "UF TEXT NOT NULL," +
                 "Data_Vencimento TEXT NOT NULL," +
                 "Prioridade INTEGER NOT NULL," +
-                "Promocao INTEGER NOT NULL" +
+                "Promocao INTEGER NOT NULL," +
+                "Codigo INTEGER NOT NULL" +
                 ");"
 
         val sqlProgressivaPersonalizada= "CREATE TABLE IF NOT EXISTS  Tb_Progressiva_Personalizada (" +
@@ -155,9 +178,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 ")"
 
         val sqlEstoque = "CREATE TABLE IF NOT EXISTS TB_Estoque(" +
-                "Barra VARCHAR(50) NOT NULL," +
+                "EAN VARCHAR(50) NOT NULL," +
                 "Quantidade INTEGER NOT NULL," +
-                "Loja_id INTEGER NOT NULL" +
+                "Centro INTEGER NOT NULL" +
                 ");"
 
 
@@ -193,8 +216,78 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "base64 TEXT,"+
                 "caixapadrao INT,"+
                 "pmc REAL,"+
+                "Qtd_Minima_Operador INT," +
+                "Qtd_Maxima_Operador INT," +
+                "ANR BOLEAN," +
+                "FormaPagamentoExclusiva INTEGER,"+
+                "RegraPrazo  INT," +
+                "LojaTipo  INT," +
+
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
+
+        val sqlPedidos = "CREATE TABLE IF NOT EXISTS TBPedidosFinalizados(" +
+                "PedidoID INTEGER PRIMARY KEY AUTOINCREMENT," + // Definindo PedidoID como PRIMARY KEY
+                "loja_id INTEGER NOT NULL," +
+                "cliente_id INTEGER NOT NULL," +
+                "OperadorLogistigo VARCHAR(255) NOT NULL," +
+                "Usuario_id INTEGER NOT NULL,"+
+                "UF INTEGER NOT NULL,"+
+                "Comissao REAL, " +
+                "ComissaoPorcentagem REAL, " +
+                "MarcasXComissoes_id INTEGER, " +
+                "Produto_codigo INTEGER, " +
+                "Barra TEXT, " +
+                "Quantidade INTEGER, " +
+                "PF REAL NOT NULL, " +
+                "Valor REAL NOT NULL, " +
+                "ValorOriginal REAL NOT NULL, " +
+                "Grupo_Codigo INTEGER, " +
+                "Desconto REAL NOT NULL, " +
+                "DescontoOriginal REAL NOT NULL, " +
+                "ST REAL, " +
+                "formalizacao TEXT, " +
+                "CODLISTAPRECOSYNC INTEGER, " +
+                "ValorTotal REAL, " +
+                "Nome TEXT, " +
+                "Apontador_codigo TEXT,"+
+                "nomeLoja TEXT,"+
+                "razaosocial TEXT,"+
+                "cnpj TEXT,"+
+                "dataPedido TEXT,"+
+                "valorminimoLoja REAL,"+
+                "base64 TEXT,"+
+                "caixapadrao INT,"+
+                "pmc REAL,"+
+                "Qtd_Minima_Operador INT," +
+                "Qtd_Maxima_Operador INT," +
+                "ANR BOLEAN," +
+                "PedidoEnviado INTEGER," +
+                "formaDePagemento VARCHAR," +
+                "NumeroPedido VARCHAR(255),"+
+                "OperadoresPedidos VARCHAR(100)," +
+                "FormaPagamentoExclusiva INTEGER,"+
+                "Chave VARCHAR(255),"+
+                "justificativaANR VARCHAR(255),"+
+                "TipoLoja INT"+
+
+                ")"
+
+
+        val sqlProdutoItemFinalizadoPedido = "CREATE TABLE IF NOT EXISTS TB_Produtos_Pedidos_Finalizado(" +
+                "PedidoID INTEGER NOT NULL," +
+                "Barra  VARCHAR(30) NOT NULL," +
+                "Produto_codigo INTEGER,"+
+                "Desconto REAL,"+
+                "DescontoOriginal REAL,"+
+                "formalizacao VARCHAR(100),"+
+                "PF REAL,"+
+                "Quantidade INTEGER,"+
+                "ValorRepasse REAL,"+
+                "ST VARCHAR(30),"+
+                "Valor REAL,"+
+                "NomeProduto VARCHAR(255),"+
+                "FOREIGN KEY (PedidoID) REFERENCES TBPedidosFinalizados(PedidoID));"
 
         val  sqlImagens ="CREATE TABLE IF NOT EXISTS TB_Imagens(" +
                 "barra TEXT PRIMARY KEY,"+
@@ -225,11 +318,12 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlProgressivaPersonalizada)
             db?.execSQL(sqlImagens)
             db?.execSQL(sqlModeloPedido)
+            db?.execSQL(prazoMedio)
+            db?.execSQL(sqlFormpagExclusivo)
+            db?.execSQL(sqlPedidos)
+            db?.execSQL(sqlProdutoItemFinalizadoPedido)
 
-
-
-        }catch (e:Exception)
-        {
+        }catch (e:Exception) {
             e.printStackTrace()
             Log.d("Info_dp","Erro ao cria tabela")
         }

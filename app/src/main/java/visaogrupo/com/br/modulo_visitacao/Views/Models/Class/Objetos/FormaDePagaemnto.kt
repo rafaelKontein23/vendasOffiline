@@ -5,5 +5,7 @@ data class FormaDePagaemnto(
     val Cod_FormaPgto: String,
     val FormaPgto: String,
     val ValorMinimo: Double,
-    val loja: Int
+    val loja: Int,
+    val  PrazoMedio:Int,
+    val exlusiva:Int
 )

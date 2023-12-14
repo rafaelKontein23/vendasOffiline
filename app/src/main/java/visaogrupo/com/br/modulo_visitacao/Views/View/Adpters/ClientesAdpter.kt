@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -37,6 +38,18 @@ class ClientesAdpter (list: MutableList<Clientes>, val  idfram:Int, val supoortf
             holder.cnpjcliente.text = CNPJ
             holder.razaosocialClientes.text = listaClientes[position].RazaoSocial
             holder.enderecocliente.text = listaClientes[position].Endereco
+
+            if (listaClientes[position].Compra == 1){
+                   holder.positivo.isVisible = true
+                   holder.negativo.isVisible = false
+            }else {
+                   holder.positivo.isVisible = false
+                   holder.negativo.isVisible = true
+
+            }
+
+            holder.documentoVencido.isVisible = listaClientes[position].ExibeAlerta.equals("true")
+            holder.duplicadaVencida.isVisible = listaClientes[position].DuplicataVencida ==1
 
 
             holder.comtarincelula.setOnClickListener {
@@ -73,6 +86,12 @@ class ClientesAdpter (list: MutableList<Clientes>, val  idfram:Int, val supoortf
         val enderecocliente = itemView.findViewById<TextView>(R.id.enderecoCliente)
         val  comtarincelula = itemView.findViewById<ConstraintLayout>(R.id.comtarincelula)
         val  linha = itemView.findViewById<View>(R.id.linhacliente)
+        val positivo = itemView.findViewById<ImageView>(R.id.positivo)
+        val negativo = itemView.findViewById<ImageView>(R.id.negativo)
+        val documentoVencido = itemView.findViewById<ImageView>(R.id.documentoVencido)
+        val duplicadaVencida = itemView.findViewById<ImageView>(R.id.duplicadaVencida)
+
+
     }
 
 }

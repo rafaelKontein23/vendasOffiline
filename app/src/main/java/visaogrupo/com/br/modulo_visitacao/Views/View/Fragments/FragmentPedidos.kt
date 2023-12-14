@@ -1,0 +1,119 @@
+package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
+
+import android.graphics.Color
+import android.os.Build
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterViewPagerPedidos
+import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinalizado
+
+
+class FragmentPedidos : Fragment(), AtualizaPedido {
+        val  content = this
+        var  adapterViewPagerPedidos:AdapterViewPagerPedidos? = null
+        var adpterPedidoFinalizado :AdpterPedidosFinalizado?= null
+        var adpterPedidoFinalizadoEnviado :AdpterPedidosFinalizado?= null
+        override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        val  view = inflater.inflate(R.layout.fragment_pedidos, container, false)
+        val  arrastaParaLado = view.findViewById<ViewPager2>(R.id.arrastaParaLado);
+        val  viewFechado = view.findViewById<View>(R.id.viewFechado)
+        val  viewAberto = view.findViewById<View>(R.id.viewAberto)
+        val  abertos = view.findViewById<TextView>(R.id.abertos)
+        val  fechado = view.findViewById<TextView>(R.id.fechado)
+        adapterViewPagerPedidos = AdapterViewPagerPedidos(getChildFragmentManager(), lifecycle)
+
+        val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
+        val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
+        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this)
+
+        val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
+        val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
+        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this)
+
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!))
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!))
+        arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        arrastaParaLado.adapter = adapterViewPagerPedidos
+
+        abertos.setOnClickListener {
+            arrastaParaLado.setCurrentItem(0,true)
+            visivelSelecionado(abertos,fechado)
+            viewFechado.isVisible = false
+            viewAberto.isVisible= true
+        }
+
+        fechado.setOnClickListener {
+            arrastaParaLado.setCurrentItem(1,true)
+
+            visivelSelecionado(fechado,abertos)
+            viewFechado.isVisible = true
+            viewAberto.isVisible= false
+        }
+
+        arrastaParaLado.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (position == 1){
+                    visivelSelecionado(fechado,abertos)
+                    viewFechado.isVisible = true
+                    viewAberto.isVisible= false
+                }else{
+                    visivelSelecionado(abertos,fechado)
+                    viewFechado.isVisible = false
+                    viewAberto.isVisible= true
+                }
+            }
+        })
+
+
+
+        return view
+    }
+   fun visivelSelecionado(textVisivel:TextView,textinvisivek:TextView){
+       textVisivel.setTextColor(Color.parseColor("#004682"))
+
+       textinvisivek.setTextColor(Color.parseColor("#5483AB"))
+   }
+
+    override fun atualizaPedidos() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
+            val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
+            adpterPedidoFinalizado?.listaPedido = listaPedidos
+            adpterPedidoFinalizado?.notifyDataSetChanged()
+
+
+            val  pedidosFinalizadosDAOEnviado = PedidosFinalizadosDAO(requireContext())
+            val  listaPedidosEnviado = pedidosFinalizadosDAOEnviado.listarPedidos(1)
+            adpterPedidoFinalizadoEnviado?.listaPedido = listaPedidosEnviado
+            adpterPedidoFinalizadoEnviado?.notifyDataSetChanged()
+
+        }
+    }
+}

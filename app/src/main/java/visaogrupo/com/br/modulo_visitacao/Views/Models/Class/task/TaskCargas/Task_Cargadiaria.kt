@@ -6,7 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import retrofit2.Call
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Isyncs_Cargas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Funcao_erro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_Carga
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.*
 
@@ -17,7 +19,7 @@ class  Task_Cargadiaria {
         var  path =""
         try {
 
-            val downloadService = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_Carga.createService(visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Isyncs_Cargas::class.java)
+            val downloadService = Retrofit_Carga.createService(Isyncs_Cargas::class.java)
             val call:Call<ResponseBody> = downloadService.downloadFile("docs/tablet/carga/vendas/zip_${userid}.zip")
             var  response = call.execute()
             if (response.isSuccessful){
@@ -28,9 +30,10 @@ class  Task_Cargadiaria {
             }else{
                 response.errorBody()
                 var dialogerro = DialogErro()
-                dialogerro.Dialog(context,"Atenção","Algo deu errado com a carga","OK","",
-                    Funcao_erro()
-                )
+                dialogerro.Dialog(context,"Atenção","Algo deu errado com a carga","OK",""
+                ){
+
+                }
                 Log.d("Response",response.errorBody().toString())
                 return path
             }
@@ -71,9 +74,10 @@ class  Task_Cargadiaria {
                 } catch (e: IOException) {
                     e.printStackTrace()
                     var dialogerro = DialogErro()
-                    dialogerro.Dialog(context,"Atenção","Algo deu errado ao salvar o zip","OK","",
-                        Funcao_erro()
-                    )
+                    dialogerro.Dialog(context,"Atenção","Algo deu errado ao salvar o zip","OK",""
+                    ){
+
+                    }
                     Log.d("Task_CargaDiaria", "Failed to save the file!")
                     return ""
                 } finally {
@@ -86,9 +90,9 @@ class  Task_Cargadiaria {
         } catch (e: IOException) {
             e.printStackTrace()
             var dialogerro = DialogErro()
-            dialogerro.Dialog(context,"Atenção","Algo deu errado ao salvar o zip","OK","",
-                Funcao_erro()
-            )
+            dialogerro.Dialog(context,"Atenção","Algo deu errado ao salvar o zip","OK",""){
+
+            }
             Log.d("Task_CargaDiaria", "Failed to save the file!")
             return ""
         }

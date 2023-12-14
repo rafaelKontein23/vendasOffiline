@@ -9,16 +9,16 @@ class Retrofit_Carga {
 
     companion object {
          val url =
-             visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.Companion.urlCarga
+            URLs.urlCarga
 
 
-         val builder = Retrofit.Builder().baseUrl(visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_Carga.Companion.url)
+         val builder = Retrofit.Builder().baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
 
-         val retrofit = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_Carga.Companion.builder.build()
+         val retrofit = builder.build()
 
         fun <S> createService(serviceClass: Class<S>?): S {
-            return visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_Carga.Companion.retrofit.create(serviceClass)
+            return retrofit.create(serviceClass)
         }
     }
 

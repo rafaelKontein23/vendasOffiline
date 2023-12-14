@@ -4,13 +4,18 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas
 import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,27 +47,34 @@ class taskImagem (context:Context){
                 while (cursor.moveToNext()){
                     try {
                         val barra = cursor.getString(0)
-                        val imageUrl = URL("${visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.urlimagens}${barra}.jpg")
-                        val connection = imageUrl.openConnection()
+                        val imageUrl = URL("${URLs.urlimagens}${barra}.jpg")
+                        Glide.with(context)
+                            .asBitmap()
+                            .load(imageUrl)
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    val outputStream = ByteArrayOutputStream()
+                                    resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
 
-                        val inputStream = connection.getInputStream()
-                        val outputStream = ByteArrayOutputStream()
+                                    val imageBytes = outputStream.toByteArray()
+                                    val imagembase64 = encodeBase64String(imageBytes)
 
-                        inputStream.use { input ->
-                            outputStream.use { output ->
-                                input.copyTo(output)
-                            }
-                        }
+                                    val valores = ContentValues()
 
-                        val imageBytes = outputStream.toByteArray()
-                        val imagembase64 = encodeBase64String(imageBytes)
+                                    valores.put("imagembase64",imagembase64)
+                                    valores.put("barra",barra)
 
-                        val valores = ContentValues()
+                                    db.writableDatabase.insert("TB_Imagens",null, valores)
+                                    Log.d("Insert", barra)
+                                }
 
-                        valores.put("imagembase64",imagembase64)
-                        valores.put("barra",barra)
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    // Chamado quando a imagem é carregada e depois removida do alvo
+                                }
+                            })
 
-                        db.writableDatabase.insert("TB_Imagens",null, valores)
+
+
                         Log.d("Insert","${barra}")
                     }catch (e:Exception){
                         e.printStackTrace()

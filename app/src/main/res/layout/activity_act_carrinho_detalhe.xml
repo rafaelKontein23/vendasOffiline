@@ -32,7 +32,7 @@
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.304"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/voltarCarrinho"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
@@ -100,11 +100,9 @@
 
                     <TextView
                         android:id="@+id/unidadesTotasi"
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-
                         android:text="0 uni."
                         android:textAlignment="textEnd"
                         android:textColor="#336B9B"
@@ -214,7 +212,7 @@
 
             </androidx.appcompat.widget.AppCompatButton>
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/voltarCarrinho"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"

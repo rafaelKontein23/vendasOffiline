@@ -36,13 +36,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:textSize="12dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="4dp"
         android:drawableStart="@drawable/ponto"
         android:drawablePadding="8dp"
         android:text="Rua campos de guaira"
         android:textColor="@color/azulrua"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toStartOf="@+id/positivo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textRazaosocialcliente" />
 
@@ -51,10 +51,52 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="2dp"
         android:background="#E6EDF3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enderecoCliente" />
+
+    <ImageView
+        android:id="@+id/positivo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/negativo"
+        app:layout_constraintTop_toTopOf="@+id/enderecoCliente"
+        app:srcCompat="@drawable/positivo" />
+
+    <ImageView
+        android:id="@+id/negativo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+
+        app:layout_constraintEnd_toStartOf="@+id/documentoVencido"
+        app:layout_constraintTop_toTopOf="@+id/positivo"
+        app:srcCompat="@drawable/nao_positivo" />
+
+    <ImageView
+        android:id="@+id/documentoVencido"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+
+        app:layout_constraintEnd_toStartOf="@+id/duplicadaVencida"
+        app:layout_constraintTop_toTopOf="@+id/negativo"
+        app:srcCompat="@drawable/documentos_vencidos" />
+
+    <ImageView
+        android:id="@+id/duplicadaVencida"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:visibility="gone"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/documentoVencido"
+        app:srcCompat="@drawable/duplicadas" />
 </androidx.constraintlayout.widget.ConstraintLayout>

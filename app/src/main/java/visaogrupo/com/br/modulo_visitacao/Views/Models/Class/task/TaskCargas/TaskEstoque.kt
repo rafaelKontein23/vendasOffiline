@@ -9,13 +9,13 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Reque
 class TaskEstoque {
 
 
-    fun recuperaEstoque(loja_id:Int): JSONArray? {
+    fun recuperaEstoque(codigoEstoque:Int): JSONArray? {
         val jsonArrayEstoque: JSONArray? = null
         try {
             val client =  OkHttpClient().newBuilder()
                 .build();
             val request =  Request.Builder()
-                .url("${visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.urlEstoque}${loja_id}.json")
+                .url("${URLs.urlEstoque}${codigoEstoque}.json")
                 .method("GET", null)
                 .build();
 

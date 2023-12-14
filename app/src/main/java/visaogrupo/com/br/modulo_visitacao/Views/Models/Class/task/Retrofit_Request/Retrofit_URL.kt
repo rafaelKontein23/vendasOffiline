@@ -7,8 +7,7 @@ import java.util.concurrent.TimeUnit
 
 class Retrofit_URL () {
 
-        private val url =
-            visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.Companion.url
+        private val url = URLs.url
 
         private val client = OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS).writeTimeout(5, TimeUnit.SECONDS).build()

@@ -7,5 +7,7 @@ data class OperadorLogistico(
     val MinimoValor: Double,
     val Nome: String,
     val OperadorLogistico_Grupo_id: Int,
-    val OperadorLogistico_ID: Int
+    val OperadorLogistico_ID: Int,
+    var selecionado: Boolean = false,
+    var posicao :Int  = -1
 )

@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInte
 
 import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagaemnto
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 
 interface IFormaDePagamento {
 
@@ -9,5 +10,6 @@ interface IFormaDePagamento {
 
     fun atualizar (FormaDePagaemnto: FormaDePagaemnto):Boolean
 
-    fun listar (loja_id:Int):MutableList<FormaDePagaemnto>
+    fun listar (loja_id:Int, valorToatalPedido:Double, RegraSelecionada: Int,cnpj:String
+    ):MutableList<FormaDePagaemnto>
 }

@@ -14,8 +14,13 @@ import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.*
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoque
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFormaDePagamentoExclusiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskProgressivas
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRegraPrazoMedio
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.Task_Cargadiaria
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import java.text.SimpleDateFormat
@@ -24,7 +29,7 @@ import java.util.*
 class CargaDiaria {
 
 
-    fun fazCargaDiaria(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView, animador: ObjectAnimator,terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
+    fun fazCargaDiaria(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView, animador: ObjectAnimator,terminouCarga: TerminouCarga){
         CoroutineScope(Dispatchers.IO).launch {
             //Faz request de Zip
             val patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
@@ -82,6 +87,13 @@ class CargaDiaria {
                             Log.d("Terminou Clientes","")
                         }
                     }
+
+                    val lendoPrazoMedio = launch {
+                        val taskRegraPrazoMedio = TaskRegraPrazoMedio()
+                        val listaRetorna  = taskRegraPrazoMedio.tasKRegra()
+                        val regraPrazoMedio = RegraPrazoDAO(context)
+                        regraPrazoMedio.insertRegraProgressiva(listaRetorna)
+                    }
                     //grava no banco produtos
                     val  lendoProdutos = launch {
                         jsonProtudos = lerZip.readTextFileFromZip(patch,"Produtos.json","Protudos").toString()
@@ -98,10 +110,33 @@ class CargaDiaria {
                     // faz as tarefas execulta juntas
                     lendoLojas.join()
                     lendoClientes.join()
-                    lendoProdutos.join();
+                    lendoProdutos.join()
+                    lendoPrazoMedio.join()
 
-                    Log.d("Iniciou Segunda Parte","")
-                    val lendoFormasDePagamento = launch {
+
+
+
+
+
+
+                  Log.d("Iniciou Segunda Parte","")
+                  val LendoFormaDePagamentoExclusiva = launch {
+                      var listaCnpj = mutableListOf<Clientes>()
+                      val queryCnpjs = "SELECT * FROM TB_clientes WHERE formapagamentoexclusiva = 1"
+                      val clientesDAO = ClientesDAO(context)
+                      listaCnpj = clientesDAO.listar(context,queryCnpjs)
+                      val taskFormaDePagamentoExclusiva = TaskFormaDePagamentoExclusiva()
+                      for (i in listaCnpj){
+                          val listFormaDePagamentoExclusiva = taskFormaDePagamentoExclusiva.taskFormaDePagamentos(i.UF,i.CNPJ)
+                          val formaDePagamentoExcluisiv = FormaDePagamentoExclusivaDAO(context)
+                          formaDePagamentoExcluisiv.insert(listFormaDePagamentoExclusiva)
+                      }
+
+
+
+
+                  }
+                  val lendoFormasDePagamento = launch {
 
                         val dblista = DataBaseHelber(context)
 
@@ -159,173 +194,177 @@ class CargaDiaria {
 
                     lendoFormasDePagamento.join()
                     lendoOperadorLogistico.join()
+                    LendoFormaDePagamentoExclusiva.join()
 
                     Log.d("Começou "," Terceira parte")
 
-                    val  lendoProgressiva = launch {
-                        val dblistaProgre = DataBaseHelber(context)
+                     val  lendoProgressiva = launch {
+                              val dblistaProgre = DataBaseHelber(context)
 
-                        Log.d("Começou o Progressiva","")
-                        val lojasOP = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf" +
-                                " FROM TB_lojas lojasPorCliente" +
-                                " inner join TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
-                                " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
-                                " order by 1"
-
-
-                        val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
-                        var count =0
-                        val jsonarayProgressiva: MutableList<JSONArray>? = mutableListOf()
-                        val coroutines = mutableListOf<Deferred<Unit>>()
-                        while (curso.moveToNext()){
-                            val  uf = curso.getString(1)
-                            val loja_id = curso.getInt(0)
-                            count = count +1
-
-                            Log.d("Progress",count.toString())
-                            val lendpo =   async{
-                                val taskProgressivas = TaskProgressivas(context)
-                                val jsonArray =taskProgressivas.recuperaProgressiva(loja_id,uf)
-                                if (jsonArray != null) {
-                                    jsonarayProgressiva?.add(jsonArray)
-                                }
-                            }
-                            coroutines.add(lendpo)
+                              Log.d("Começou o Progressiva","")
+                              val lojasOP = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf, Clientes.codigo" +
+                                      " FROM TB_lojas lojasPorCliente" +
+                                      " inner join TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
+                                      " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
+                                      " order by 1"
 
 
+                              val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
+                              var count =0
+                              val jsonarayProgressiva: MutableList<JSONArray>? = mutableListOf()
+                              val coroutines = mutableListOf<Deferred<Unit>>()
+                              while (curso.moveToNext()){
+                                  val  uf = curso.getString(1)
+                                  val loja_id = curso.getInt(0)
+                                  val  codigoProgressiva = curso.getInt(2)
+                                  count = count +1
 
-                        }
+                                  Log.d("Progress",count.toString())
+                                  val lendpo =   async{
+                                      val taskProgressivas = TaskProgressivas(context)
+                                      val jsonArray =taskProgressivas.recuperaProgressiva(loja_id,uf,codigoProgressiva)
 
-                        runBlocking {
-                            coroutines.awaitAll()
-                        }
 
-                        Log.d("Terminou", jsonarayProgressiva?.size.toString())
-                        Log.d("Terminou","Progressiva")
-
-                        FragmentCargas.progresspush += 1
-                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
-
-                        val db_Progreesivas = DataBaseHelber(context).writableDatabase
-                        db_Progreesivas.beginTransaction()
-                        try {
-                            for ( i in 0 until  jsonarayProgressiva!!.size){
-                                val valoresProgresiva = ContentValues()
-                                val jsonArrayAtual = jsonarayProgressiva[i]
-
-                                for ( j in 0 until  jsonArrayAtual.length()){
-                                    val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
-
-                                    valoresProgresiva.put("Prod_cod", jsonClientesPorLojasRetorno.optInt("Prod_cod"))
-                                    valoresProgresiva.put("Loja_id", jsonClientesPorLojasRetorno.optInt("Loja_id"))
-                                    valoresProgresiva.put("Valor", jsonClientesPorLojasRetorno.optDouble("Valor"))
-                                    valoresProgresiva.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
-                                    valoresProgresiva.put("QuantidadeMaxima", jsonClientesPorLojasRetorno.optInt("QuantidadeMaxima"))
-                                    valoresProgresiva.put("Desconto", jsonClientesPorLojasRetorno.optDouble("Desconto"))
-                                    valoresProgresiva.put("Desconto_Min", jsonClientesPorLojasRetorno.optDouble("Desconto_Min"))
-                                    valoresProgresiva.put("DescontoMaximo", jsonClientesPorLojasRetorno.optDouble("DescontoMaximo"))
-                                    valoresProgresiva.put("PF", jsonClientesPorLojasRetorno.optDouble("PF"))
-                                    valoresProgresiva.put("PMC", jsonClientesPorLojasRetorno.optDouble("PMC"))
-                                    valoresProgresiva.put("ST", jsonClientesPorLojasRetorno.optDouble("ST"))
-                                    valoresProgresiva.put("formalizacao", jsonClientesPorLojasRetorno.optString("formalizacao"))
-                                    valoresProgresiva.put("Seq_Kit", jsonClientesPorLojasRetorno.optInt("Seq_Kit"))
-                                    valoresProgresiva.put("Seq_Cond_Coml", jsonClientesPorLojasRetorno.optInt("Seq_Cond_Coml"))
-                                    valoresProgresiva.put("UF", jsonClientesPorLojasRetorno.optString("UF"))
-                                    valoresProgresiva.put("Data_Vencimento", jsonClientesPorLojasRetorno.optString("Data_Vencimento"))
-                                    valoresProgresiva.put("Prioridade", jsonClientesPorLojasRetorno.optInt("Prioridade"))
-                                    valoresProgresiva.put("Promocao", jsonClientesPorLojasRetorno.optInt("Promocao"))
-
-                                    db_Progreesivas.insert("TB_Progressiva",null,valoresProgresiva)
-
-                                }
-
-                            }
-                            db_Progreesivas.setTransactionSuccessful()
-                        }finally {
-                            db_Progreesivas.endTransaction()
-                        }
+                                      if (jsonArray != null) {
+                                          jsonarayProgressiva?.add(jsonArray)
+                                      }
+                                  }
+                                  coroutines.add(lendpo)
 
 
 
-                    }
-                    FragmentCargas.progresspush += 1
-                    FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
-                    lendoProgressiva.join()
-                    // lendo estoque
-                    val lendoEstoque = launch {
-                        val dblistaProgre = DataBaseHelber(context)
+                              }
 
-                        Log.d("Começou o Estoque","")
-                        val lojasOP = "SELECT distinct lojasPorCliente.loja_id" +
-                                " FROM TB_lojas lojasPorCliente" +
-                                " INNER JOIN TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
-                                " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
-                                " ORDER BY 1"
+                              runBlocking {
+                                  coroutines.awaitAll()
+                              }
+
+                              Log.d("Terminou", jsonarayProgressiva?.size.toString())
+                              Log.d("Terminou","Progressiva")
+
+                              FragmentCargas.progresspush += 1
+                              FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+
+                              val db_Progreesivas = DataBaseHelber(context).writableDatabase
+                              db_Progreesivas.beginTransaction()
+                              try {
+                                  for ( i in 0 until  jsonarayProgressiva!!.size){
+                                      val valoresProgresiva = ContentValues()
+                                      val jsonArrayAtual = jsonarayProgressiva[i]
+
+                                      for ( j in 0 until  jsonArrayAtual.length()){
+                                          val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
+
+                                          valoresProgresiva.put("Prod_cod", jsonClientesPorLojasRetorno.optInt("Prod_cod"))
+                                          valoresProgresiva.put("Loja_id", jsonClientesPorLojasRetorno.optInt("Loja_id"))
+                                          valoresProgresiva.put("Valor", jsonClientesPorLojasRetorno.optDouble("Valor"))
+                                          valoresProgresiva.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
+                                          valoresProgresiva.put("QuantidadeMaxima", jsonClientesPorLojasRetorno.optInt("QuantidadeMaxima"))
+                                          valoresProgresiva.put("Desconto", jsonClientesPorLojasRetorno.optDouble("Desconto"))
+                                          valoresProgresiva.put("Desconto_Min", jsonClientesPorLojasRetorno.optDouble("Desconto_Min"))
+                                          valoresProgresiva.put("DescontoMaximo", jsonClientesPorLojasRetorno.optDouble("DescontoMaximo"))
+                                          valoresProgresiva.put("PF", jsonClientesPorLojasRetorno.optDouble("PF"))
+                                          valoresProgresiva.put("PMC", jsonClientesPorLojasRetorno.optDouble("PMC"))
+                                          valoresProgresiva.put("ST", jsonClientesPorLojasRetorno.optDouble("ST"))
+                                          valoresProgresiva.put("formalizacao", jsonClientesPorLojasRetorno.optString("formalizacao"))
+                                          valoresProgresiva.put("Seq_Kit", jsonClientesPorLojasRetorno.optInt("Seq_Kit"))
+                                          valoresProgresiva.put("Seq_Cond_Coml", jsonClientesPorLojasRetorno.optInt("Seq_Cond_Coml"))
+                                          valoresProgresiva.put("UF", jsonClientesPorLojasRetorno.optString("UF"))
+                                          valoresProgresiva.put("Data_Vencimento", jsonClientesPorLojasRetorno.optString("Data_Vencimento"))
+                                          valoresProgresiva.put("Prioridade", jsonClientesPorLojasRetorno.optInt("Prioridade"))
+                                          valoresProgresiva.put("Promocao", jsonClientesPorLojasRetorno.optInt("Promocao"))
+                                          valoresProgresiva.put("Codigo",jsonClientesPorLojasRetorno.optInt("CODLISTAPRECOSYNC"))
+
+                                          db_Progreesivas.insert("TB_Progressiva",null,valoresProgresiva)
+
+                                      }
+
+                                  }
+                                  db_Progreesivas.setTransactionSuccessful()
+                              }finally {
+                                  db_Progreesivas.endTransaction()
+                              }
 
 
-                        val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
-                        var count =0
-                        val jsonarayEstoque: MutableList<JSONArray>? = mutableListOf()
-                        val coroutines = mutableListOf<Deferred<Unit>>()
-                        while (curso.moveToNext()){
 
-                            val loja_id = curso.getInt(0)
-                            count = count +1
-
-                            Log.d("Quantidade list estoque",count.toString())
-                            val lendEstoque =   async{
-                                val taskProgressivas =
-                                    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoque()
-                                val jsonArray =taskProgressivas.recuperaEstoque(loja_id)
-                                if (jsonArray != null) {
-                                    jsonarayEstoque?.add(jsonArray)
-                                }
-                            }
-                            coroutines.add(lendEstoque)
+                          }
+                          lendoProgressiva.join()
+                          FragmentCargas.progresspush += 1
+                          FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
 
 
 
-                        }
+                          // lendo estoque
+                          val lendoEstoque = launch {
+                              val dblistaProgre = DataBaseHelber(context)
 
-                        runBlocking {
-                            coroutines.awaitAll()
-                        }
+                              Log.d("Começou o Estoque","")
+                              val lojasOP = "SELECT CodEstoque FROM TB_clientes"
 
-                        Log.d("Quantidadede estoque", jsonarayEstoque?.size.toString())
 
-                        val db_Estoque= DataBaseHelber(context).writableDatabase
-                        db_Estoque.beginTransaction()
-                        try {
-                            for ( i in 0 until  jsonarayEstoque!!.size){
-                                val valoresEstoque = ContentValues()
-                                val jsonArrayAtual = jsonarayEstoque[i]
+                              val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
+                              var count =0
+                              val jsonarayEstoque: MutableList<JSONArray>? = mutableListOf()
+                              val coroutines = mutableListOf<Deferred<Unit>>()
+                              while (curso.moveToNext()){
 
-                                for ( j in 0 until  jsonArrayAtual.length()){
-                                    val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
+                                  val codigoEstoque = curso.getInt(0)
+                                  count = count +1
 
-                                    valoresEstoque.put("Barra", jsonClientesPorLojasRetorno.optString("Barra"))
-                                    valoresEstoque.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
-                                    valoresEstoque.put("Loja_id", jsonClientesPorLojasRetorno.optInt("Loja_id"))
-                                    db_Estoque.insert("TB_Estoque",null,valoresEstoque)
+                                  Log.d("Quantidade list estoque",count.toString())
+                                  val lendEstoque =   async{
+                                      val taskProgressivas = TaskEstoque()
+                                      val jsonArray =taskProgressivas.recuperaEstoque(codigoEstoque)
+                                      if (jsonArray != null) {
+                                          jsonarayEstoque?.add(jsonArray)
+                                      }
+                                  }
+                                  coroutines.add(lendEstoque)
 
-                                }
 
-                            }
-                            db_Estoque.setTransactionSuccessful()
-                        }catch (e:Exception){
-                            e.printStackTrace()
-                        }finally {
-                            db_Estoque.endTransaction()
-                        }
-                        FragmentCargas.progresspush += 3
-                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
-                    }
-                    lendoEstoque.join()
 
-                    cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
+                              }
+
+                              runBlocking {
+                                  coroutines.awaitAll()
+                              }
+
+                              Log.d("Quantidadede estoque", jsonarayEstoque?.size.toString())
+
+                              val db_Estoque= DataBaseHelber(context).writableDatabase
+                              db_Estoque.beginTransaction()
+                              try {
+                                  for ( i in 0 until  jsonarayEstoque!!.size){
+                                      val valoresEstoque = ContentValues()
+                                      val jsonArrayAtual = jsonarayEstoque[i]
+
+                                      for ( j in 0 until  jsonArrayAtual.length()){
+                                          val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
+
+                                          valoresEstoque.put("EAN", jsonClientesPorLojasRetorno.optString("EAN"))
+                                          valoresEstoque.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
+                                          valoresEstoque.put("Centro", jsonClientesPorLojasRetorno.optInt("Centro"))
+                                          db_Estoque.insert("TB_Estoque",null,valoresEstoque)
+
+                                      }
+
+                                  }
+                                  db_Estoque.setTransactionSuccessful()
+                              }catch (e:Exception){
+                                  e.printStackTrace()
+                              }finally {
+                                  db_Estoque.endTransaction()
+                              }
+                              FragmentCargas.progresspush += 3
+                              FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                          }
+                          lendoEstoque.join()
+
+
 
 
                     Log.d("Terminou carga","")
+                    cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
                 }catch (e:Exception){
                     e.printStackTrace()
                 }
@@ -375,7 +414,5 @@ class CargaDiaria {
             subtitulocarga.text ="atualizado em: ${currentDate} "
 
         }
-
-
     }
 }

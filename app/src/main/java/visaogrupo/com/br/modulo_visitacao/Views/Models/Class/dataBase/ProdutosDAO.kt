@@ -3,11 +3,12 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase
 import android.content.ContentValues
 import android.content.Context
 import org.json.JSONArray
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Produtos
 
 class ProdutosDAO(context:Context):
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IProtudos {
+    IProtudos {
     val DBProtudos = DataBaseHelber(context).writableDatabase
     val dblistaproudos = DataBaseHelber(context).readableDatabase
     val valoresProtudos = ContentValues()

@@ -8,8 +8,8 @@ import retrofit2.http.POST;
 
 public interface Insync_Task {
 
-    @POST("catarinense/login")
-    Call<ResponseBody> P_Login_factory(@Body RequestBody body);
+    @POST("hertz/novo/login")
+    Call<ResponseBody> P_Login_Pasta(@Body RequestBody body);
 
 
 

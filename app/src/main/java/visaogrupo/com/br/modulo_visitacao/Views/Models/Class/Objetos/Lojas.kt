@@ -26,5 +26,7 @@ data class Lojas(
     val Minimo_Aprovacao: Double,
     val Valida_Estoque: String,
     val Loja_Preco: String,
-    val Exibe_Estoque: String
+    val Exibe_Estoque: Int,
+    val ANR :Int,
+    val RegraPrazoMedio :Int
 )

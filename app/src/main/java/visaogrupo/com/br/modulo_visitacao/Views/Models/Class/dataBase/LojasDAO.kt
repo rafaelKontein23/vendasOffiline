@@ -4,13 +4,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import org.json.JSONArray
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.ILojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 
 class LojasDAO (context:Context):
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.ILojas {
+    ILojas {
 
     var DBLojas = DataBaseHelber(context).writableDatabase
-    val listaLojas = mutableListOf<Lojas>()
+
     override   fun insert(lojas: JSONArray): Boolean {
          try {
 
@@ -20,6 +21,7 @@ class LojasDAO (context:Context):
              for (i in 0 until lojas.length()) {
                  try {
                      val  jsonLojasRetorno = lojas.optJSONObject(i)
+                     val RegraPrazoMedio = jsonLojasRetorno.getBoolean("RegraPrazoMedio")
 
                      valoresLojas.put("nome", jsonLojasRetorno.optString("Nome"));
                      valoresLojas.put("loja_id", jsonLojasRetorno.optInt("Loja_id"));
@@ -46,8 +48,9 @@ class LojasDAO (context:Context):
                      valoresLojas.put("Minimo_Aprovacao", jsonLojasRetorno.optDouble("MinimoAprovacao"));
                      valoresLojas.put("Valida_Estoque", jsonLojasRetorno.optBoolean("ValidaEstoque"));
                      valoresLojas.put("Loja_Preco", jsonLojasRetorno.optBoolean("LojaPreco"));
+                     valoresLojas.put("RegraPrazoMedio", RegraPrazoMedio);
                      valoresLojas.put("Exibe_Estoque", jsonLojasRetorno.optBoolean("ExibeEstoque"));
-
+                     valoresLojas.put("ANR", jsonLojasRetorno.optBoolean("ANR"));
                      DBLojas.insert("TB_lojas",null,valoresLojas)
                  }catch (e:Exception){
                      e.printStackTrace()
@@ -102,7 +105,9 @@ class LojasDAO (context:Context):
             val Minimo_Aprovacao =  cursor.getDouble(25)
             val Valida_Estoque =    cursor.getString(26)
             val Loja_Preco =    cursor.getString(27)
-
+            val ANR        =      cursor.getInt(28)
+            val exibe_Estoque = cursor.getInt(29)
+            val RegraPrazoMedio = cursor.getInt(30)
             val loja = Lojas(loja_id, nome,
                 MinimoUnidades, MinimoValor,
                 LojaTipo, tipo, LogoHome,
@@ -114,7 +119,7 @@ class LojasDAO (context:Context):
                 Portal_Tablet, Qtd_Minima_Operador,
                 Qtd_Maxima_Operador, Loja_Online,
                 Minimo_Aprovacao, Valida_Estoque,
-                Loja_Preco, "")
+                Loja_Preco, exibe_Estoque,ANR, RegraPrazoMedio)
 
             listaLojasobject.add(loja)
 

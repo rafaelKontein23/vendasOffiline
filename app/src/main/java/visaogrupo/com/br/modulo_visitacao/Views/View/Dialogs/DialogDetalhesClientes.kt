@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado
 
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
@@ -85,7 +86,7 @@ class DialogDetalhesClientes {
            vender.setOnClickListener {
                dialog.onBackPressed()
 
-               ActPricipal.troca = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado.lojas
+               ActPricipal.troca = TrocaItemSelecionado.lojas
                trocarcorItem.trocacor()
                val mudarFragment = MudarFragment()
                mudarFragment.openFragmentLojas(supportFragmentManager,frameid,trocarcorItem, carrinhoVisible, atualizaCarrinho )

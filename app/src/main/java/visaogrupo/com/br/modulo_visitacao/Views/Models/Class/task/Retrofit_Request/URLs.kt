@@ -4,15 +4,15 @@ class URLs {
     companion object {
 
         //Requests
-        var urlCarga = "https://wwwe.catarinenseonline.com.br/"
+        var urlCarga = "https://services.apie.hertzfarmaonline.com.br/"
         var url = "https://wwwe.visaogrupo.com.br/ws/"
-        var urlEnviaPedido = "https://wwwe.visaogrupo.com.br/ws/catarinense/envio/pedido"
-        var urlEstoque ="https://catarinenseonline.com.br/Docs/Tablet/Carga/estoque/estoque_"
-        var urlimagens = "https://catarinenseonline.com.br/ImagensEan/"
+        var urlEnviaPedido = "https://wwwe.visaogrupo.com.br/ws/hertz/envia/pedido"
+        var urlEstoque ="https://services.apie.hertzfarmaonline.com.br/estoque/Estoque_00"
+        var urlimagens = "https://services.apie.hertzfarmaonline.com.br/Images/"
         var urlProgressiva = "https://wwwi.catarinenseonline.com.br/Progressivas/Progressiva_"
 
         // web
 
-        var urlportal = "https://wwwi.catarinenseonline.com.br/autenticacao/AcessoTablet=?l="
+        var urlportal = "https://hertzfarmaonline.com.br/"
     }
 }

@@ -18,12 +18,11 @@ class DialogErro {
             mensagem: String?,
             aceitar: String?,
             cancelarr: String?,
-            funcao: Funcao_erro
+            funcao :() -> Unit
     ) {
             val dialog = android.app.Dialog(context!!)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog)
-            dialog.show()
             dialog.window!!.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -31,6 +30,8 @@ class DialogErro {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.window!!.attributes.windowAnimations = R.style.DialoAnimation
             dialog.window!!.setGravity(Gravity.CENTER)
+            dialog.show()
+
             val Titulo_dialog: TextView
             val mensagem_dialog: TextView
             val confirma: TextView
@@ -43,7 +44,9 @@ class DialogErro {
             mensagem_dialog.text = mensagem
             confirma.text = aceitar
             cancelar.text = cancelarr
-            confirma.setOnClickListener { funcao.ondismisdialog(dialog)
+            confirma.setOnClickListener {
+                    dialog.dismiss()
+                    funcao()
             }
         }
 

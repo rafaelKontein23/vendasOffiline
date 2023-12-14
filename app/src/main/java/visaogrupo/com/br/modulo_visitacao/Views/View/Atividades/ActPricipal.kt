@@ -19,6 +19,9 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
@@ -29,11 +32,12 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinner
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
 
 class ActPricipal : AppCompatActivity(),
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem,
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible,
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho,
+    TrocarcorItem,
+    carrinhoVisible,
+    AtualizaCarrinho,
     FragmentCargas.MyCallback {
 
     var list_menu:MutableList<String> = ArrayList<String>()
@@ -42,6 +46,7 @@ class ActPricipal : AppCompatActivity(),
     val fragmentCargas =   FragmentCargas()
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
+    val fragementPedido = FragmentPedidos()
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View
@@ -75,9 +80,24 @@ class ActPricipal : AppCompatActivity(),
         fragmentCargas.callback =this
 
         atualizaQtdCarrinho()
-        supportFragmentManager.
-        beginTransaction()
-            .replace(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
+        val tela = intent.getStringExtra("Tela")
+        if (!tela?.isEmpty()!!){
+
+            seleciona(text_pedidos,view_prdidos,icon_pedidos);
+            Deseleciona_itens(text_home,text_clientes,text_lojas,text_protudo,view_home,
+                view_clientes,view_lojas,view_produto,icon_home,icon_clientes,icon_lojas,icon_produtos)
+            itensVisible()
+
+            supportFragmentManager.
+            beginTransaction()
+                .replace(R.id.fragmentContainerViewPrincipal, fragementPedido).addToBackStack(null).commit()
+
+        }else {
+            supportFragmentManager.
+            beginTransaction()
+                .replace(R.id.fragmentContainerViewPrincipal, fragmentCargas).addToBackStack(null).commit()
+
+        }
 
 
         val clickListenerhome = View.OnClickListener {
@@ -107,7 +127,22 @@ class ActPricipal : AppCompatActivity(),
             seleciona(text_pedidos,view_prdidos,icon_pedidos);
             Deseleciona_itens(text_home,text_clientes,text_lojas,text_protudo,view_home,
                 view_clientes,view_lojas,view_produto,icon_home,icon_clientes,icon_lojas,icon_produtos)
-            itensVisible()
+            if(!fragementPedido.isVisible){
+
+                val fragmentManager: FragmentManager = supportFragmentManager
+                val fragmentTransaction: FragmentTransaction =
+                    fragmentManager.beginTransaction()
+                fragmentTransaction.setCustomAnimations(
+                    android.R.anim.slide_in_left,
+                    android.R.anim.slide_out_right
+                )
+
+                fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragementPedido)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+
+            }
+
         }
 
         icon_pedidos.setOnClickListener (clickListenerpedidos)
@@ -385,7 +420,7 @@ class ActPricipal : AppCompatActivity(),
         atualizaQtdCarrinho()
     }
     fun  atualizaQtdCarrinho(){
-        val queryQuantidadeNoCarrinho = "SELECT cliente_id, loja_id, COUNT(*) AS total " +
+        val queryQuantidadeNoCarrinho = "SELECT cliente_id, loja_id, COUNT (*) AS total " +
                 "FROM TB_Carrinho " +
                 "GROUP BY cliente_id, loja_id"
 

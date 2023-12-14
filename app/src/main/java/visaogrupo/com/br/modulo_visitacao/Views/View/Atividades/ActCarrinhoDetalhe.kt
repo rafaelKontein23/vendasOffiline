@@ -22,6 +22,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
     lateinit var adpterCarrinhoDetalhes: CarrinhoDetalheAdpter
     lateinit var   listaProdutoCarrinho :MutableList<Carrinho>
     var valorminimo = 0.0
+    var valorTotal = 0.0
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onPostCreate(savedInstanceState: Bundle?) {
         binding  = ActivityActCarrinhoDetalheBinding.inflate(layoutInflater)
@@ -40,8 +41,12 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         binding.ValorMinimoCarrinho.text = "R$ "  + valorformatMinimo
 
         binding.continuarCarrinho.setOnClickListener {
-            val dialogOperadorLogistico = DialogOperadorLogistico()
-            dialogOperadorLogistico.dialog(this,listaProdutoCarrinho)
+            val dialogOperadorLogistico = DialogOperadorLogistico(this)
+            dialogOperadorLogistico.dialog(this,listaProdutoCarrinho,valorTotal)
+        }
+
+        binding.voltarCarrinho.setOnClickListener{
+             finish()
         }
         valorminimo = ActPricipal.lojavalorMinimo
         atualzza(listaProdutoCarrinho,ActPricipal.lojavalorMinimo)
@@ -65,7 +70,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
 
     }
     fun atualzza(lista: MutableList<Carrinho>, valorMinimo: Double){
-        var valorTotal = 0.0
+
         var valorDesconto = 0.0
         var quantidade = 0
         for (i in 0 until  lista.size){
@@ -78,7 +83,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
             quantidade += lista[j].quantidade.toString().toInt()
         }
         val valorTot = String.format("%.2f",valorTotal)
-        val valorTotDesc = String.format("%.2f",valorDesconto)
+        val valorTotDesc = String.format("%.2f",valorDesconto / lista.size)
         binding.valorTotalitens.text = "R$ " + valorTot
         binding.desconto.text =  valorTotDesc +"%"
         binding.unidadesTotasi.text = quantidade.toString() + " Uni."

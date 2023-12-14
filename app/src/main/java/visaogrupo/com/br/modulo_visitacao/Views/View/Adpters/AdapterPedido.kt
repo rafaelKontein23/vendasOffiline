@@ -17,7 +17,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 
 class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.Adapter<AdapterPedido.ViewHolderPedido>() {
-    val listaPedido = list
+    var listaPedido = list
    val context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPedido {

@@ -5,11 +5,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +20,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaLetraFiltro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
@@ -27,11 +35,12 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ImagensDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProdutosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFiltroAZ
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
-class FragmentProtudos (carrinhoVisible: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible, atulizaCarrinho: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho) : Fragment(),
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade,
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho {
+class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: AtualizaCarrinho) : Fragment(),
+    StartaAtividade,
+    ExcluiItemcarrinho, AtualizaLetraFiltro {
 
     private  lateinit var  binding: FragmentProtudosBinding
     val carrinhoVisible = carrinhoVisible
@@ -64,12 +73,12 @@ class FragmentProtudos (carrinhoVisible: visaogrupo.com.br.modulo_visitacao.View
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
         clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
-
         adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),contextThis,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,contextThis,view)
         val layoutManager = LinearLayoutManager(requireContext())
-
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager
+
+
 
         CoroutineScope(Dispatchers.IO).launch{
             val imagensDao = ImagensDAO()
@@ -78,7 +87,7 @@ class FragmentProtudos (carrinhoVisible: visaogrupo.com.br.modulo_visitacao.View
                 query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
                         "FROM TB_produtos Produtos " +
                         "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
-                        "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
+                        "INNER JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra  AND Estoque.centro = Progressiva.codigo " +
                         "inner join TB_Imagens imagens on Produtos.barra = imagens.barra "+
                         "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
                         "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
@@ -86,27 +95,91 @@ class FragmentProtudos (carrinhoVisible: visaogrupo.com.br.modulo_visitacao.View
                         "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
                         "order by 1 "
             }else{
-                query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
-                        "FROM TB_produtos Produtos " +
-                        "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
-                        "INNER JOIN TB_Estoque Estoque ON Estoque.Barra = Produtos.barra and ESTOQUE.Loja_id = Progressiva.loja_id " +
-                        "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
-                        "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
-                        "and Progressiva.uf = '${clienteSelecionado.UF}' " +
-                        "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
-                        "order by 1 "
+                query = " SELECT distinct  Produtos.Nome \n" +
+                        "                         ,Produtos.Apresentacao \n" +
+                        "                           ,Produtos.barra \n" +
+                        "                           ,Produtos.Imagem \n" +
+                        "                           ,Produtos.Produto_codigo \n" +
+                        "                           ,Produtos.caixapadrao \n" +
+                        "                           ,Progressiva.pmc \n" +
+                        "                           ,Estoque.Quantidade \n" +
+                        "                           ,Progressiva.pf \n" +
+                        "                           ,Carrinho.valor \n" +
+                        "                           ,Carrinho.quantidade \n" +
+                        "                           ,Carrinho.ValorTotal \n" +
+                        "                           ,(CASE \n" +
+                        "                        WHEN Carrinho.Quantidade > 0 THEN 1 \n" +
+                        "                        ELSE 0 \n" +
+                        "                         END) AS EstaNoCarrinho, \n" +
+                        "                        Progressiva.codigo \n" +
+                        "                        FROM TB_Produtos Produtos \n" +
+                        "                        INNER JOIN TB_Progressiva Progressiva ON Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
+                        "                        LEFT  JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra  AND Estoque.centro = Progressiva.codigo\n" +
+                        "                        LEFT JOIN TB_Carrinho Carrinho ON Carrinho.Loja_id = Progressiva.Loja_id \n" +
+                        "                        AND Carrinho.produto_codigo = Progressiva.Prod_cod\n" +
+                        "                        AND Carrinho.UF = Progressiva.UF \n" +
+                        "                        AND Carrinho.cliente_id =${clienteSelecionado.Empresa_id}\n" +
+                        "                        WHERE Progressiva.Loja_id = ${lojaSelecionada.loja_id}\n" +
+                        "                        AND Progressiva.uf = '${clienteSelecionado.UF}' \n" +
+                        "                        ORDER BY 1"
             }
 
 
             produtos = ProdutosDAO(requireContext())
             listaProtudos = produtos.litar(query)
+
+
+            val letrasIniciais = listaProtudos.map { it.nome.first().toUpperCase() }
+            val letrasUnicas = letrasIniciais.distinct()
+
+            val  adpterFiltroAz = AdapterFiltroAZ(letrasUnicas,this@FragmentProtudos)
+            val layoutManagerAz = LinearLayoutManager(requireContext())
+
             CoroutineScope(Dispatchers.Main).launch {
 
+                binding.recyclerFiltroAZ.adapter = adpterFiltroAz
+                binding.recyclerFiltroAZ.layoutManager = layoutManagerAz
                 adpterProtudos.count = listaProtudos.size
                 adpterProtudos.listaProtudos = listaProtudos
                 adpterProtudos.carregando =false
                 adpterProtudos.notifyDataSetChanged()
             }
+
+            binding.edtBuscaProdutos.addTextChangedListener(object:TextWatcher{
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                       val buscaProdutos = s.toString()
+                       val listaFiltroProdutos  = mutableListOf<ProdutoProgressiva>()
+                       for (i in listaProtudos){
+                           if (i.nome.toLowerCase().contains(buscaProdutos) || i.barra.contains(buscaProdutos) || i.ProdutoCodigo.toString().contains(buscaProdutos) ){
+                                   listaFiltroProdutos.add(i)
+                           }
+
+                       }
+
+
+
+                    if (listaFiltroProdutos.isEmpty()){
+                        binding.recyProtudo.isVisible = false
+                        binding.SemFiltro.isVisible = true
+                    }else{
+                        binding.recyProtudo.isVisible = true
+                        binding.SemFiltro.isVisible =false
+                        adpterProtudos.listaProtudos = listaFiltroProdutos
+                        adpterProtudos.notifyDataSetChanged()
+                    }
+
+
+
+
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                }
+
+            })
         }
 
 
@@ -208,5 +281,30 @@ class FragmentProtudos (carrinhoVisible: visaogrupo.com.br.modulo_visitacao.View
         val carrinhoDAO=  CarrinhoDAO(requireContext())
         val count = carrinhoDAO.quantidadeItens(clienteSelecionado.Empresa_id, lojaSelecionada.loja_id)
         binding.quatidadeItens.text = count.toString()
+    }
+
+    override fun letraFiltro(letra:String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            MainScope().launch {
+                adpterProtudos.listaProtudos = listaProtudos
+                adpterProtudos.notifyDataSetChanged()
+
+            }
+
+
+            for (i in listaProtudos.indices){
+                val letraPrimeira = listaProtudos[i].nome.substring(0,1).toUpperCase()
+                if (letraPrimeira.equals(letra)){
+                    MainScope().launch {
+                        binding.recyProtudo.scrollToPosition(i)
+                    }
+
+                    break
+                }
+            }
+
+        }
+
+
     }
 }
