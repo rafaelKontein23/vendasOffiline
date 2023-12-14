@@ -3,6 +3,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis
 import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteException
 import android.graphics.Color
 import android.util.Log
 import android.widget.ImageView
@@ -260,22 +261,28 @@ class CargaDiaria {
                                           valoresProgresiva.put("Valor", jsonClientesPorLojasRetorno.optDouble("Valor"))
                                           valoresProgresiva.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
                                           valoresProgresiva.put("QuantidadeMaxima", jsonClientesPorLojasRetorno.optInt("QuantidadeMaxima"))
-                                          valoresProgresiva.put("Desconto", jsonClientesPorLojasRetorno.optDouble("Desconto"))
-                                          valoresProgresiva.put("Desconto_Min", jsonClientesPorLojasRetorno.optDouble("Desconto_Min"))
-                                          valoresProgresiva.put("DescontoMaximo", jsonClientesPorLojasRetorno.optDouble("DescontoMaximo"))
-                                          valoresProgresiva.put("PF", jsonClientesPorLojasRetorno.optDouble("PF"))
-                                          valoresProgresiva.put("PMC", jsonClientesPorLojasRetorno.optDouble("PMC"))
-                                          valoresProgresiva.put("ST", jsonClientesPorLojasRetorno.optDouble("ST"))
-                                          valoresProgresiva.put("formalizacao", jsonClientesPorLojasRetorno.optString("formalizacao"))
-                                          valoresProgresiva.put("Seq_Kit", jsonClientesPorLojasRetorno.optInt("Seq_Kit"))
-                                          valoresProgresiva.put("Seq_Cond_Coml", jsonClientesPorLojasRetorno.optInt("Seq_Cond_Coml"))
+                                          valoresProgresiva.put("Desconto", jsonClientesPorLojasRetorno.optDouble("Desconto",0.0))
+                                          valoresProgresiva.put("Desconto_Min", jsonClientesPorLojasRetorno.optDouble("Desconto_Min",0.0))
+                                          valoresProgresiva.put("DescontoMaximo", jsonClientesPorLojasRetorno.optDouble("DescontoMaximo",0.0))
+                                          valoresProgresiva.put("PF", jsonClientesPorLojasRetorno.optDouble("PF",0.0))
+                                          valoresProgresiva.put("PMC", jsonClientesPorLojasRetorno.optDouble("PMC", 0.0))
+                                          valoresProgresiva.put("ST", jsonClientesPorLojasRetorno.optDouble("ST",0.0))
+                                          valoresProgresiva.put("formalizacao", jsonClientesPorLojasRetorno.optString("formalizacao","dsas"))
+                                          valoresProgresiva.put("Seq_Kit", jsonClientesPorLojasRetorno.optInt("Seq_Kit",  0))
+                                          valoresProgresiva.put("Seq_Cond_Coml", jsonClientesPorLojasRetorno.optInt("Seq_Cond_Coml", 0))
                                           valoresProgresiva.put("UF", jsonClientesPorLojasRetorno.optString("UF"))
-                                          valoresProgresiva.put("Data_Vencimento", jsonClientesPorLojasRetorno.optString("Data_Vencimento"))
-                                          valoresProgresiva.put("Prioridade", jsonClientesPorLojasRetorno.optInt("Prioridade"))
-                                          valoresProgresiva.put("Promocao", jsonClientesPorLojasRetorno.optInt("Promocao"))
-                                          valoresProgresiva.put("Codigo",jsonClientesPorLojasRetorno.optInt("CODLISTAPRECOSYNC"))
+                                          valoresProgresiva.put("Data_Vencimento", jsonClientesPorLojasRetorno.optString("Data_Vencimento","dveio Nada"))
+                                          valoresProgresiva.put("Prioridade", jsonClientesPorLojasRetorno.optInt("Prioridade",0))
+                                          valoresProgresiva.put("Promocao", jsonClientesPorLojasRetorno.optInt("Promocao",0))
+                                          valoresProgresiva.put("Codigo",jsonClientesPorLojasRetorno.optInt("CODLISTAPRECOSYNC", 0))
 
-                                          db_Progreesivas.insert("TB_Progressiva",null,valoresProgresiva)
+                                          try {
+                                              db_Progreesivas.insertOrThrow("TB_Progressiva",null,valoresProgresiva)
+
+                                          }catch (e: SQLiteException){
+                                              println("${e.message}")
+                                          }
+
 
                                       }
 
