@@ -73,9 +73,9 @@ class Task_Login {
                             val mensagem = jsonObjectresponse.getString("Mensagem")
                             if (mensagem.isEmpty()) {
                                 val usuarioId = jsonObjectresponse.getString("Usuario_id")
-
+                                val nome = jsonObjectresponse.getString("Nome")
                                 val login = Login(
-                                    usuarioId, "Vendedor", email,senha,"",
+                                    usuarioId, nome, email,senha,"",
                                     "","","","",
                                     "","","","","","" )
 

@@ -46,12 +46,6 @@ class ActLogin:  AppCompatActivity() ,
         // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
 
-        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences?.edit()
-        editor?.putBoolean("cargafeita", true)
-        editor?.apply()
-
-
         entrar!!.setOnClickListener {
 
             entrar!!.text = ""

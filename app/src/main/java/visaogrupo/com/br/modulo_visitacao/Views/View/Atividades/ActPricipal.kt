@@ -174,7 +174,6 @@ class ActPricipal : AppCompatActivity(),
                         android.R.anim.slide_in_left,
                         android.R.anim.slide_out_right
                     )
-
                     fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentClientes)
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commit()
@@ -193,48 +192,37 @@ class ActPricipal : AppCompatActivity(),
 
 
         val clickListenerlojas = View.OnClickListener {
-            val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-            val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
             fragmentClientes.onDestroy()
-            if(feitacarga == false){
-                if (!FragmentCargas.alertvisible){
-                    FragmentCargas.alertvisible = true
-                    val alertas = Alertas()
-                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
-                }
-            }else{
-                val visivel =fragmentLojas.isVisible
 
-                if(!visivel){
-                    val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-                    val clienteSelecionado = sharedPreferences?.getString("ClienteSelecionado", null)
-                    if (clienteSelecionado.isNullOrBlank()){
-                        val dialogErro = DialogErro()
-                        dialogErro.Dialog(this,"Ops!","Selecione primeiro um cliente para acessar as lojas.","Ok",""){
+            val visivel =fragmentLojas.isVisible
 
-                        }
-                    }else {
+            if(!visivel){
+                val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                val clienteSelecionado = sharedPreferences?.getString("ClienteSelecionado", null)
+                if (clienteSelecionado.isNullOrBlank()){
+                    val dialogErro = DialogErro()
+                    dialogErro.Dialog(this,"Ops!","Selecione primeiro um cliente para acessar as lojas.","Ok",""){
 
-                        seleciona(text_lojas,view_lojas,icon_lojas);
-                        Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
-                            view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
-                        itensVisible()
-                        val fragmentManager: FragmentManager = supportFragmentManager
-                        val fragmentTransaction: FragmentTransaction =
-                            fragmentManager.beginTransaction()
-                        fragmentTransaction.setCustomAnimations(
-                            android.R.anim.slide_in_left,
-                            android.R.anim.slide_out_right
-                        )
-
-                        fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
-                        fragmentTransaction.addToBackStack("h")
-                        fragmentTransaction.commit()
                     }
+                }else {
 
+                    seleciona(text_lojas,view_lojas,icon_lojas);
+                    Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
+                        view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
+                    itensVisible()
+                    val fragmentManager: FragmentManager = supportFragmentManager
+                    val fragmentTransaction: FragmentTransaction =
+                        fragmentManager.beginTransaction()
+                    fragmentTransaction.setCustomAnimations(
+                        android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right
+                    )
+
+                    fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
+                    fragmentTransaction.addToBackStack("h")
+                    fragmentTransaction.commit()
                 }
             }
-
 
         }
 
@@ -242,35 +230,22 @@ class ActPricipal : AppCompatActivity(),
         text_lojas.setOnClickListener(clickListenerlojas)
 
         val clickListenerprodutos = View.OnClickListener {
-            val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-            val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
-            if(feitacarga == false){
-                if (!FragmentCargas.alertvisible){
-                    FragmentCargas.alertvisible = true
-                    val alertas = Alertas()
-                    alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
+            val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            val lojaSelecionada = sharedPreferences?.getString("LojaSelecionada", null)
+            if (lojaSelecionada.isNullOrBlank()){
+                val dialogErro = DialogErro()
+                dialogErro.Dialog(this,"Ops!","Selecione primeiro uma loja para acessar os produtos.","Ok",""){
                 }
-            }else{
-
-                val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-                val lojaSelecionada = sharedPreferences?.getString("LojaSelecionada", null)
-                if (lojaSelecionada.isNullOrBlank()){
-                    val dialogErro = DialogErro()
-                    dialogErro.Dialog(this,"Ops!","Selecione primeiro uma loja para acessar os produtos.","Ok",""){
-                    }
-                }else {
-                    seleciona(text_protudo,view_produto,icon_produtos);
-                    Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
-                        view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
-                    itensInvisible()
-                    if(!fragmentProtudos.isVisible){
-                        val mudarFragment = MudarFragment()
-                        mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
-                    }
+            }else {
+                seleciona(text_protudo,view_produto,icon_produtos);
+                Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
+                    view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
+                itensInvisible()
+                if(!fragmentProtudos.isVisible){
+                    val mudarFragment = MudarFragment()
+                    mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
                 }
-
             }
-
         }
 
         icon_produtos.setOnClickListener (clickListenerprodutos)
