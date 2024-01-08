@@ -46,6 +46,14 @@
         <activity
             android:name=".Views.View.Atividades.ActLogin"
             android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Views.View.Atividades.ActSplashSreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,7 +64,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

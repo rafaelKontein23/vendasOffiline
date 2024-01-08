@@ -9,8 +9,12 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Funcao_erro
@@ -45,6 +49,7 @@ class ActLogin:  AppCompatActivity() ,
         carregandoprogress = findViewById(R.id.progressBar_carregando_login)
         // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
+
 
         entrar!!.setOnClickListener {
 
@@ -83,10 +88,14 @@ class ActLogin:  AppCompatActivity() ,
         }
     }
 
+    override fun onBackPressed() {
+       // super.onBackPressed()
+    }
+
     override fun ondismiss(enum: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro) {
         // Para verificar se os dados estão corretos
         when(enum){
-            visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro ->{
+           Login_Erro.Erro ->{
                 val dialog_erro = DialogErro()
                 dialog_erro.Dialog(this, "Atenção", "Algo deu errado, verifiue os campos e tentente novamente", "OK", "Cancelar",
                 ){
@@ -101,7 +110,21 @@ class ActLogin:  AppCompatActivity() ,
                 carregandoprogress!!.visibility = View.GONE
                 entrar!!.text = "Entrar"
                 var intent = Intent(baseContext, ActPricipal::class.java)
+
                 intent.putExtra("Tela","")
+                val dataAtual = DataAtual()
+                val  date = dataAtual.recuperaData()
+                val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("dataLogin", date)
+                editor.apply()
+                ExcluirPrefuser.excluirItemPref(baseContext,"LojaSelecionada")
+                ExcluirPrefuser.excluirItemPref(baseContext,"ClienteSelecionado")
+                val excluiDadosTabelas = ExcluiDados(baseContext)
+                excluiDadosTabelas.exluidados()
+
+                editor?.putBoolean("cargafeita", false)
+                editor?.apply()
                 startActivity(intent)
             }
         }

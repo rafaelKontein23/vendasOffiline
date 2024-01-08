@@ -18,6 +18,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
@@ -290,6 +292,13 @@ class ActPricipal : AppCompatActivity(),
                 }else if(selectedItem.contains("Adm")){
 
                 }else if(selectedItem.contains("Sobre")){
+
+                }else if(selectedItem.contains("Sair")){
+                    finish()
+                    MainScope().launch {
+                        val  intent = Intent(applicationContext,ActLogin::class.java)
+                        startActivity(intent)
+                    }
 
                 }
             }

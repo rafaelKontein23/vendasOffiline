@@ -13,4 +13,15 @@ class DataAtual {
 
         return dataFormatada
     }
+
+
+    fun verificarDataPassada(dataString: String): Boolean {
+        val formatoData = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dataFornecida: Date = formatoData.parse(dataString) ?: return false
+
+        val dataAtual = Calendar.getInstance().time
+
+        return dataAtual.after(dataFornecida)
+    }
+
 }
