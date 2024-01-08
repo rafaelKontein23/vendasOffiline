@@ -41,6 +41,7 @@ class FragmentLojas (trocarcorItem: visaogrupo.com.br.modulo_visitacao.Views.Mod
         val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val objetoSerializado = sharedPreferences?.getString("ClienteSelecionado", null)
+        
         clienteSelecionado =  gson.fromJson(objetoSerializado, Clientes::class.java)
 
 

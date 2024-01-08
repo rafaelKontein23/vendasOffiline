@@ -36,6 +36,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.OperadorLogistico
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.RecuperaDataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
@@ -115,7 +116,8 @@ class DialogOperadorLogistico (context:Context){
                 }
                 val carrinhoDao = CarrinhoDAO(context)
                 carrinhoDao.excluirItemCarrinho(list[0].clienteId,list[0].lojaId)
-
+                ExcluirPrefuser.excluirItemPref(context,"LojaSelecionada")
+                ExcluirPrefuser.excluirItemPref(context,"ClienteSelecionado")
                 dialog.dismiss()
                 val  intent = Intent(context,ActPricipal::class.java)
                 intent.putExtra("Tela","pedido")

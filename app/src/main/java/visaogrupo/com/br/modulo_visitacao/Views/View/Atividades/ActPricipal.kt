@@ -22,6 +22,7 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
@@ -32,6 +33,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinner
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
 
 class ActPricipal : AppCompatActivity(),
@@ -201,23 +203,35 @@ class ActPricipal : AppCompatActivity(),
                     alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
-                seleciona(text_lojas,view_lojas,icon_lojas);
-                Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
-                    view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
-                itensVisible()
                 val visivel =fragmentLojas.isVisible
-                if(!visivel){
-                    val fragmentManager: FragmentManager = supportFragmentManager
-                    val fragmentTransaction: FragmentTransaction =
-                        fragmentManager.beginTransaction()
-                    fragmentTransaction.setCustomAnimations(
-                        android.R.anim.slide_in_left,
-                        android.R.anim.slide_out_right
-                    )
 
-                    fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
-                    fragmentTransaction.addToBackStack("h")
-                    fragmentTransaction.commit()
+                if(!visivel){
+                    val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                    val clienteSelecionado = sharedPreferences?.getString("ClienteSelecionado", null)
+                    if (clienteSelecionado.isNullOrBlank()){
+                        val dialogErro = DialogErro()
+                        dialogErro.Dialog(this,"Ops!","Selecione primeiro um cliente para acessar as lojas.","Ok",""){
+
+                        }
+                    }else {
+
+                        seleciona(text_lojas,view_lojas,icon_lojas);
+                        Deseleciona_itens(text_home,text_pedidos,text_clientes,text_protudo,view_home,
+                            view_prdidos,view_clientes,view_produto,icon_home,icon_pedidos,icon_clientes,icon_produtos)
+                        itensVisible()
+                        val fragmentManager: FragmentManager = supportFragmentManager
+                        val fragmentTransaction: FragmentTransaction =
+                            fragmentManager.beginTransaction()
+                        fragmentTransaction.setCustomAnimations(
+                            android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right
+                        )
+
+                        fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
+                        fragmentTransaction.addToBackStack("h")
+                        fragmentTransaction.commit()
+                    }
+
                 }
             }
 
@@ -237,14 +251,24 @@ class ActPricipal : AppCompatActivity(),
                     alertas.alerta(supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
                 }
             }else{
-                seleciona(text_protudo,view_produto,icon_produtos);
-                Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
-                    view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
-                itensInvisible()
-                if(!fragmentProtudos.isVisible){
-                    val mudarFragment = MudarFragment()
-                    mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+
+                val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                val lojaSelecionada = sharedPreferences?.getString("LojaSelecionada", null)
+                if (lojaSelecionada.isNullOrBlank()){
+                    val dialogErro = DialogErro()
+                    dialogErro.Dialog(this,"Ops!","Selecione primeiro uma loja para acessar os produtos.","Ok",""){
+                    }
+                }else {
+                    seleciona(text_protudo,view_produto,icon_produtos);
+                    Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
+                        view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
+                    itensInvisible()
+                    if(!fragmentProtudos.isVisible){
+                        val mudarFragment = MudarFragment()
+                        mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+                    }
                 }
+
             }
 
         }
