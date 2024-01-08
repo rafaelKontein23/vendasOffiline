@@ -126,26 +126,26 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
 
             }
 
-                for (progressiva in listaProgrssiva) {
-                    if(quantidadeAdionada >= progressiva.quantidade  ){
+            for (progressiva in listaProgrssiva) {
+                if(quantidadeAdionada >= progressiva.quantidade  ){
 
-                        listaProgrssiva.forEach() { progressivaLista ->
-                            progressivaLista.ProgressivaSelecionad = false
-                        }
-                        progressiva.ProgressivaSelecionad = true
-                        val descontoProgreesivaSelecionada =progressiva.desconto
-                        val valorProgressivaSelecionada  = progressiva.valor
-                        val quantidadeProgressivaSelecionbada  =progressiva.quantidade
-                        val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
-                        ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
-                        if (soma){
-                            atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, true)
-                        }else {
-                            atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, false)
+                    listaProgrssiva.forEach() { progressivaLista ->
+                        progressivaLista.ProgressivaSelecionad = false
+                    }
+                    progressiva.ProgressivaSelecionad = true
+                    val descontoProgreesivaSelecionada =progressiva.desconto
+                    val valorProgressivaSelecionada  = progressiva.valor
+                    val quantidadeProgressivaSelecionbada  =progressiva.quantidade
+                    val ProgressivaSelecionada  = ProgressivaSelecionada(quantidadeProgressivaSelecionbada,descontoProgreesivaSelecionada,valorProgressivaSelecionada)
+                    ActProtudoDetalhe.progressivaSelecionada = ProgressivaSelecionada
+                    if (soma){
+                        atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, true)
+                    }else {
+                        atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,ProgressivaSelecionada.valorProgressivaSelecionada,true, false)
 
-                        }
                     }
                 }
+            }
 
 
 

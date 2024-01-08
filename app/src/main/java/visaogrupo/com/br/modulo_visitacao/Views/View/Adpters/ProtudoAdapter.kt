@@ -85,6 +85,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                     bundle.putSerializable("ImagemProd", listaProtudos[position].base64)
                     intent.putExtra("ProtudoSelecionado_bundle", bundle)
                     intent.putExtra("ImagemProd_bundle", bundle)
+                    intent.putExtra("estaNoCarrinho", listaProtudos[position].estaNoCarrinho)
                     start.atividade(intent)
 
                 }

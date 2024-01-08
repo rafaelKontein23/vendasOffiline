@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Atividades
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -8,16 +9,19 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizadetalhesProdutos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.CarrinhoDetalheAdpter
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogOperadorLogistico
 
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActCarrinhoDetalheBinding
 
 class ActCarrinhoDetalhe:  AppCompatActivity(),
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizadetalhesProdutos,
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade {
+    AtualizadetalhesProdutos,
+    StartaAtividade {
     private  lateinit var  binding: ActivityActCarrinhoDetalheBinding
     lateinit var adpterCarrinhoDetalhes: CarrinhoDetalheAdpter
     lateinit var   listaProdutoCarrinho :MutableList<Carrinho>
@@ -30,26 +34,26 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         super.onPostCreate(savedInstanceState)
 
 
-        val  carrinhoDAO = CarrinhoDAO(this)
-        listaProdutoCarrinho = carrinhoDAO.listaritensCarrinho(ActPricipal.loja_id,ActPricipal.cliente_id)
-
-        val linearLayoutManager = LinearLayoutManager(this)
-        adpterCarrinhoDetalhes =  CarrinhoDetalheAdpter(listaProdutoCarrinho,binding.root,this,this,this)
-        binding.recyprotudo.layoutManager = linearLayoutManager
-        binding.recyprotudo.adapter = adpterCarrinhoDetalhes
-        val  valorformatMinimo = String.format("%.2f",ActPricipal.lojavalorMinimo)
-        binding.ValorMinimoCarrinho.text = "R$ "  + valorformatMinimo
-
         binding.continuarCarrinho.setOnClickListener {
-            val dialogOperadorLogistico = DialogOperadorLogistico(this)
-            dialogOperadorLogistico.dialog(this,listaProdutoCarrinho,valorTotal)
+            if(valorTotal < valorminimo){
+                val dialogErro  = DialogErro()
+                dialogErro.Dialog(this,"Atenção", "Pedido mínimo não Atingido!","Voltar para a loja",""){
+                    onBackPressed()
+                }
+            }else {
+                val dialogOperadorLogistico = DialogOperadorLogistico(this)
+                dialogOperadorLogistico.dialog(this,listaProdutoCarrinho,valorTotal)
+            }
+
         }
 
         binding.voltarCarrinho.setOnClickListener{
              finish()
         }
-        valorminimo = ActPricipal.lojavalorMinimo
-        atualzza(listaProdutoCarrinho,ActPricipal.lojavalorMinimo)
+
+        atualizarInterface()
+
+
 
 
     }
@@ -64,8 +68,8 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
             lista[position].valortotal = valor
             atualzza(lista,valorminimo)
         }else{
+            adpterCarrinhoDetalhes.listaProdutoCarrinho = lista
             adpterCarrinhoDetalhes.notifyDataSetChanged()
-
         }
 
     }
@@ -73,6 +77,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
 
         var valorDesconto = 0.0
         var quantidade = 0
+        valorTotal = 0.0
         for (i in 0 until  lista.size){
             valorTotal += lista[i].valortotal.toString().toDouble()
         }
@@ -112,7 +117,30 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
+            atualizarInterface()
+        }
+    }
+
     override fun atividade(intent: Intent) {
         startActivityForResult(intent,3)
+    }
+
+    fun atualizarInterface(){
+
+        val  carrinhoDAO = CarrinhoDAO(this)
+        listaProdutoCarrinho = carrinhoDAO.listaritensCarrinho(ActPricipal.loja_id,ActPricipal.cliente_id)
+
+        val linearLayoutManager = LinearLayoutManager(this)
+        adpterCarrinhoDetalhes =  CarrinhoDetalheAdpter(listaProdutoCarrinho,binding.root,this,this,this)
+        binding.recyprotudo.layoutManager = linearLayoutManager
+        binding.recyprotudo.adapter = adpterCarrinhoDetalhes
+        val  valorformatMinimo = String.format("%.2f",ActPricipal.lojavalorMinimo)
+        binding.ValorMinimoCarrinho.text = "R$ "  + valorformatMinimo
+        valorminimo = ActPricipal.lojavalorMinimo
+
+        atualzza(listaProdutoCarrinho,ActPricipal.lojavalorMinimo)
     }
 }

@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Adpters
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -92,6 +93,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
             intent.putExtra("ImagemProd_bundle", bundle)
             bundle.putSerializable("ProtudoSelecionado", produto as Serializable)
             intent.putExtra("ProtudoSelecionado_bundle", bundle)
+            intent.putExtra("estaNoCarrinho",1)
             start.atividade(intent)
         }
 

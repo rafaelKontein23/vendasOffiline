@@ -35,6 +35,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.*
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProgresivaDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
 
 class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValorProduto , AtualizaQuantidadeProduto{
@@ -71,6 +72,9 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         val lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
         val clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+        val estaNoCarrinho  = intent.getIntExtra("estaNoCarrinho",0)
+
+
 
         // Atualiza as informações do front
         binding.PMC.text = "R$ " + protudoSelecionado.PMC.toString()
@@ -131,7 +135,12 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
             }
             job1.join()
             job2.join()
-            binding.edtQuantidade.setText(  listaProgressiva[0].quantidade.toString())
+            if (estaNoCarrinho == 1){
+                edtQuantidade.setText(protudoSelecionado.quantidadeCarrinho.toString())
+            }else{
+                binding.edtQuantidade.setText(  listaProgressiva[0].quantidade.toString())
+
+            }
 
             listaProgressiva.addAll(lista_progressivapresona)
 
@@ -142,8 +151,13 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
             CoroutineScope(Dispatchers.Main).launch {
                  binding.recyProgressiva.layoutManager = layoutManager
                  binding.recyProgressiva.adapter = progressivaAdpter
+                if (estaNoCarrinho == 1){
+                    progressivaAdpter.quantidadeAdionada = protudoSelecionado.quantidadeCarrinho
 
-                progressivaAdpter.quantidadeAdionada = listaProgressiva[0].quantidade
+                }else{
+                    progressivaAdpter.quantidadeAdionada = listaProgressiva[0].quantidade
+
+                }
                 progressivaAdpter.clicou= false
                 progressivaAdpter.notifyDataSetChanged()
              }
@@ -308,12 +322,28 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
 
                val carrinhoDAO = CarrinhoDAO(this)
-               carrinhoDAO.insertCarrinho(carrinho)
+               try {
+                   if (estaNoCarrinho  == 1){
+
+                       carrinhoDAO.atualizaItemCarrinho(carrinho)
+                       Toast.makeText(baseContext,"Item atualizado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+
+
+                   }else{
+                       carrinhoDAO.insertCarrinho(carrinho)
+                       Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+                   }
+               }catch (e:Exception){
+                   e.printStackTrace()
+                   val dialogErro = DialogErro()
+                   dialogErro.Dialog(this,"Ops!", "Algo deu errado","Ok",""){
+
+                   }
+               }
+
                val intent = Intent()
                setResult(Activity.RESULT_OK, intent)
                finish()
-               Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
-               this.onBackPressed()
            }
 
         }
