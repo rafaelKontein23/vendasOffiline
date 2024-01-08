@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro
@@ -25,6 +26,7 @@ class ActLogin:  AppCompatActivity() ,
     private var email: EditText? = null
     private  var senha:EditText? = null
     private var carregandoprogress: ProgressBar? = null
+    private var  equesciSenha :TextView? =  null
     private var entrar: Button? = null
     val login_erro = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro
     companion object {
@@ -39,6 +41,7 @@ class ActLogin:  AppCompatActivity() ,
         email = findViewById(R.id.email_login)
         senha = findViewById(R.id.senha)
         entrar = findViewById(R.id.entrar)
+        equesciSenha = findViewById(R.id.equesci_senha)
         carregandoprogress = findViewById(R.id.progressBar_carregando_login)
         // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
@@ -64,6 +67,13 @@ class ActLogin:  AppCompatActivity() ,
                 try {
                     task_login.Request_login(captuere_email, capture_senha, "", this,this)
                 } catch (e: Exception) {
+                    e.printStackTrace()
+                    var dialogErro = DialogErro()
+                    dialogErro.Dialog(this,"Erro na conexão!","Algo deu errado, por favor verifique a conexão e tente novamente","OK",""){
+
+                    }
+                    carregandoprogress!!.visibility = View.GONE
+                    entrar!!.text = "Entrar"
 
                 }
             }else{

@@ -56,8 +56,8 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
         val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
         adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this)
 
-        adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!))
-        adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!))
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
         arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         arrastaParaLado.adapter = adapterViewPagerPedidos
 

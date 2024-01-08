@@ -21,13 +21,13 @@
 
             <ImageView
                 android:id="@+id/logo_empresa"
-                android:layout_width="68dp"
-                android:layout_height="49dp"
+                android:layout_width="129dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="40dp"
+                android:src="@drawable/hertz"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView"

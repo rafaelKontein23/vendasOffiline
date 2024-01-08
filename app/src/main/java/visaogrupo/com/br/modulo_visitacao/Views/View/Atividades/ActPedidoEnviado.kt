@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import visaogrupo.com.br.modulo_visitacao.R
@@ -20,6 +22,8 @@ class ActPedidoEnviado : AppCompatActivity() {
     lateinit var  data :TextView
     lateinit var  chave:TextView
     lateinit var  recyProdutosPedidos :RecyclerView
+    lateinit var containerInfoPedidos:ConstraintLayout
+    lateinit var containerCopiar:ConstraintLayout
 
 
 
@@ -31,6 +35,8 @@ class ActPedidoEnviado : AppCompatActivity() {
         data = findViewById(R.id.data)
         chave = findViewById(R.id.chave)
         recyProdutosPedidos = findViewById(R.id.recyProdutos)
+        containerInfoPedidos = findViewById(R.id.containerInfoPedidos)
+        containerCopiar = findViewById(R.id.containerCopiar)
 
         val pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
 
@@ -39,24 +45,31 @@ class ActPedidoEnviado : AppCompatActivity() {
         if (pedido != null) {
             listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido.pedidoID)
         }
+        containerInfoPedidos.isVisible = pedido?.pedidoEnviado == true
+        chave.isVisible = pedido?.pedidoEnviado == true
+        containerCopiar.isVisible = pedido?.pedidoEnviado == true
+        if (pedido?.pedidoEnviado == true){
+
+            chave.text =pedido?.chave
+            val valorFormatado = String.format("%.2f", pedido?.valorTotal)
+            valorTotal.text = "R$ "+ valorFormatado.replace(".",",")
+            data.text = pedido?.dataPedido
+            chave.setOnClickListener{
+                val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val textoParaCopiar = chave.text.toString()
+                val clipData = ClipData.newPlainText("label", textoParaCopiar)
+                clipboardManager.setPrimaryClip(clipData)
+
+                // Exibe uma mensagem de confirmação
+                Toast.makeText(this, "Chave copiado para a área de transferência", Toast.LENGTH_SHORT).show()
+            }
+        }
         val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,this)
         val linearLayout = LinearLayoutManager(this)
         recyProdutosPedidos.layoutManager = linearLayout
         recyProdutosPedidos.adapter = adpterProdutosPedidos
 
 
-        chave.text =pedido?.chave
-        valorTotal.text = "R$ "+ pedido?.valorTotal.toString()
-        data.text = pedido?.dataPedido
-        chave.setOnClickListener{
-            val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val textoParaCopiar = chave.text.toString()
-            val clipData = ClipData.newPlainText("label", textoParaCopiar)
-            clipboardManager.setPrimaryClip(clipData)
-
-            // Exibe uma mensagem de confirmação
-            Toast.makeText(this, "Chave copiado para a área de transferência", Toast.LENGTH_SHORT).show()
-        }
 
     }
 }

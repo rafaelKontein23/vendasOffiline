@@ -24,7 +24,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout5"
+        android:id="@+id/containerInfoPedidos"
         android:layout_width="match_parent"
         android:layout_height="268dp"
         android:layout_marginStart="24dp"
@@ -68,16 +68,19 @@
 
         <TextView
             android:id="@+id/Total"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="24dp"
+            android:textAlignment="center"
             android:layout_marginEnd="40dp"
             android:fontFamily="@font/inter"
             android:text="TextView"
-            android:textColor="@color/white"
 
+            android:textColor="@color/white"
             android:textFontWeight="700"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view18" />
 
         <TextView
@@ -94,14 +97,17 @@
 
         <TextView
             android:id="@+id/data"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="40dp"
             android:fontFamily="@font/inter"
             android:text="TextView"
+            android:textAlignment="center"
             android:textColor="@color/white"
             android:textFontWeight="700"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/view18" />
 
@@ -141,7 +147,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout7"
+        android:id="@+id/containerCopiar"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginStart="24dp"
@@ -149,7 +155,7 @@
         android:background="@drawable/funco_pedido_verde_escuro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+        app:layout_constraintTop_toBottomOf="@+id/containerInfoPedidos">
 
 
         <TextView
@@ -174,13 +180,11 @@
         android:id="@+id/recyProdutos"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+        app:layout_constraintTop_toBottomOf="@+id/containerCopiar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

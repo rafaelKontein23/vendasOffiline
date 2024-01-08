@@ -335,6 +335,7 @@
             <TextView
                 android:id="@+id/atualizarTodos"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:text="atualizar todos"
