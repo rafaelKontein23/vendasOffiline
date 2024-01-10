@@ -57,11 +57,11 @@ class DialogOperadorLogistico (context:Context){
     fun dialog( context:Context,list: MutableList<Carrinho>, valorTotal:Double){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_operador_logistico);
-        dialog.show();
         dialog.getWindow()?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow()?.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow()?.getAttributes()?.windowAnimations= R.style.DialoAnimation;
         dialog.getWindow()?.setGravity(Gravity.BOTTOM);
+        dialog.show();
 
 
         val  recyclerOpl = dialog.findViewById<RecyclerView>(R.id.recyclerOpl)
@@ -88,7 +88,7 @@ class DialogOperadorLogistico (context:Context){
             buton.isEnabled = false
             val numeroPedio = NunerodoPedido.text.toString()
 
-            if (!oplId.isEmpty() && formadepagamentocap.toLowerCase() != "selecione"){
+            if (!oplId.isEmpty() && !formadepagamentocap.contains("Selecionar")){
                 val observacaocap = observacao.text.toString()
 
                 val formaDePagmento = infoFormaDePagamento(context,list[0].valortotal,list[0].RegraPrazo,list[0].cnpj,formadepagamentocap)

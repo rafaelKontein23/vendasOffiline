@@ -16,6 +16,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.google.firebase.FirebaseApp
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.*
 import kotlinx.coroutines.MainScope
@@ -31,6 +32,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CapturaDeviceToken
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinnerAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
@@ -72,6 +74,10 @@ class ActPricipal : AppCompatActivity(),
         list_menu.add("")
         list_menu.add("")
         list_menu.add("")
+        FirebaseApp.initializeApp(this);
+
+        val  capDevice = CapturaDeviceToken()
+        capDevice.recuperaToken()
 
         viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)

@@ -79,10 +79,11 @@ class FormaDePagamentoDAO(context: Context):
 
              }
         }else {
-              query = "SELECT * FROM TB_formaDePagamento WHERE loja_id = ${loja_id} "+
+              query = "SELECT 0 Tipo,* FROM TB_formaDePagamento WHERE loja_id = ${loja_id} " +
+                      "UNION "+
                       "SELECT 2 Tipo,* FROM TB_formaDePagamento Pagamento " +
                       "WHERE pagamento.prazomedio in ( " +
-                      " SELECT DISTINCT prazomedio FROM TB_PrazoMedioXValor Pz " +
+                      "SELECT DISTINCT prazomedio FROM TB_PrazoMedioXValor Pz " +
                       " where ${valorToatalPedido} BETWEEN valorde and valorate " +
                       ") and loja_id = ${loja_id}"
 
@@ -91,7 +92,7 @@ class FormaDePagamentoDAO(context: Context):
              while (curso.moveToNext()){
 
                  val tipo = curso.getInt(0)
-                 val loja_id = curso.getInt(1)
+                 val loja_id = curso.getInt(0)
                  val Cod_FormaPgto = curso.getString(2)
                  val FormaPgto   = curso.getString(3)
                  val ValorMinimo = curso.getDouble(4)

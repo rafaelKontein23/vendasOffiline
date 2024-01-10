@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id "org.jetbrains.kotlin.android.extensions"
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -52,10 +53,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-
-
-
-
-
-
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation 'com.google.firebase:firebase-messaging:23.4.0'
 }

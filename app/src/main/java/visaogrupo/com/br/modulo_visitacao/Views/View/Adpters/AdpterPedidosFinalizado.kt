@@ -45,7 +45,10 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolderPedidoFinalizado, position: Int) {
-        val valorTot = String.format("%.2f",listaPedido[position].valorTotal)
+        val valorPedidoTotalDAO = PedidosFinalizadosDAO(context)
+        val valorTotalPedido = valorPedidoTotalDAO.somarTotalPedido(listaPedido[position].pedidoID)
+        val valorTot = String.format("%.2f",valorTotalPedido)
+
         val cnpj = listaPedido[position].cnpj?.substring(0,2)+"."+
                 listaPedido[position].cnpj?.substring(2,5)+"."+
                 listaPedido[position].cnpj?.substring(5,8)+"/"+

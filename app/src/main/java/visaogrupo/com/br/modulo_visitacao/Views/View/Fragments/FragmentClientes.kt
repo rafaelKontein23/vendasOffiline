@@ -262,12 +262,11 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
         CoroutineScope(Dispatchers.IO).launch {
 
-
-            val clientes = ClientesDAO(requireContext())
-            val queryListaClientes ="SELECT * FROM TB_clientes ORDER BY 1 LIMIT 5"
-            val queryListaClientesToatal ="SELECT * FROM TB_clientes "
-            listaclientes = clientes.listar(requireContext(),queryListaClientes)
-            listaclientesFiltroButton = clientes.listar(requireContext(),queryListaClientesToatal)
+           val clientes = ClientesDAO(requireContext())
+           val queryListaClientes ="SELECT * FROM TB_clientes ORDER BY 1 LIMIT 5"
+           val queryListaClientesToatal ="SELECT * FROM TB_clientes "
+           listaclientes = clientes.listar(requireContext(),queryListaClientes)
+           listaclientesFiltroButton = clientes.listar(requireContext(),queryListaClientesToatal)
           CoroutineScope(Dispatchers.Main).launch{
 
                 adapterCliente.listaClientes = listaclientes

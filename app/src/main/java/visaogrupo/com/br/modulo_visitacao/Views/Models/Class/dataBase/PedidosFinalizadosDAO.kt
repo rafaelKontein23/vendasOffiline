@@ -230,4 +230,16 @@ class PedidosFinalizadosDAO(context: Context) {
         return listaProdutosFinalizados
     }
 
+    fun somarTotalPedido(pedidoId:Long):Double{
+        val query = "SELECT Valor FROM TB_Produtos_Pedidos_Finalizado WHERE pedidoid = ${pedidoId}"
+        val cursor = dbPedido.writableDatabase.rawQuery(query,null)
+
+        var valortotal = 0.0
+        while (cursor.moveToNext()){
+            val valor  = cursor.getDouble(0)
+            valortotal = valor +valortotal
+        }
+        return valortotal
+    }
+
 }

@@ -3,6 +3,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.View.Atividades
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Paint.Align
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -24,6 +25,8 @@ class ActPedidoEnviado : AppCompatActivity() {
     lateinit var  recyProdutosPedidos :RecyclerView
     lateinit var containerInfoPedidos:ConstraintLayout
     lateinit var containerCopiar:ConstraintLayout
+    lateinit var tituloPedido:TextView
+    lateinit var totalPedido :TextView
 
 
 
@@ -37,21 +40,26 @@ class ActPedidoEnviado : AppCompatActivity() {
         recyProdutosPedidos = findViewById(R.id.recyProdutos)
         containerInfoPedidos = findViewById(R.id.containerInfoPedidos)
         containerCopiar = findViewById(R.id.containerCopiar)
+        tituloPedido = findViewById(R.id.tituloPedido)
+        totalPedido= findViewById(R.id.totalPedido)
 
         val pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
 
         val pedidosFinalizadosDAO = PedidosFinalizadosDAO(applicationContext)
         var listaProdutos  = mutableListOf<ProdutosFinalizados>()
+        val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
         if (pedido != null) {
             listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido.pedidoID)
         }
         containerInfoPedidos.isVisible = pedido?.pedidoEnviado == true
         chave.isVisible = pedido?.pedidoEnviado == true
         containerCopiar.isVisible = pedido?.pedidoEnviado == true
+
+
         if (pedido?.pedidoEnviado == true){
 
             chave.text =pedido?.chave
-            val valorFormatado = String.format("%.2f", pedido?.valorTotal)
+            val valorFormatado = String.format("%.2f", valorTotalPedido)
             valorTotal.text = "R$ "+ valorFormatado.replace(".",",")
             data.text = pedido?.dataPedido
             chave.setOnClickListener{
@@ -63,6 +71,12 @@ class ActPedidoEnviado : AppCompatActivity() {
                 // Exibe uma mensagem de confirmação
                 Toast.makeText(this, "Chave copiado para a área de transferência", Toast.LENGTH_SHORT).show()
             }
+        }else{
+            tituloPedido.setText("Detalhes de produtos")
+            totalPedido.isVisible = true
+            val valorFormatado = String.format("%.2f", valorTotalPedido)
+            totalPedido.text = "R$ ${valorFormatado.replace(".",",")}"
+
         }
         val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,this)
         val linearLayout = LinearLayoutManager(this)
