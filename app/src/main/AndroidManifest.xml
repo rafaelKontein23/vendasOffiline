@@ -15,6 +15,13 @@
         <activity
             android:name=".Views.View.Atividades.ActPedidoEnviado"
             android:exported="false" />
+        <service
+            android:name=".Views.Models.Class.Ultis.ReceberPush"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".Views.View.Atividades.ActPedido"
             android:exported="false">

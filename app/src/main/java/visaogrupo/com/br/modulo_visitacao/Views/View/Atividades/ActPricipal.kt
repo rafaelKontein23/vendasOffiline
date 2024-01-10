@@ -1,7 +1,9 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Atividades
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -78,6 +81,12 @@ class ActPricipal : AppCompatActivity(),
 
         val  capDevice = CapturaDeviceToken()
         capDevice.recuperaToken()
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+        }
+
+
+
 
         viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
