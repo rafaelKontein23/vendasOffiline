@@ -115,11 +115,6 @@ class CargaDiaria {
                     lendoPrazoMedio.join()
 
 
-
-
-
-
-
                   Log.d("Iniciou Segunda Parte","")
                   val LendoFormaDePagamentoExclusiva = launch {
                       var listaCnpj = mutableListOf<Clientes>()

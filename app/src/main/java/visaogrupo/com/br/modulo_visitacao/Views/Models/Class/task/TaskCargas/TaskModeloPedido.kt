@@ -19,22 +19,25 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Insync_Task
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ModeloPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Incript
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ModeloDePedidoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.RetrofitModelo
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TaskModeloPedido {
 
-    fun requestModelo(context: Context,  user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon: ImageView, animador: ObjectAnimator, terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
+    fun requestModelo(context: Context,  user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon: ImageView, animador: ObjectAnimator, terminouCarga: TerminouCarga){
         CoroutineScope(Dispatchers.IO).launch {
             val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
             val gsonuserid = Gson()
             val objetoSerializadoLogin = sharedPreferences?.getString("UserLogin", null)
             val login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
-            val downloadService = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.RetrofitModelo.createService(visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.Insync_Task::class.java)
+            val downloadService = RetrofitModelo.createService(Insync_Task::class.java)
             val json = JSONObject()
             json.put("CodigoUsuario",login.Usuario_id)
 

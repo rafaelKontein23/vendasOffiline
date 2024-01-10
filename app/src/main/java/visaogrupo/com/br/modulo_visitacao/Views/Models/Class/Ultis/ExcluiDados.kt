@@ -18,6 +18,7 @@ class ExcluiDados(context: Context) {
         listaNomeTabela.add("TB_Progressiva")
         listaNomeTabela.add("TB_Estoque")
         listaNomeTabela.add("TB_formaDePagamento")
+        listaNomeTabela.add("TB_Imagens")
         for (nomes in listaNomeTabela){
             try {
                 val excluiTabela = "DELETE FROM ${nomes}"
@@ -31,6 +32,18 @@ class ExcluiDados(context: Context) {
         }
 
         return listaNomeTabela
+    }
+
+    fun excluidaEstoque (){
+        try {
+            val excluiTabela = "DELETE FROM TB_Estoque"
+            db.execSQL(excluiTabela)
+            Log.d("Excluiu dados de : ","TB_Estoque")
+        }catch (e:Exception){
+            e.printStackTrace()
+            Log.d("Falho a exclusão de","Dados")
+        }
+
     }
 
 

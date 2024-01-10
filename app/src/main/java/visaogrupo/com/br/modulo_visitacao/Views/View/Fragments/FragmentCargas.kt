@@ -28,6 +28,9 @@ import kotlinx.android.synthetic.main.fragment_cargas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CargaDiaria
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoqueSeparado
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskModeloPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskImagem
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogMudarAmbienteSenha
@@ -80,15 +83,15 @@ class FragmentCargas () : Fragment() ,
         val objetoSerializado = sharedPreferences?.getString("UserLogin", null)
         login =  gson.fromJson(objetoSerializado, Login::class.java)
         val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
-
+ 
 
          // verifica se a carga ja esta feita
         if(feitacarga ==true){
             trocaCoritensCargaFeita(binding.imgCargaiImagem,binding.textcargaImagem,binding.infoTextCargaImagem)
-            trocaCoritensCargaFeita(binding.imgCargamodelo,binding.textcargamodelo,binding.infoTextCargamodelo)
+            trocaCoritensCargaFeita(binding.imgEstoque,binding.textEstoque,binding.infoTextoEsque)
         }else{
             trocaCoritensCargaNaoFeita(binding.imgCargaiImagem,binding.textcargaImagem,binding.infoTextCargaImagem)
-            trocaCoritensCargaNaoFeita(binding.imgCargamodelo,binding.textcargamodelo,binding.infoTextCargamodelo)
+            trocaCoritensCargaNaoFeita(binding.imgEstoque,binding.textEstoque,binding.infoTextoEsque)
         }
 
         binding.nomeVendedor.text = login.Nome
@@ -122,7 +125,7 @@ class FragmentCargas () : Fragment() ,
                 taskImagem.requestImagem(requireContext(),login.Usuario_id.toString(),view.cargaImagem,view.textcargaImagem,view.infoTextCargaImagem,view.imgCargaiImagem,animatdor,this)
             }
         }
-        binding.cargaModelodePedido.setOnClickListener {
+        binding.cargaEstoque.setOnClickListener {
 
             if (feitacarga == false){
                 if (!alertvisible){
@@ -133,11 +136,10 @@ class FragmentCargas () : Fragment() ,
 
             }else{
                 // fazer carga de modelo de pedido aqui
-                val animatdor = animandoCarregando(view.carregandocargamodelo)
-                atualizaviewAtualizando(view.cargaModelodePedido,requireContext(),view.textcargamodelo,view.infoTextCargamodelo)
-                val taskModeloPedido =
-                    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskModeloPedido()
-                taskModeloPedido.requestModelo(requireContext(),login.Usuario_id.toString(),view.cargaModelodePedido,view.textcargamodelo,view.infoTextCargamodelo,view.imgCargamodelo,animatdor,this)
+                val animatdor = animandoCarregando(view.carregandoEstoque)
+                atualizaviewAtualizando(view.cargaEstoque,requireContext(),view.textEstoque,view.infoTextoEsque)
+                val taskEstoque = TaskEstoqueSeparado()
+                taskEstoque.requestEstoque(requireContext(),view.cargaEstoque,view.textEstoque,view.infoTextoEsque,view.imgEstoque,animatdor,this)
 
             }
         }
@@ -173,7 +175,7 @@ class FragmentCargas () : Fragment() ,
 
     override fun terminouCarga() {
         trocaCoritensCargaFeita(binding.imgCargaiImagem,binding.textcargaImagem,binding.infoTextCargaImagem)
-        trocaCoritensCargaFeita(binding.imgCargamodelo,binding.textcargamodelo,binding.infoTextCargamodelo)
+        trocaCoritensCargaFeita(binding.imgEstoque,binding.textEstoque,binding.infoTextoEsque)
         callback?.onActionDone()
         val alerta = Alertas()
         alerta.alerta(requireActivity().supportFragmentManager,"Carga feita! Boas Vendas =)","#4DA310",R.drawable.certo,R.drawable.bordas_verde_alert)
@@ -212,8 +214,4 @@ class FragmentCargas () : Fragment() ,
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-
-
-
 }

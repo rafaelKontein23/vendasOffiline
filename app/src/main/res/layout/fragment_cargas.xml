@@ -261,27 +261,26 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cargaModelodePedido"
+                android:id="@+id/cargaEstoque"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/bordascargas"
-                android:visibility="gone"
                 android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cargaImagem">
 
                 <ImageView
-                    android:id="@+id/imgCargamodelo"
+                    android:id="@+id/imgEstoque"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:background="@drawable/bordas_carga_bloquiada"
                     android:padding="14dp"
-                    android:src="@drawable/modeloicon"
+                    android:src="@drawable/estoqueicon"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -290,22 +289,22 @@
                 </ImageView>
 
                 <TextView
-                    android:id="@+id/textcargamodelo"
+                    android:id="@+id/textEstoque"
                     style="@style/textbold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="1dp"
-                    android:text="Atualizar Modelos de Pedido"
+                    android:text="Atualizar Estoque de Produtos"
                     android:textColor="@color/cornaoselecionadatext"
                     android:textSize="14dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
+                    app:layout_constraintStart_toEndOf="@+id/imgEstoque"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/infoTextCargamodelo"
+                    android:id="@+id/infoTextoEsque"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -314,12 +313,12 @@
                     android:textColor="@color/cornaoselecionadatextsub"
                     app:layout_constraintBottom_toBottomOf="parent"
 
-                    app:layout_constraintEnd_toStartOf="@+id/carregandocargamodelo"
-                    app:layout_constraintStart_toEndOf="@+id/imgCargamodelo"
-                    app:layout_constraintTop_toBottomOf="@+id/textcargamodelo"
+                    app:layout_constraintEnd_toStartOf="@+id/carregandoEstoque"
+                    app:layout_constraintStart_toEndOf="@+id/imgEstoque"
+                    app:layout_constraintTop_toBottomOf="@+id/textEstoque"
                     app:layout_constraintVertical_bias="0.0" />
                 <ImageView
-                    android:id="@+id/carregandocargamodelo"
+                    android:id="@+id/carregandoEstoque"
                     android:layout_width="24dp"
                     android:layout_height="22dp"
                     android:layout_marginEnd="8dp"

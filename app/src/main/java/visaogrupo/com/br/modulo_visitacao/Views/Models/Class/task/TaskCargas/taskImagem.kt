@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.apache.commons.codec.binary.Base64.encodeBase64String
 import visaogrupo.com.br.modulo_visitacao.R
@@ -69,7 +70,6 @@ class taskImagem (context:Context){
                                 }
 
                                 override fun onLoadCleared(placeholder: Drawable?) {
-                                    // Chamado quando a imagem é carregada e depois removida do alvo
                                 }
                             })
 
@@ -98,7 +98,7 @@ class taskImagem (context:Context){
                     icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
 
                 }
-                Thread.sleep(10000)
+                delay(10000)
                 CoroutineScope(Dispatchers.Main).launch {
 
                     val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)

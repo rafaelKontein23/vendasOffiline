@@ -81,48 +81,23 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
 
 
         CoroutineScope(Dispatchers.IO).launch{
-            val imagensDao = ImagensDAO()
-            val istotalImagens = imagensDao.hasDataInImagesTable(requireContext())
-            if(istotalImagens){
-                query = "SELECT Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho  " +
-                        "FROM TB_produtos Produtos " +
-                        "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod " +
-                        "INNER JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra  AND Estoque.centro = Progressiva.codigo " +
-                        "inner join TB_Imagens imagens on Produtos.barra = imagens.barra "+
-                        "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF and carrinho.cliente_id = ${clienteSelecionado.Empresa_id} " +
-                        "where Progressiva.loja_id = ${lojaSelecionada.loja_id} " +
-                        "and Progressiva.uf = '${clienteSelecionado.UF}' " +
-                        "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo "+
-                        "order by 1 "
-            }else{
-                query = " SELECT distinct  Produtos.Nome \n" +
-                        "                         ,Produtos.Apresentacao \n" +
-                        "                           ,Produtos.barra \n" +
-                        "                           ,Produtos.Imagem \n" +
-                        "                           ,Produtos.Produto_codigo \n" +
-                        "                           ,Produtos.caixapadrao \n" +
-                        "                           ,Progressiva.pmc \n" +
-                        "                           ,Estoque.Quantidade \n" +
-                        "                           ,Progressiva.pf \n" +
-                        "                           ,Carrinho.valor \n" +
-                        "                           ,Carrinho.quantidade \n" +
-                        "                           ,Carrinho.ValorTotal \n" +
-                        "                           ,(CASE \n" +
-                        "                        WHEN Carrinho.Quantidade > 0 THEN 1 \n" +
-                        "                        ELSE 0 \n" +
-                        "                         END) AS EstaNoCarrinho, \n" +
-                        "                        Progressiva.codigo \n" +
-                        "                        FROM TB_Produtos Produtos \n" +
-                        "                        INNER JOIN TB_Progressiva Progressiva ON Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
-                        "                        LEFT  JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra  AND Estoque.centro = Progressiva.codigo\n" +
-                        "                        LEFT JOIN TB_Carrinho Carrinho ON Carrinho.Loja_id = Progressiva.Loja_id \n" +
-                        "                        AND Carrinho.produto_codigo = Progressiva.Prod_cod\n" +
-                        "                        AND Carrinho.UF = Progressiva.UF \n" +
-                        "                        AND Carrinho.cliente_id =${clienteSelecionado.Empresa_id}\n" +
-                        "                        WHERE Progressiva.Loja_id = ${lojaSelecionada.loja_id}\n" +
-                        "                        AND Progressiva.uf = '${clienteSelecionado.UF}' \n" +
-                        "                        ORDER BY 1"
-            }
+
+
+            query = "SELECT \n" +
+                    "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
+                    "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
+                    "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                    "FROM TB_produtos Produtos \n" +
+                    "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
+                    "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
+                    "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
+                    "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
+                    "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
+                    "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}  \n" +
+                    "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
+                    "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
+                    "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by 1"
+
 
 
             produtos = ProdutosDAO(requireContext())

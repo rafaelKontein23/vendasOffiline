@@ -83,7 +83,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
                 listaProdutoCarrinho[position].caixapadrao,1,
                 listaProdutoCarrinho[position].valor,
                 listaProdutoCarrinho[position].quantidade,
-                listaProdutoCarrinho[position].valortotal,"")
+                listaProdutoCarrinho[position].valortotal,"", 0)
 
 
 

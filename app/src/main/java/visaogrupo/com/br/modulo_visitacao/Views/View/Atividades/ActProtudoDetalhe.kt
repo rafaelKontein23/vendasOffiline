@@ -85,6 +85,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         binding.barra.text=  protudoSelecionado.barra
         binding.codigoProduto.text = protudoSelecionado.ProdutoCodigo.toString()
         binding.checkCaixapadrao.text = "Caixa Padrão ${protudoSelecionado.caixapadrao.toString()} uni."
+        binding.estoque.text = protudoSelecionado.quantidadeEstoque.toString()
         if(!imagemBase64?.isEmpty()!!){
             val bitmap =exibirImagemBase64(imagemBase64.toString())
             binding.imgprodto.setImageBitmap(bitmap)

@@ -66,17 +66,16 @@ class ProdutosDAO(context:Context):
             val  valor_total = curso.getDouble(11)
             var imagebase64 =""
             var estaCarrinhp = 0
-            if (query.contains("TB_Imagens")) {
+            if (curso.getString(12) != null) {
                 imagebase64 = curso.getString(12)
-                estaCarrinhp = curso.getInt(13)
-            }else{
-                imagebase64 = ""
-                estaCarrinhp = curso.getInt(12)
             }
+            estaCarrinhp = curso.getInt(13)
+
+            val quantidadeEstoque = curso.getInt(15)
 
 
 
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total, imagebase64)
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total, imagebase64, quantidadeEstoque)
 
             listaprotudos.add(produtos)
         }
