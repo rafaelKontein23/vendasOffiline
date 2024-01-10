@@ -108,6 +108,11 @@ class LojasDAO (context:Context):
             val ANR        =      cursor.getInt(28)
             val exibe_Estoque = cursor.getInt(29)
             val RegraPrazoMedio = cursor.getInt(30)
+            var imagembase64 = ""
+            if (cursor.getString(32) != null){
+                 imagembase64 = cursor.getString(32)
+            }
+
             val loja = Lojas(loja_id, nome,
                 MinimoUnidades, MinimoValor,
                 LojaTipo, tipo, LogoHome,
@@ -119,7 +124,7 @@ class LojasDAO (context:Context):
                 Portal_Tablet, Qtd_Minima_Operador,
                 Qtd_Maxima_Operador, Loja_Online,
                 Minimo_Aprovacao, Valida_Estoque,
-                Loja_Preco, exibe_Estoque,ANR, RegraPrazoMedio)
+                Loja_Preco, exibe_Estoque,ANR, RegraPrazoMedio,imagembase64)
 
             listaLojasobject.add(loja)
 

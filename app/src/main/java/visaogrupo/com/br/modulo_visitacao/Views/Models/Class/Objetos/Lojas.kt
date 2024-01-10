@@ -28,5 +28,6 @@ data class Lojas(
     val Loja_Preco: String,
     val Exibe_Estoque: Int,
     val ANR :Int,
-    val RegraPrazoMedio :Int
+    val RegraPrazoMedio :Int,
+    val Base64:String
 )

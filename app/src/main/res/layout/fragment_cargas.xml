@@ -309,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="baixar carga de modelos..."
+                    android:text="baixar carga de estoque"
                     android:textColor="@color/cornaoselecionadatextsub"
                     app:layout_constraintBottom_toBottomOf="parent"
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_lojas.view.*
@@ -52,16 +53,17 @@ class FragmentLojas (trocarcorItem: visaogrupo.com.br.modulo_visitacao.Views.Mod
 
         // recupera lisat de lojas
         val listalojas = LojasDAO(requireContext())
-        val querylojasClientes = " SELECT DISTINCT LojCli.empresa_id, Lojas.* " +
+        val querylojasClientes = " SELECT DISTINCT LojCli.empresa_id, Lojas.*,imagembase64 " +
                 "FROM TB_lojas Lojas " +
                 "INNER JOIN TB_lojaporcliente LojCli ON Lojas.Loja_id = LojCli.loja_id " +
                 "INNER JOIN TB_clientes CLIENTES ON Clientes.Empresa_id = LojCli.empresa_id " +
                 "INNER JOIN TB_OperadorLogistico Operador ON Operador.loja_id = Lojas.loja_id AND Operador.estado = Clientes.uf " +
+                "LEFT join TB_ImagensLojas ImgLj ON ImgLj.loja_id = Lojas.loja_id \n"+
                 "WHERE LojCli.empresa_id = ${clienteSelecionado.Empresa_id} "
 
         val listLojas =  listalojas.listarlojas(requireContext(),1,querylojasClientes)
         AdapterLojas = LojasAdapter(listLojas,trocarcorItem,R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible,atualizaCarrinho)
-        val  layoutManager = LinearLayoutManager(requireContext())
+        val  layoutManager = GridLayoutManager(requireContext(),2)
         binding.recyLojas.layoutManager = layoutManager
         binding.recyLojas.adapter = AdapterLojas
 

@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz.db",
     null,
-    101 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    104 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -294,6 +294,13 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "imagembase64 TEXT"+
                 ")"
 
+        val  sqlImagensLojas ="CREATE TABLE IF NOT EXISTS TB_ImagensLojas(" +
+                "logoHome TEXT PRIMARY KEY,"+
+                "loja_id INTEGER,"+
+                "imagembase64 TEXT"+
+                ")"
+
+
 
         val  sqlModeloPedido ="CREATE TABLE IF NOT EXISTS TB_ModeloPedido(" +
                 "CodigoUsuario INTEGER, " +
@@ -317,6 +324,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlCarrinho)
             db?.execSQL(sqlProgressivaPersonalizada)
             db?.execSQL(sqlImagens)
+            db?.execSQL(sqlImagensLojas)
             db?.execSQL(sqlModeloPedido)
             db?.execSQL(prazoMedio)
             db?.execSQL(sqlFormpagExclusivo)

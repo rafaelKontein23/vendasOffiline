@@ -37,7 +37,7 @@ class ClientesAdpter (list: MutableList<Clientes>, val  idfram:Int, val supoortf
             val CNPJ =   cnpjstr.substring(0,2)+"."+cnpjstr.substring(2,5)+"."+cnpjstr.substring(5,8)+"/"+cnpjstr.substring(8,12) +"-"+ cnpjstr.substring(12,14);
             holder.cnpjcliente.text = CNPJ
             holder.razaosocialClientes.text = listaClientes[position].RazaoSocial
-            holder.enderecocliente.text = listaClientes[position].Endereco
+            holder.enderecocliente.text = listaClientes[position].Endereco + ", ${listaClientes[position].Cidade}, ${listaClientes[position].UF} "
 
             if (listaClientes[position].Compra == 1){
                    holder.positivo.isVisible = true

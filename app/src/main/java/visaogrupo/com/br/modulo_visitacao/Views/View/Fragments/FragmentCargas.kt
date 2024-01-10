@@ -83,7 +83,7 @@ class FragmentCargas () : Fragment() ,
         val objetoSerializado = sharedPreferences?.getString("UserLogin", null)
         login =  gson.fromJson(objetoSerializado, Login::class.java)
         val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
- 
+
 
          // verifica se a carga ja esta feita
         if(feitacarga ==true){

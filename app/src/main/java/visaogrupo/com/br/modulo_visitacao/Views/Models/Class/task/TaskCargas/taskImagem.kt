@@ -37,51 +37,110 @@ class taskImagem (context:Context){
 
     fun requestImagem(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon: ImageView, animador: ObjectAnimator, terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
         CoroutineScope(Dispatchers.IO).launch {
-            try {
+          val requestProdutoImagem = launch {
+              try {
 
-                val excluiTabela = "DELETE FROM TB_Imagens"
-                db.writableDatabase.execSQL(excluiTabela)
-                Log.d("Exclui","Imagens")
-                val query ="SELECT barra from TB_produtos"
-                val cursor = db.writableDatabase.rawQuery(query,null)
+                  val excluiTabela = "DELETE FROM TB_Imagens"
+                  db.writableDatabase.execSQL(excluiTabela)
+                  Log.d("Exclui","Imagens")
+                  val query ="SELECT barra from TB_produtos"
+                  val cursor = db.writableDatabase.rawQuery(query,null)
 
-                while (cursor.moveToNext()){
-                    try {
-                        val barra = cursor.getString(0)
-                        val imageUrl = URL("${URLs.urlimagens}${barra}.jpg")
-                        Glide.with(context)
-                            .asBitmap()
-                            .load(imageUrl)
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    val outputStream = ByteArrayOutputStream()
-                                    resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                  while (cursor.moveToNext()){
+                      try {
+                          val barra = cursor.getString(0)
+                          val imageUrl = URL("${URLs.urlimagens}${barra}.jpg")
+                          Glide.with(context)
+                              .asBitmap()
+                              .load(imageUrl)
+                              .into(object : CustomTarget<Bitmap>() {
+                                  override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                      val outputStream = ByteArrayOutputStream()
+                                      resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
 
-                                    val imageBytes = outputStream.toByteArray()
-                                    val imagembase64 = encodeBase64String(imageBytes)
+                                      val imageBytes = outputStream.toByteArray()
+                                      val imagembase64 = encodeBase64String(imageBytes)
 
-                                    val valores = ContentValues()
+                                      val valores = ContentValues()
 
-                                    valores.put("imagembase64",imagembase64)
-                                    valores.put("barra",barra)
+                                      valores.put("imagembase64",imagembase64)
+                                      valores.put("barra",barra)
 
-                                    db.writableDatabase.insert("TB_Imagens",null, valores)
-                                    Log.d("Insert", barra)
-                                }
+                                      db.writableDatabase.insert("TB_Imagens",null, valores)
+                                      Log.d("Insert", barra)
+                                  }
 
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                }
-                            })
+                                  override fun onLoadCleared(placeholder: Drawable?) {
+                                  }
+                              })
 
 
 
-                        Log.d("Insert","${barra}")
-                    }catch (e:Exception){
-                        e.printStackTrace()
+                          Log.d("Insert","${barra}")
+                      }catch (e:Exception){
+                          e.printStackTrace()
+                      }
+
+                  }
+              }catch (e:Exception){
+                  e.printStackTrace()
+              }
+          }
+            val requestLojasImagem = launch {
+                try {
+
+                    val excluiTabela = "DELETE FROM TB_ImagensLojas"
+                    db.writableDatabase.execSQL(excluiTabela)
+                    Log.d("Exclui","Imagens Lojas")
+                    val query ="SELECT  DISTINCT logohome,loja_id FROM TB_lojas "
+                    val cursor = db.writableDatabase.rawQuery(query,null)
+
+                    while (cursor.moveToNext()){
+                        try {
+                            val logoHome = cursor.getString(0)
+                            val lojaId =  cursor.getInt(1)
+                            val imageUrl = URL("${URLs.urlImagensLojas}${logoHome}")
+                            Glide.with(context)
+                                .asBitmap()
+                                .load(imageUrl)
+                                .into(object : CustomTarget<Bitmap>() {
+                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                        val outputStream = ByteArrayOutputStream()
+                                        resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+
+                                        val imageBytes = outputStream.toByteArray()
+                                        val imagembase64 = encodeBase64String(imageBytes)
+
+                                        val valores = ContentValues()
+
+                                        valores.put("imagembase64",imagembase64)
+                                        valores.put("logoHome",logoHome)
+                                        valores.put("loja_id", lojaId)
+
+                                        db.writableDatabase.insert("TB_ImagensLojas",null, valores)
+                                        Log.d("Insert", logoHome)
+                                    }
+
+                                    override fun onLoadCleared(placeholder: Drawable?) {
+                                    }
+                                })
+
+
+
+                            Log.d("Insert","${logoHome}")
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
+
                     }
-
+                }catch (e:Exception){
+                    e.printStackTrace()
                 }
-                val drawable = icon.drawable
+            }
+         requestProdutoImagem.join()
+         requestLojasImagem.join()
+
+            val drawable = icon.drawable
 
                 CoroutineScope(Dispatchers.Main).launch {
 
@@ -116,9 +175,6 @@ class taskImagem (context:Context){
 
                 }
                 Log.d("Terminou"," carga de imagens")
-            }catch (e:Exception){
-                e.printStackTrace()
-            }
 
 
         }

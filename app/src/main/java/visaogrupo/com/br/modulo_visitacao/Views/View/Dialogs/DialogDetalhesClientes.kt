@@ -95,7 +95,7 @@ class DialogDetalhesClientes {
            cnpj.text = cnpjformat
            razaoSocial.text = cliente.RazaoSocial
            endereco.text = "${cliente.Endereco}, ${cliente.Numero} ${cliente.Cidade},${cliente.Bairro}, ${cliente.UF}"
-           Telefone.text = cliente.Telefone
-           email.text = cliente.Email
+           Telefone.text = cliente.Email
+           email.text = cliente.Telefone
        }
 }
