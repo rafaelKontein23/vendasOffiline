@@ -36,7 +36,22 @@ class FormaDePagamentoDAO(context: Context):
     override fun atualizar(FormaDePagaemnto: FormaDePagaemnto): Boolean {
         TODO("Not yet implemented")
     }
+    fun buscarNomeFormaPag (codigo:String):String {
+        val query =
+            "SELECT DISTINCT formapgto FROM TB_formaDePagamento WHERE cod_formapgto = '${codigo}'"
+        val cursor = dbFormaDePagamento.rawQuery(query, null)
+        while (cursor.moveToNext()) {
+            val nomeForm = cursor.getString(0)
+            if (nomeForm != null) {
+                return nomeForm
 
+            } else {
+                return "Forma de pagamento não existe"
+
+            }
+        }
+        return "Forma de pagamento não existe"
+    }
     override fun listar(
         loja_id: Int,
         valorToatalPedido: Double,

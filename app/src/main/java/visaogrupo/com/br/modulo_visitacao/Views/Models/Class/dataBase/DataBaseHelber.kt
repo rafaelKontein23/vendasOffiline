@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz.db",
     null,
-    104 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    112 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -311,7 +311,34 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Quantidade INTEGER, " +
                 "CodigoProgressiva INTEGER," +
                 "Desconto DOUBLE);"
+
+
+        val sqlFiltro = "CREATE TABLE IF NOT EXISTS TB_Filtros(" +
+                "filtroIdkey  INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                "FiltroID INTEGER," +
+                "Pares VARCHAR," +
+                "FiltroCategoriaID INTEGER," +
+                "Descricao VARCHAR," +
+                "Quantidade INTEGER"+
+                ")"
+        val sqlFiltroProduto = "CREATE TABLE IF NOT EXISTS TB_FiltroProdutos(" +
+                "filtroProdutoId  INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                "FiltroID INTEGER," +
+                "Pares VARCHAR," +
+                "FiltroCategoriaID INTEGER," +
+                "Barra VARCHAR," +
+                "Produto_codigo VARCHAR," +
+                "LojaID INTEGER"+
+                ")"
+
+        val sqlFiltroPrincipal = "CREATE TABLE IF NOT EXISTS TB_FiltroPricipal(" +
+                "FiltroCategoriaID INTEGER PRIMARY KEY," +
+                "Descricao VARCHAR" +
+                ")"
         try {
+            db?.execSQL(sqlFiltro)
+            db?.execSQL(sqlFiltroProduto)
+            db?.execSQL(sqlFiltroPrincipal)
             db?.execSQL(sqlEstoque)
             db?.execSQL(sqlPRogressiva)
             db?.execSQL(sqlOperadorLogistico)
@@ -330,6 +357,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlFormpagExclusivo)
             db?.execSQL(sqlPedidos)
             db?.execSQL(sqlProdutoItemFinalizadoPedido)
+
 
         }catch (e:Exception) {
             e.printStackTrace()

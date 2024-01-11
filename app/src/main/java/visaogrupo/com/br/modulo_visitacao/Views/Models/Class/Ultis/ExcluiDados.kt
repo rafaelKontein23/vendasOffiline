@@ -19,6 +19,11 @@ class ExcluiDados(context: Context) {
         listaNomeTabela.add("TB_Estoque")
         listaNomeTabela.add("TB_formaDePagamento")
         listaNomeTabela.add("TB_Imagens")
+
+        listaNomeTabela.add("TB_Filtros")
+        listaNomeTabela.add("TB_FiltroProdutos")
+        listaNomeTabela.add("TB_FiltroPricipal")
+        
         for (nomes in listaNomeTabela){
             try {
                 val excluiTabela = "DELETE FROM ${nomes}"

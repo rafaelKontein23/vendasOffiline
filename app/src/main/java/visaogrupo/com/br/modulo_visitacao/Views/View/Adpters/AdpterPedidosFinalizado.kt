@@ -23,6 +23,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.FormaDePagamentoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskEnviaPedido
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
@@ -48,6 +49,14 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         val valorPedidoTotalDAO = PedidosFinalizadosDAO(context)
         val valorTotalPedido = valorPedidoTotalDAO.somarTotalPedido(listaPedido[position].pedidoID)
         val valorTot = String.format("%.2f",valorTotalPedido)
+        val formaPag = FormaDePagamentoDAO(context)
+        val codForm = listaPedido[position].formaDePagamento
+        var nomeFormaPag = ""
+        if (!listaPedido[position].formaDePagamento!!.isEmpty()){
+             nomeFormaPag = formaPag.buscarNomeFormaPag(codForm!!)
+
+        }
+
 
         val cnpj = listaPedido[position].cnpj?.substring(0,2)+"."+
                 listaPedido[position].cnpj?.substring(2,5)+"."+
@@ -60,7 +69,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         holder.valorTotal.text = "R$ " + valorTot
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaoSocial
-        holder.data.text  = listaPedido[position].dataPedido
+        holder.data.text  = listaPedido[position].dataPedido+ " | ${nomeFormaPag}"
 
         holder.celula.setOnClickListener(object :OnClickListener{
             override fun onClick(v: View?) {

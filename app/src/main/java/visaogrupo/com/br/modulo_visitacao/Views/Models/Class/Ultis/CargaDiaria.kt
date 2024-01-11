@@ -17,8 +17,14 @@ import org.json.JSONObject
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FiltroPrincipal
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FiltroProduto
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Filtros
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.*
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoque
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroPrincipal
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroProduto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFormaDePagamentoExclusiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRegraPrazoMedio
@@ -33,6 +39,7 @@ class CargaDiaria {
     fun fazCargaDiaria(context: Context, user_ide:String, constrain: ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, icon:ImageView, animador: ObjectAnimator,terminouCarga: TerminouCarga){
         CoroutineScope(Dispatchers.IO).launch {
             //Faz request de Zip
+
             val patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
 
             // Atualiza progress
@@ -58,6 +65,8 @@ class CargaDiaria {
 
 
                 try {
+
+
                     //grava no banco lojas
                     val lendoLojas =launch {
                         //Lendo Arquivo de Loja
@@ -365,11 +374,72 @@ class CargaDiaria {
                               FragmentCargas.progresspush += 3
                               FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
                           }
-                          lendoEstoque.join()
+                   lendoEstoque.join()
+                    // fazendo carga de filtro
+                    var jsonArrayFiltroPrincipal: JSONArray? = null
+                    var jsonArrayFiltro:JSONArray? = null
+                    var jsonArrayFiltroProduto:JSONArray? = null
+                    val lendoFiltroPrincipal = launch {
+                        val  taskFiltroPrincipal = TaskFiltroPrincipal()
+                        jsonArrayFiltroPrincipal =taskFiltroPrincipal.requestFiltroPrincipal()
+                    }
+                    val lendoFiltros= launch {
+                        val taskFiltro = TaskFiltro()
+                        jsonArrayFiltro = taskFiltro.requestFiltro()
+                    }
+                    val lendoFiltroProduto = launch {
+                        val taskFiltroProduto = TaskFiltroProduto()
+                        jsonArrayFiltroProduto = taskFiltroProduto.requestFiltroProduto()
+                    }
+                    lendoFiltroPrincipal.join()
+                    lendoFiltros.join()
+                    lendoFiltroProduto.join()
 
+                    val gravandoFiltroPrincipal = launch {
+                        for ( i in  0 until jsonArrayFiltroPrincipal!!.length()){
+                            val jsonObjectFiltroPrincipalIndices = jsonArrayFiltroPrincipal!!.getJSONObject(i)
+                            val filtroCatecoriaID = jsonObjectFiltroPrincipalIndices.getInt("FiltroCategoria_id")
+                            val descricao = jsonObjectFiltroPrincipalIndices.getString("Descricao")
+                            val filtroPrincipal = FiltroPrincipal(descricao,filtroCatecoriaID)
+                            val filtroPrincipalDAO = FiltroPrincipalDAO(context)
+                            filtroPrincipalDAO.insert(filtroPrincipal)
 
+                        }
+                    }
+                    val gravandoFiltro = launch {
+                        for (i in 0 until  jsonArrayFiltro!!.length()){
+                            val jsonFiltroIndce = jsonArrayFiltro!!.getJSONObject(i)
+                            val filtroID = jsonFiltroIndce.getInt("Filtro_id")
+                            val Pares = jsonFiltroIndce.getString("Pares")
+                            val FiltroCategoria_id = jsonFiltroIndce.getInt("FiltroCategoria_id")
+                            val Descricao = jsonFiltroIndce.getString("Descricao")
+                            val Qtd = jsonFiltroIndce.getInt("Qtd")
+                            val filtro = Filtros(Descricao,FiltroCategoria_id,filtroID,Pares,Qtd)
+                            val filtroDAO = FiltroDAO(context)
+                            filtroDAO.insert(filtro)
 
+                        }
+                    }
 
+                    val  gravandoFiltroProduto = launch {
+                        for (i in 0 until  jsonArrayFiltroProduto!!.length()){
+                            val jsonFiltroProdutoIndice = jsonArrayFiltroProduto!!.getJSONObject(i)
+                            val pares = jsonFiltroProdutoIndice.getString("Pares")
+                            val Produto_codigo = jsonFiltroProdutoIndice.getString("Produto_codigo")
+                            val Barra = jsonFiltroProdutoIndice.getString("Barra")
+                            val FiltroCategoria_id = jsonFiltroProdutoIndice.getInt("FiltroCategoria_id")
+                            val Filtro_id = jsonFiltroProdutoIndice.getInt("Filtro_id")
+                            val Loja_id = jsonFiltroProdutoIndice.getInt("Loja_id")
+
+                            val filtroProduto = FiltroProduto(Barra,FiltroCategoria_id,Filtro_id,Loja_id,pares,Produto_codigo)
+                            val filtroProdutoDAO = FiltroProdutoDAO(context)
+                            filtroProdutoDAO.insert(filtroProduto)
+
+                        }
+                    }
+                    gravandoFiltroPrincipal.join()
+                    gravandoFiltro.join()
+                    gravandoFiltroProduto.join()
                     Log.d("Terminou carga","")
                     cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
                 }catch (e:Exception){

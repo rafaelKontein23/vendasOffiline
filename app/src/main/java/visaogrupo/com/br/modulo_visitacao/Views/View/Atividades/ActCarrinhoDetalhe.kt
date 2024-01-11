@@ -37,8 +37,8 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         binding.continuarCarrinho.setOnClickListener {
             if(valorTotal < valorminimo){
                 val dialogErro  = DialogErro()
-                dialogErro.Dialog(this,"Atenção", "Pedido mínimo não Atingido!","Voltar para a loja",""){
-                    onBackPressed()
+                dialogErro.Dialog(this,"Atenção", "Pedido mínimo não Atingido!","Ok",""){
+
                 }
             }else {
                 val dialogOperadorLogistico = DialogOperadorLogistico(this)

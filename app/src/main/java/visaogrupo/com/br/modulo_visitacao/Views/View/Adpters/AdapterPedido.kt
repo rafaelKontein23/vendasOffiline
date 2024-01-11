@@ -39,7 +39,6 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaosocial
         holder.unidades.text=  listaPedido[position].qtd_Total.toString() + "Uni."
-        holder.data.text  = listaPedido[position].data
 
         holder.celula.setOnClickListener {
 
