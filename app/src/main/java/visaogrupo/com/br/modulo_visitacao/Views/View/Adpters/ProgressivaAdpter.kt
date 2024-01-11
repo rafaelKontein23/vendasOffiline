@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.View.Adpters
 
 import android.content.Context
 import android.graphics.Color
+import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProgressivaLista
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProgressivaSelecionada
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MascaraCampo
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
@@ -75,7 +77,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
         holder.desconto.setOnFocusChangeListener(object  : OnFocusChangeListener{
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (!hasFocus){
-                    val descontoCap =  holder.desconto.text.toString().toDouble()
+                    val descontoCap =  holder.desconto.text.toString().replace(",",".").toDouble()
                     if (!anr){
                         if (descontoCap >=  listaProgrssiva [position].DescontoMaximo){
                             val alertas = Alertas()
@@ -110,7 +112,8 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
             notifyItemRemoved(position1)
 
         }
-        edtQuatidade.isEnabled = true
+
+       MascaraCampo.mascaraEdit("NN,NN",holder.desconto)
 
 
         Log.d("quantiddae",quantidadeAdionada.toString())

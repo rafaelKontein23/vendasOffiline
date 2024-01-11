@@ -128,7 +128,16 @@ class DialogOperadorLogistico (context:Context){
 
 
             }else{
-                Toast.makeText(context,"Verifique os campos " , Toast.LENGTH_SHORT).show()
+                if (oplId.isEmpty() && formadepagamentocap.contains("Selecionar") ){
+                    Toast.makeText(context,"Selecione o operador logístico, Selecione uma forma de pagamento " , Toast.LENGTH_SHORT).show()
+                }else if (oplId.isEmpty()){
+                    Toast.makeText(context,"Selecione o operador logístico" , Toast.LENGTH_SHORT).show()
+
+                }else if (formadepagamentocap.contains("Selecionar")){
+                    Toast.makeText(context,"Selecione uma forma de pagamento" , Toast.LENGTH_SHORT).show()
+
+                }
+
             }
 
             buton.isEnabled = true

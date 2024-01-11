@@ -47,7 +47,7 @@
         android:layout_height="0dp"
         android:inputType="number"
         android:text="0"
-        android:maxLength="2"
+        android:maxLength="5"
         android:textAlignment="center"
         android:textColor="#585E68"
         android:textSize="14dp"

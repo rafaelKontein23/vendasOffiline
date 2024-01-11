@@ -71,7 +71,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
 
             snackbar.show()
         }
-
+        holder.desconto.text = listaProdutoCarrinho[position].desconto.toString() + "%"
         holder.containerDetalhe.setOnClickListener {
             val intent = Intent(context, ActProtudoDetalhe::class.java)
             val bundle = Bundle()
@@ -109,6 +109,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
         val valorTotal = itemView.findViewById<TextView>(R.id.valorTotal)
         val containerDetalhe = itemView.findViewById<ConstraintLayout>(R.id.containerDetalhe)
         val codigo = itemView.findViewById<TextView>(R.id.codproduto)
+        val desconto = itemView.findViewById<TextView>(R.id.desconto)
 
 
     }

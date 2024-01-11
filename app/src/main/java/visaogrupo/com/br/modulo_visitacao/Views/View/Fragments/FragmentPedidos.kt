@@ -46,6 +46,8 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
         val  viewAberto = view.findViewById<View>(R.id.viewAberto)
         val  abertos = view.findViewById<TextView>(R.id.abertos)
         val  fechado = view.findViewById<TextView>(R.id.fechado)
+        val pedidosAbertosCarrinho = view.findViewById<TextView>(R.id.abertosPendentes)
+        val  viewAbertosPedendes = view.findViewById<View>(R.id.viewAbertosPedendes)
         adapterViewPagerPedidos = AdapterViewPagerPedidos(getChildFragmentManager(), lifecycle)
 
         val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
@@ -58,6 +60,7 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
 
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
+        adapterViewPagerPedidos!!.addFragment(FraggmentPedidoAbertos())
         arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         arrastaParaLado.adapter = adapterViewPagerPedidos
 
@@ -65,7 +68,9 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
             arrastaParaLado.setCurrentItem(0,true)
             visivelSelecionado(abertos,fechado)
             viewFechado.isVisible = false
+            viewAbertosPedendes.isVisible =false
             viewAberto.isVisible= true
+
         }
 
         fechado.setOnClickListener {
@@ -74,6 +79,19 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
             visivelSelecionado(fechado,abertos)
             viewFechado.isVisible = true
             viewAberto.isVisible= false
+            viewAbertosPedendes.isVisible =false
+
+        }
+        pedidosAbertosCarrinho.setOnClickListener {
+            arrastaParaLado.setCurrentItem(2,true)
+
+            visivelSelecionado(pedidosAbertosCarrinho,abertos)
+            fechado.setTextColor(Color.parseColor("#5483AB"))
+
+            viewFechado.isVisible = false
+            viewAberto.isVisible= false
+            viewAbertosPedendes.isVisible =true
+
         }
 
         arrastaParaLado.registerOnPageChangeCallback(object : OnPageChangeCallback() {
@@ -83,10 +101,21 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
                     visivelSelecionado(fechado,abertos)
                     viewFechado.isVisible = true
                     viewAberto.isVisible= false
+                    viewAbertosPedendes.isVisible =false
+
+                }else if (position == 2){
+                    visivelSelecionado(pedidosAbertosCarrinho,abertos)
+                    fechado.setTextColor(Color.parseColor("#5483AB"))
+
+                    viewFechado.isVisible = false
+                    viewAberto.isVisible= false
+                    viewAbertosPedendes.isVisible =true
                 }else{
                     visivelSelecionado(abertos,fechado)
                     viewFechado.isVisible = false
                     viewAberto.isVisible= true
+                    viewAbertosPedendes.isVisible =false
+
                 }
             }
         })

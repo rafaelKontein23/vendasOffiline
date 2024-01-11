@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/inter"
-                android:text="Abertos"
+                android:text="Salvos"
 
                 android:textAlignment="center"
                 android:textFontWeight="500"
@@ -41,13 +41,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/inter"
-                android:text="Fechados"
+                android:text="Enviados"
+                android:textAlignment="center"
+                android:textFontWeight="500"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/abertosPendentes"
+                app:layout_constraintStart_toEndOf="@+id/abertos" />
+
+            <TextView
+                android:id="@+id/abertosPendentes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/inter"
+                android:text="Abertos"
                 android:textAlignment="center"
                 android:textFontWeight="500"
                 android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/abertos" />
+                app:layout_constraintStart_toEndOf="@+id/fechado" />
 
             <TextView
                 android:id="@+id/textView47"
@@ -72,7 +87,7 @@
                 android:layout_height="3dp"
                 android:background="#004682"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/fechado"
                 app:layout_constraintStart_toEndOf="@+id/abertos" />
 
             <View
@@ -85,6 +100,17 @@
                 app:layout_constraintEnd_toEndOf="@+id/abertos"
                 app:layout_constraintStart_toEndOf="@+id/viewFechado"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <View
+                android:id="@+id/viewAbertosPedendes"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                android:layout_height="3dp"
+                android:background="#004682"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fechado" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView

@@ -57,7 +57,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
 
         val PedidoFinalizado = listaPedido[position]
 
-        holder.valorTotal.text = valorTot
+        holder.valorTotal.text = "R$ " + valorTot
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaoSocial
         holder.data.text  = listaPedido[position].dataPedido

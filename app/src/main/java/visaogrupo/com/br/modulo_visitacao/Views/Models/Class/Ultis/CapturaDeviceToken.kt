@@ -1,6 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis
 
 import android.util.Log
+
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -23,5 +24,6 @@ class CapturaDeviceToken {
         }
 
     }
+
 
 }

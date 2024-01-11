@@ -34,7 +34,7 @@ class AdpterProdutosPedidos  (list:MutableList<ProdutosFinalizados>, context : C
         holder.nomeProdtud.text = listaPedidoProdutos[position].nomeProduto
         holder.codProduto.text = listaPedidoProdutos[position].produtoCodigo.toString()
         holder.barra.text  = listaPedidoProdutos[position].barra
-        holder.valoruni.text  = valorTot
+        holder.valoruni.text  = "R$ " + valorTot
         holder.unidades.text  = listaPedidoProdutos[position].quantidade.toString() + " uni."
 
     }
