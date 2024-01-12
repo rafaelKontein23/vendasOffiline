@@ -65,11 +65,14 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                 holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
 
                 if (listaProtudos[position].estaNoCarrinho  == 1){
+                    val carrinhoDAO = CarrinhoDAO(context)
+                    val valores = carrinhoDAO.buscaProgressivavalor(listaProtudos[position].ProdutoCodigo)
                     holder.quantidade.isVisible = true
                     holder.excluiritem.isVisible = true
                     holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
                     holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
                     holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
+                    holder.progressivaSelecionada.text = valores
                 }else{
                     holder.quantidade.isVisible = false
                     holder.excluiritem.isVisible = false
@@ -174,6 +177,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
         val excluiritem = itemView.findViewById<TextView>(R.id.excluirItem)
         val linhaProtudos = itemView.findViewById<View>(R.id.linhaProtudos)
         val efeito =itemView.findViewById<ShimmerFrameLayout>(R.id.shimmerLayout)
+        val progressivaSelecionada = itemView.findViewById<TextView>(R.id.progressivaSelecionada)
 
     }
      fun exibirImagemBase64(imagemBase64: String):Bitmap {

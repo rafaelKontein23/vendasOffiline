@@ -118,6 +118,19 @@ class CarrinhoDAO (context:Context) {
 
     }
 
+    fun buscaProgressivavalor(produtoCodigo:Int):String{
+        val  query = "SELECT valor, desconto FROM TB_Carrinho carrinho WHERE carrinho.produto_codigo = ${produtoCodigo}"
+        val  cursor = dbCarrinho.rawQuery(query,null)
+        var valores =""
+        while (cursor.moveToNext()){
+            val valorProgressiva = cursor.getDouble(0)
+            val desconto = cursor.getDouble(1)
+            valores = "| R$ ${valorProgressiva}|  ${desconto} %"
+            break
+        }
+        return valores
+    }
+
     fun quantidadeItens(cliente_id: Int,loja_id: Int):Int{
         val query ="SELECT SUM(quantidade) AS total " +
                 "FROM TB_Carrinho " +
