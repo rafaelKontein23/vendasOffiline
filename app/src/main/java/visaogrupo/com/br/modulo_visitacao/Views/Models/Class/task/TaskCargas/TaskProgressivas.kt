@@ -21,7 +21,7 @@ class TaskProgressivas (context: Context) {
                 .method("GET", null)
                 .build();
 
-
+            println("orfo ${request.url()}")
             val response = client.newCall(request).execute();
             val  retorprogresiiva =  response.body()?.string()
             val jsonRetrono = JSONObject(retorprogresiiva)

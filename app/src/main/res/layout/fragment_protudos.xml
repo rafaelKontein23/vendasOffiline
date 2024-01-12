@@ -32,7 +32,7 @@
         <View
             android:id="@+id/view9"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="85dp"
             android:layout_marginTop="16dp"
             android:background="@color/corviewicon"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
             android:text="-"
             style="@style/textbold"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="@color/corazultext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:drawableEnd="@drawable/buscaedit"
             android:drawablePadding="20dp"
@@ -119,7 +119,7 @@
             android:layout_width="0dp"
 
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/view10"
             app:layout_constraintEnd_toStartOf="@+id/recyclerFiltroAZ"
             app:layout_constraintStart_toStartOf="parent"
@@ -214,6 +214,8 @@
             app:layout_constraintStart_toStartOf="@+id/textView17"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
+
+
         <View
             android:id="@+id/view12"
             android:layout_width="19dp"
@@ -259,6 +261,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view9" />
 
+        <ImageView
+            android:id="@+id/filtros"
+            android:layout_width="41dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/bordasiconfiltro"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/carrinhoProtudo"
+            app:layout_constraintEnd_toStartOf="@+id/carrinhoProtudo"
+            app:layout_constraintTop_toTopOf="@+id/carrinhoProtudo"
+            app:srcCompat="@drawable/filtroicones" />
+        <View
+            android:id="@+id/view14"
+            android:layout_width="19dp"
+            android:layout_height="18dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/bordas_carga"
+            android:backgroundTint="@color/corazultext"
+            app:layout_constraintBottom_toBottomOf="@+id/carrinhoProtudo"
+            app:layout_constraintStart_toStartOf="@+id/filtros" />
+
+        <TextView
+            android:id="@+id/quatidadefiltros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+
+            app:layout_constraintBottom_toBottomOf="@+id/view14"
+            app:layout_constraintEnd_toEndOf="@+id/view14"
+            app:layout_constraintStart_toStartOf="@+id/view14"
+            app:layout_constraintTop_toTopOf="@+id/view14" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

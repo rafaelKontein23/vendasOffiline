@@ -17,19 +17,26 @@ class TaskFormaDePagamentoExclusiva {
         if (response.isSuccessful){
             val responseJson = response.body()?.string()
             val jsonPrincipal = JSONObject(responseJson)
+            println("Json principal"+jsonPrincipal.toString())
             val  cnpj = jsonPrincipal.getString("CNPJ")
             val jsonArray = jsonPrincipal.getJSONArray("FormaPagamento")
-            for (i in 0 until jsonArray.length()){
-                val jsonFormaDePag =  jsonArray.getJSONObject(i)
-                val  Cod_FormaPgto = jsonFormaDePag.getString("Cod_FormaPgto")
-                val  FormaPgto = jsonFormaDePag.getString("FormaPgto")
-                val  formaPagExclussiva = FormaDePagExclusiva(cnpj,Cod_FormaPgto,FormaPgto)
-                listaFormaExcluisva.add(formaPagExclussiva)
+            try {
+                for (i in 0 until jsonArray.length()){
+                    val jsonFormaDePag =  jsonArray.getJSONObject(i)
+                    val  Cod_FormaPgto = jsonFormaDePag.getString("Cod_FormaPgto")
+                    val  FormaPgto = jsonFormaDePag.getString("FormaPgto")
+                    val  formaPagExclussiva = FormaDePagExclusiva(cnpj,Cod_FormaPgto,FormaPgto)
+                    listaFormaExcluisva.add(formaPagExclussiva)
 
+                }
+
+            }catch (e:Exception){
+                e.printStackTrace()
             }
         }else {
             Log.d("erro",response.errorBody().toString())
         }
+
 
      return  listaFormaExcluisva
     }

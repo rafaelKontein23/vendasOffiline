@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="Azul_inicial">#0196B4</color>
     <color name="azul_seleciona">#737880</color>
+    <color name="deseleciona">#5E737880</color>
+
     <color name="catarinense_cor_branco">#E6F5F8</color>
     <color name="corneutratext">#585E68</color>
     <color name="corview">#33E6EDF3</color>

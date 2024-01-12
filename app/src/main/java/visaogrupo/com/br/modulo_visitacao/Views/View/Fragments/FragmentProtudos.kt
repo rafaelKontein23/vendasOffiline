@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -21,8 +22,10 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaFiltrosProduto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaLetraFiltro
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.LimparFiltrosProdutos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
@@ -36,13 +39,15 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDA
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ImagensDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFiltroAZ
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogFiltro
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
 class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: AtualizaCarrinho) : Fragment(),
     StartaAtividade,
-    ExcluiItemcarrinho, AtualizaLetraFiltro {
+    ExcluiItemcarrinho, AtualizaLetraFiltro,AtualizaFiltrosProduto, LimparFiltrosProdutos {
 
     private  lateinit var  binding: FragmentProtudosBinding
+    private var limparFiltro = false
     val carrinhoVisible = carrinhoVisible
     lateinit var   adpterProtudos : ProtudoAdapter
     var listaProtudos = mutableListOf<ProdutoProgressiva>()
@@ -78,83 +83,44 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager
 
+        binding.filtros.setOnClickListener {
+            val dialogFiltro = DialogFiltro()
+            dialogFiltro.dialogFiltro(context,this,limparFiltro,this)
+        }
 
-
-        CoroutineScope(Dispatchers.IO).launch{
-
-
-            query = "SELECT \n" +
-                    "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
-                    "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
-                    "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
-                    "FROM TB_produtos Produtos \n" +
-                    "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
-                    "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
-                    "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
-                    "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
-                    "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
-                    "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}  \n" +
-                    "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
-                    "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
-                    "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by 1"
-
-
-
-            produtos = ProdutosDAO(requireContext())
-            listaProtudos = produtos.litar(query)
-
-
-            val letrasIniciais = listaProtudos.map { it.nome.first().toUpperCase() }
-            val letrasUnicas = letrasIniciais.distinct()
-
-            val  adpterFiltroAz = AdapterFiltroAZ(letrasUnicas,this@FragmentProtudos)
-            val layoutManagerAz = LinearLayoutManager(requireContext())
-
-            CoroutineScope(Dispatchers.Main).launch {
-
-                binding.recyclerFiltroAZ.adapter = adpterFiltroAz
-                binding.recyclerFiltroAZ.layoutManager = layoutManagerAz
-                adpterProtudos.count = listaProtudos.size
-                adpterProtudos.listaProtudos = listaProtudos
-                adpterProtudos.carregando =false
-                adpterProtudos.notifyDataSetChanged()
+        binding.edtBuscaProdutos.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
-            binding.edtBuscaProdutos.addTextChangedListener(object:TextWatcher{
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                       val buscaProdutos = s.toString()
-                       val listaFiltroProdutos  = mutableListOf<ProdutoProgressiva>()
-                       for (i in listaProtudos){
-                           if (i.nome.toLowerCase().contains(buscaProdutos) || i.barra.contains(buscaProdutos) || i.ProdutoCodigo.toString().contains(buscaProdutos) ){
-                                   listaFiltroProdutos.add(i)
-                           }
-
-                       }
-
-
-
-                    if (listaFiltroProdutos.isEmpty()){
-                        binding.recyProtudo.isVisible = false
-                        binding.SemFiltro.isVisible = true
-                    }else{
-                        binding.recyProtudo.isVisible = true
-                        binding.SemFiltro.isVisible =false
-                        adpterProtudos.listaProtudos = listaFiltroProdutos
-                        adpterProtudos.notifyDataSetChanged()
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val buscaProdutos = s.toString()
+                val listaFiltroProdutos  = mutableListOf<ProdutoProgressiva>()
+                for (i in listaProtudos){
+                    if (i.nome.toLowerCase().contains(buscaProdutos) || i.barra.contains(buscaProdutos) || i.ProdutoCodigo.toString().contains(buscaProdutos) ){
+                        listaFiltroProdutos.add(i)
                     }
-
-
-
-
                 }
 
-                override fun afterTextChanged(s: Editable?) {
+                if (listaFiltroProdutos.isEmpty()){
+                    binding.recyProtudo.isVisible = false
+                    binding.SemFiltro.isVisible = true
+                }else{
+                    binding.recyProtudo.isVisible = true
+                    binding.SemFiltro.isVisible =false
+                    adpterProtudos.listaProtudos = listaFiltroProdutos
+                    adpterProtudos.notifyDataSetChanged()
                 }
 
-            })
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+
+        CoroutineScope(Dispatchers.IO).launch{
+            protudosIniciais()
+
         }
 
 
@@ -279,7 +245,130 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             }
 
         }
+    }
+
+    override fun filtraListaProdutos(listaFiltroID: MutableList<Int>,filtro:String) {
+        var filtroIdNull = ""
+        if (listaFiltroID != null && !listaFiltroID.isEmpty()){
+
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+
+                var listaProtudosFiltro = mutableListOf<ProdutoProgressiva>()
+
+                var idfiltros = ""
+                for (i in 0 until  listaFiltroID.size){
+                    if (i+1 != listaFiltroID.size){
+                        idfiltros +=listaFiltroID[i].toString() +","
+                    }else{
+                        idfiltros +=listaFiltroID[i].toString()
+                    }
+
+                }
+
+                var filtroIdNull = ""
+                if (listaFiltroID != null && !listaFiltroID.isEmpty()){
+                    filtroIdNull= "and prod_cod In (" +
+                            "SELECT produto_codigo FROM TB_Filtros Filtro \n" +
+                            "inner join TB_FiltroProdutos FiltroProdutos on Filtro.filtroid = FiltroProdutos.filtroid \n" +
+                            "where Filtro.filtroid in (${idfiltros})\n" +
+                            ")"
+                }
+                val queryFiltro = "SELECT \n" +
+                        "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
+                        "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
+                        "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                        "FROM TB_produtos Produtos \n" +
+                        "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
+                        "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
+                        "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
+                        "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
+                        "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
+                        "and carrinho.cliente_id = 1908  \n" +
+                        "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
+                        "where Progressiva.loja_id = 4 and Progressiva.uf = 'MG' \n" +
+                        filtroIdNull+
+                        "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by ${filtro}"
 
 
+
+
+
+                produtos = ProdutosDAO(requireContext())
+                listaProtudosFiltro = produtos.litar(queryFiltro)
+
+
+                val letrasIniciais = listaProtudosFiltro.map { it.nome.first().toUpperCase() }
+                val letrasUnicas = letrasIniciais.distinct()
+
+                val  adpterFiltroAz = AdapterFiltroAZ(letrasUnicas,this@FragmentProtudos)
+                val layoutManagerAz = LinearLayoutManager(requireContext())
+                println("Tamanho Filtro ${listaProtudosFiltro.size}")
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    binding.recyclerFiltroAZ.adapter = adpterFiltroAz
+                    binding.recyclerFiltroAZ.layoutManager = layoutManagerAz
+                    adpterProtudos.count = listaProtudosFiltro.size
+                    adpterProtudos.listaProtudos = listaProtudosFiltro
+                    adpterProtudos.carregando =false
+                    adpterProtudos.notifyDataSetChanged()
+                    Toast.makeText(context,"Foram encontrados ${listaProtudosFiltro.size} Produtos!" , Toast.LENGTH_LONG).show()
+                    limparFiltro= true
+                    binding.quatidadefiltros.text = listaFiltroID.size.toString()
+
+
+            }
+
+        }
+    }
+
+
+    override fun LimparFiltro() {
+        protudosIniciais()
+        limparFiltro = false
+        Toast.makeText(context,"Filtros Limpos com sucesso!" , Toast.LENGTH_LONG).show()
+        binding.quatidadefiltros.text = "-"
+
+
+    }
+
+    fun protudosIniciais(){
+        query = "SELECT \n" +
+                "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
+                "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
+                "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                "FROM TB_produtos Produtos \n" +
+                "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
+                "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
+                "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
+                "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
+                "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
+                "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}  \n" +
+                "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
+                "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
+                "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by 1"
+
+
+
+        produtos = ProdutosDAO(requireContext())
+        listaProtudos = produtos.litar(query)
+
+
+        val letrasIniciais = listaProtudos.map { it.nome.first().toUpperCase() }
+        val letrasUnicas = letrasIniciais.distinct()
+
+        val  adpterFiltroAz = AdapterFiltroAZ(letrasUnicas,this@FragmentProtudos)
+        val layoutManagerAz = LinearLayoutManager(requireContext())
+        println("Tamano lista inicial ${ listaProtudos.size}")
+        CoroutineScope(Dispatchers.Main).launch {
+
+            binding.recyclerFiltroAZ.adapter = adpterFiltroAz
+            binding.recyclerFiltroAZ.layoutManager = layoutManagerAz
+            adpterProtudos.count = listaProtudos.size
+            adpterProtudos.listaProtudos = listaProtudos
+            adpterProtudos.carregando =false
+            adpterProtudos.notifyDataSetChanged()
+
+        }
     }
 }

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginEnd="23dp"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/confirmarFiltro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/xFiltros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/xmodal" />
+
+            <ProgressBar
+                android:id="@+id/progressBarFiltros"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="31dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <TextView
+                android:id="@+id/AaZ"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:drawableStart="@drawable/ordenaricon"
+                android:drawablePadding="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="AaZ"
+                android:textColor="#004682"
+                android:textFontWeight="800"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView11"
+                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+            <TextView
+                android:id="@+id/ZaA"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:drawableStart="@drawable/ordenaricon"
+                android:drawablePadding="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="ZaA"
+                android:textColor="#9FA3A8"
+                android:textFontWeight="800"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView11"
+                app:layout_constraintTop_toBottomOf="@+id/AaZ" />
+
+            <TextView
+                android:id="@+id/menorPreco"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:drawableStart="@drawable/ordenaricon"
+                android:drawablePadding="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Menor Preço"
+                android:textColor="#9FA3A8"
+                android:textFontWeight="800"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView11"
+                app:layout_constraintTop_toBottomOf="@+id/ZaA" />
+
+
+            <TextView
+                android:id="@+id/maiorPreco"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:drawableStart="@drawable/ordenaricon"
+                android:drawablePadding="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Maior Preço"
+                android:textColor="#9FA3A8"
+                android:textFontWeight="800"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textView11"
+                app:layout_constraintTop_toBottomOf="@+id/menorPreco" />
+
+            <TextView
+                android:id="@+id/textView12"
+                style="@style/text_sub_titulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/inter_medium"
+                android:text="Filtrar Produtos"
+
+                android:textColor="#2E3642"
+                android:textFontWeight="600"
+
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/maiorPreco" />
+
+            <TextView
+                android:id="@+id/textView11"
+                style="@style/text_sub_titulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/inter_medium"
+                android:text="Ordenar Produtos"
+                android:textColor="#2E3642"
+
+                android:textFontWeight="600"
+                android:textSize="20sp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewFiltro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmarFiltro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bordas_botaofiltroverde"
+        android:text="Confirmar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/limparfiltro"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/limparfiltro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bordas_botaolimpar_filtro"
+        android:text="limpar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/confirmarFiltro"
+        app:layout_constraintEnd_toStartOf="@+id/maiorPrecofafa"
+        app:layout_constraintTop_toTopOf="@+id/confirmarFiltro" />
+
+    <TextView
+        android:id="@+id/maiorPrecofafa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

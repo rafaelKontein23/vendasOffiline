@@ -20,6 +20,19 @@ class FiltroPrincipalDAO (context: Context){
         }catch (e:Exception){
              e.printStackTrace()
         }
+    }
 
+    fun listar ():MutableList<FiltroPrincipal>{
+        val query = "SELECT * FROM TB_FiltroPricipal"
+        val listaFiltroPrincipal = mutableListOf <FiltroPrincipal>()
+        val cursor = dbFiltroPrincipal.rawQuery(query,null)
+        while (cursor.moveToNext()){
+            val filtroCategoriaID = cursor.getInt(0)
+            val descricao = cursor.getString(1)
+            val filtroPrincipal = FiltroPrincipal(descricao,filtroCategoriaID)
+            listaFiltroPrincipal.add(filtroPrincipal)
+
+        }
+        return listaFiltroPrincipal
     }
 }

@@ -449,7 +449,7 @@ class CargaDiaria {
         }
     }
 
-    fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView,context: Context, icon:ImageView,animador: ObjectAnimator,terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
+    suspend fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, context: Context, icon:ImageView, animador: ObjectAnimator, terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
 
 
         val drawable = icon.drawable
@@ -474,7 +474,6 @@ class CargaDiaria {
             editor?.apply()
             FragmentCargas.progresspush  =0
         }
-
 
         Thread.sleep(10000)
         CoroutineScope(Dispatchers.Main).launch {

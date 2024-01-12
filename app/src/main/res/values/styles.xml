@@ -46,7 +46,11 @@
         <item name="android:windowExitAnimation">@anim/slide_pra_baixo</item>
 
     </style>
+    <style name="DialoAnimationEsquerParaDireita">
+        <item name="android:windowEnterAnimation">@anim/esquerta_para_direita</item>
+        <item name="android:windowExitAnimation">@anim/direita_para_esquerda</item>
 
+    </style>
     <style name="CustomBottomNavigationCimapraBaixo">
         <item name="android:windowEnterAnimation">@anim/slide_pra_baixo</item>
         <item name="android:windowExitAnimation">@anim/slide_pra_cima</item>
