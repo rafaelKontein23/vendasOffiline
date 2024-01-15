@@ -24,6 +24,7 @@ import org.apache.commons.codec.binary.Base64.encodeBase64String
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.DataBaseHelber
 import java.io.ByteArrayOutputStream
 import java.net.URL
@@ -157,7 +158,7 @@ class taskImagem (context:Context){
                     icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
 
                 }
-                delay(10000)
+                delay(5000)
                 CoroutineScope(Dispatchers.Main).launch {
 
                     val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)
@@ -168,10 +169,10 @@ class taskImagem (context:Context){
                     constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
                     texttitulocarga.setTextColor(Color.parseColor("#21262F"))
                     subtitulocarga.setTextColor(Color.parseColor("#737880"))
-                    val currentDate: String = SimpleDateFormat("dd/MMyyyy", Locale.getDefault()).format(
+                    val currentDate: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
                         Date()
                     )
-                    subtitulocarga.text ="atualizado em: ${currentDate} "
+                    subtitulocarga.text ="atualizado em: ${currentDate} ${HoraAtual.horaAtual()}"
 
                 }
                 Log.d("Terminou"," carga de imagens")

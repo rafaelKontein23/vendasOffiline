@@ -35,9 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/inter_medium"
                 android:background="#DDDDDD"
+                android:fontFamily="@font/inter_medium"
                 android:textColor="#0196B4"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +68,7 @@
                 android:fontFamily="@font/inter"
                 android:textColor="#737880"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/NomeProtudo" />
 
@@ -130,14 +130,14 @@
                 android:id="@+id/progressivaSelecionada"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
                 android:fontFamily="@font/inter"
+                android:text=""
                 android:textColor="#737880"
                 android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/barraProduto"
-                app:layout_constraintTop_toTopOf="@+id/barraProduto" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>

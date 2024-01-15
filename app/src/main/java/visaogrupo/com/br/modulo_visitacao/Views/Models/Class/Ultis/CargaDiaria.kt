@@ -44,7 +44,7 @@ class CargaDiaria {
 
             // Atualiza progress
             FragmentCargas.progresspush += 1
-            FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+            FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","procurando Zip...")
 
 
             Log.d("Caminho Zip","${patch}")
@@ -79,7 +79,7 @@ class CargaDiaria {
                             Log.d("Terminou lojas","")
                             // atuliza progress push
                              FragmentCargas.progresspush += 1
-                             FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                             FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando lojas...")
                         }
 
                     }
@@ -93,7 +93,7 @@ class CargaDiaria {
                         val isCliente = clientesDAO.insert(jsonArrayCliente)
                         if (isCliente){
                             FragmentCargas.progresspush += 1
-                            FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                            FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando clientes...")
                             Log.d("Terminou Clientes","")
                         }
                     }
@@ -172,7 +172,7 @@ class CargaDiaria {
                         }
 
                         FragmentCargas.progresspush += 1
-                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                        FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Formas de pagamentos...")
 
                         Log.d("Terminou"," FormaDePagamento")
                     }
@@ -196,7 +196,7 @@ class CargaDiaria {
                             operadorLogisticoDAO.insert(jsonArrayOperadorLogistico,lojaID,ufs)
                         }
                         FragmentCargas.progresspush += 1
-                        FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                        FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando opls...")
 
                         Log.d("Terminou"," OPL")
 
@@ -253,7 +253,7 @@ class CargaDiaria {
                               Log.d("Terminou","Progressiva")
 
                               FragmentCargas.progresspush += 1
-                              FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                              FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando progressivas...")
 
                               val db_Progreesivas = DataBaseHelber(context).writableDatabase
                               db_Progreesivas.beginTransaction()
@@ -306,7 +306,7 @@ class CargaDiaria {
                           }
                           lendoProgressiva.join()
                           FragmentCargas.progresspush += 1
-                          FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                    FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando estoque...")
 
 
 
@@ -372,7 +372,7 @@ class CargaDiaria {
                                   db_Estoque.endTransaction()
                               }
                               FragmentCargas.progresspush += 3
-                              FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                              FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Filtros...")
                           }
                    lendoEstoque.join()
                     // fazendo carga de filtro
@@ -441,6 +441,8 @@ class CargaDiaria {
                     gravandoFiltro.join()
                     gravandoFiltroProduto.join()
                     Log.d("Terminou carga","")
+                    FragmentCargas.showNotification(context,"TESTE1","Carga Atualizada","Tudo Pronto, Boas vendas!")
+
                     cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
                 }catch (e:Exception){
                     e.printStackTrace()
@@ -475,7 +477,7 @@ class CargaDiaria {
             FragmentCargas.progresspush  =0
         }
 
-        Thread.sleep(10000)
+        Thread.sleep(5000)
         CoroutineScope(Dispatchers.Main).launch {
 
             val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)
@@ -486,8 +488,10 @@ class CargaDiaria {
             constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
             texttitulocarga.setTextColor(Color.parseColor("#21262F"))
             subtitulocarga.setTextColor(Color.parseColor("#737880"))
-            val currentDate: String = SimpleDateFormat("dd/MMyyyy", Locale.getDefault()).format(Date())
-            subtitulocarga.text ="atualizado em: ${currentDate} "
+            val currentDate: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
+                Date()
+            )
+            subtitulocarga.text ="atualizado em: ${currentDate} ${HoraAtual.horaAtual()}"
 
         }
     }

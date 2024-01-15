@@ -20,16 +20,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterViewPagerPedidos
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinalizado
 
 
-class FragmentPedidos : Fragment(), AtualizaPedido {
+class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido {
         val  content = this
         var  adapterViewPagerPedidos:AdapterViewPagerPedidos? = null
         var adpterPedidoFinalizado :AdpterPedidosFinalizado?= null
         var adpterPedidoFinalizadoEnviado :AdpterPedidosFinalizado?= null
+        val mostraLoad = mostraLoad
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,11 +54,11 @@ class FragmentPedidos : Fragment(), AtualizaPedido {
 
         val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
         val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
-        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this)
+        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad)
 
         val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
         val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
-        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this)
+        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad)
 
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))

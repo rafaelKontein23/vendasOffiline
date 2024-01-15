@@ -119,6 +119,10 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         })
 
         CoroutineScope(Dispatchers.IO).launch{
+            MainScope().launch {
+                binding.carregandoProduto.isVisible = true
+
+            }
             protudosIniciais()
 
         }
@@ -368,6 +372,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             adpterProtudos.listaProtudos = listaProtudos
             adpterProtudos.carregando =false
             adpterProtudos.notifyDataSetChanged()
+            binding.carregandoProduto.isVisible = false
 
         }
     }

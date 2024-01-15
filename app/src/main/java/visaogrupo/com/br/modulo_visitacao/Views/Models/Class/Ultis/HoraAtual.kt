@@ -9,11 +9,12 @@ class HoraAtual {
     {
          fun horaAtual():String{
              val calendar = Calendar.getInstance()
-
-
              val horaAtual = calendar.get(Calendar.HOUR_OF_DAY)
+             val minutosAtuais = calendar.get(Calendar.MINUTE)
 
-             return horaAtual.toString()
+             val horaMinutos = "$horaAtual:$minutosAtuais"
+
+             return horaMinutos
          }
 
     }

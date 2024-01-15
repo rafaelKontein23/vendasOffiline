@@ -29,10 +29,12 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CargaDiaria
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoqueSeparado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskModeloPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskImagem
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogMudarAmbienteSenha
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentCargasBinding
 
@@ -52,7 +54,7 @@ class FragmentCargas () : Fragment() ,
             contentView.setTextViewText(R.id.notification_title,"Atualizando")
             contentView.setProgressBar(R.id.notification_content,10, progresspush,false)
             val notificationBuilder = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.atencao) // Ícone da notificação
+                .setSmallIcon(R.drawable.tdf_azul) // Ícone da notificação
                 .setContentTitle(title) // Título da notificação
                 .setCustomBigContentView(contentView)
                 .setContentText(message)
@@ -94,6 +96,8 @@ class FragmentCargas () : Fragment() ,
             trocaCoritensCargaNaoFeita(binding.imgEstoque,binding.textEstoque,binding.infoTextoEsque)
         }
 
+
+        val verificaInternet = Verifica_Internet()
         binding.nomeVendedor.text = login.Nome
         binding.emailUsuario.text = login.Email
 
@@ -109,48 +113,71 @@ class FragmentCargas () : Fragment() ,
 
         //clicks cargas
         binding.cargaImagem.setOnClickListener {
-            val feitacarga1 = sharedPreferences?.getBoolean("cargafeita", false)
-            if (feitacarga1 == false){
-                if (!alertvisible){
-                    alertvisible = true
-                    val alertas = Alertas()
-                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
-                }
-            }else{
-                // fazer carga de imagem aqui
-                val animatdor = animandoCarregando(view.carregandocargaimagem)
-                atualizaviewAtualizando(view.cargaImagem,requireContext(),view.textcargaImagem,view.infoTextCargaImagem)
-                val  taskImagem = taskImagem(requireContext())
+                if (verificaInternet.isOnline(requireContext())){
+                    val feitacarga1 = sharedPreferences?.getBoolean("cargafeita", false)
+                    if (feitacarga1 == false){
+                        if (!alertvisible){
+                            alertvisible = true
+                            val alertas = Alertas()
+                            alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
+                        }
+                    }else{
+                        // fazer carga de imagem aqui
+                        val animatdor = animandoCarregando(view.carregandocargaimagem)
+                        atualizaviewAtualizando(view.cargaImagem,requireContext(),view.textcargaImagem,view.infoTextCargaImagem)
+                        val  taskImagem = taskImagem(requireContext())
+                        taskImagem.requestImagem(requireContext(),login.Usuario_id.toString(),view.cargaImagem,view.textcargaImagem,view.infoTextCargaImagem,view.imgCargaiImagem,animatdor,this)
+                    }
+                }else {
+                    val  dialogErro = DialogErro()
+                    dialogErro.Dialog(requireContext(),"Sem conexão", "Tente novamente mais tarde", "Ok",""){
 
-                taskImagem.requestImagem(requireContext(),login.Usuario_id.toString(),view.cargaImagem,view.textcargaImagem,view.infoTextCargaImagem,view.imgCargaiImagem,animatdor,this)
+                }
             }
+
         }
         binding.cargaEstoque.setOnClickListener {
+            if (verificaInternet.isOnline(requireContext())){
+                if (feitacarga == false){
+                    if (!alertvisible){
+                        alertvisible = true
+                        val alertas = Alertas()
+                        alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
+                    }
 
-            if (feitacarga == false){
-                if (!alertvisible){
-                    alertvisible = true
-                    val alertas = Alertas()
-                    alertas.alerta(requireActivity().supportFragmentManager,"Por favor realize a carga diaria","#B89A00",R.drawable.atencao,R.drawable.bordas_amerala_alert)
+                }else{
+                    // fazer carga de modelo de pedido aqui
+                    val animatdor = animandoCarregando(view.carregandoEstoque)
+                    atualizaviewAtualizando(view.cargaEstoque,requireContext(),view.textEstoque,view.infoTextoEsque)
+                    val taskEstoque = TaskEstoqueSeparado()
+                    taskEstoque.requestEstoque(requireContext(),view.cargaEstoque,view.textEstoque,view.infoTextoEsque,view.imgEstoque,animatdor,this)
+
                 }
+            }else {
+                val  dialogErro = DialogErro()
+                dialogErro.Dialog(requireContext(),"Sem conexão", "Tente novamente mais tarde", "Ok",""){
 
-            }else{
-                // fazer carga de modelo de pedido aqui
-                val animatdor = animandoCarregando(view.carregandoEstoque)
-                atualizaviewAtualizando(view.cargaEstoque,requireContext(),view.textEstoque,view.infoTextoEsque)
-                val taskEstoque = TaskEstoqueSeparado()
-                taskEstoque.requestEstoque(requireContext(),view.cargaEstoque,view.textEstoque,view.infoTextoEsque,view.imgEstoque,animatdor,this)
-
+                }
             }
+
+
         }
         binding.caragDiaria.setOnClickListener {
-            creadordepush(requireContext())
-            showNotification(requireContext(),"TESTE1","Titulo1","sff")
-            binding.caragDiaria.isEnabled =false
-            val animatdor = animandoCarregando(view.carregandocargadiaria)
-            atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)
-            val cargadiaria = CargaDiaria()
-            cargadiaria.fazCargaDiaria(requireContext(),login.Usuario_id.toString(),view.caragDiaria,view.textcargaDiaria,view.infoTextCargDiaria,view.imgcargadiaria,animatdor,this)
+            if (verificaInternet.isOnline(requireContext())){
+                creadordepush(requireContext())
+                showNotification(requireContext(),"TESTE1","Titulo1","sff")
+                binding.caragDiaria.isEnabled =false
+                val animatdor = animandoCarregando(view.carregandocargadiaria)
+                atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)
+                val cargadiaria = CargaDiaria()
+                cargadiaria.fazCargaDiaria(requireContext(),login.Usuario_id.toString(),view.caragDiaria,view.textcargaDiaria,view.infoTextCargDiaria,view.imgcargadiaria,animatdor,this)
+
+            }else {
+                val  dialogErro = DialogErro()
+                dialogErro.Dialog(requireContext(),"Sem conexão", "Tente novamente mais tarde", "Ok",""){
+
+                }
+            }
 
         }
 

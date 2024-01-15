@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,9 @@ import kotlinx.android.synthetic.main.activity_act_cargas.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
@@ -46,7 +49,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
 class ActPricipal : AppCompatActivity(),
     TrocarcorItem,
     carrinhoVisible,
-    AtualizaCarrinho,
+    AtualizaCarrinho,MostraLoad,
     FragmentCargas.MyCallback {
 
     var list_menu:MutableList<String> = ArrayList<String>()
@@ -55,14 +58,17 @@ class ActPricipal : AppCompatActivity(),
     val fragmentCargas =   FragmentCargas()
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
-    val fragementPedido = FragmentPedidos()
+    val fragementPedido = FragmentPedidos(this)
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View
     lateinit var  spniner :Spinner
     lateinit var login: Login
+    lateinit var viewCarregando :View
+    lateinit var  carregandoProgress :ProgressBar
+    lateinit var textCarregando:TextView
     companion object {
-        var  troca = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado.home
+        var  troca = TrocaItemSelecionado.home
         var clienteUF =""
         var cliente_id = 0
         var loja_id    =0
@@ -92,6 +98,9 @@ class ActPricipal : AppCompatActivity(),
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)
         spniner = findViewById(R.id.menucim_spnier)
+        viewCarregando = findViewById(R.id.viewCarregando)
+        carregandoProgress = findViewById(R.id.carregandoProgress)
+        textCarregando  = findViewById(R.id.textCarregando)
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val objetoSerializado = sharedPreferences?.getString("UserLogin", null)
@@ -476,6 +485,21 @@ class ActPricipal : AppCompatActivity(),
         trocacorItensAposCarga(icon_clientes,text_clientes)
         trocacorItensAposCarga(icon_lojas,text_lojas)
         trocacorItensAposCarga(icon_produtos,text_protudo)
+
+    }
+
+    override fun mostraLoad(load: Boolean, mensagem: String) {
+         if(load){
+              viewCarregando.isVisible = true
+             textCarregando.isVisible = true
+             carregandoProgress.isVisible = true
+             textCarregando.text = mensagem
+         }else{
+             viewCarregando.isVisible = false
+             textCarregando.isVisible = false
+             carregandoProgress.isVisible = false
+             textCarregando.text = mensagem
+         }
 
     }
 }

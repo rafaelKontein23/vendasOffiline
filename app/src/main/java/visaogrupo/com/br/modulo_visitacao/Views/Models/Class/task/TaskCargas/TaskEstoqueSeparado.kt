@@ -22,6 +22,7 @@ import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.DataBaseHelber
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import java.text.SimpleDateFormat
@@ -97,7 +98,7 @@ class TaskEstoqueSeparado {
                     db_Estoque.endTransaction()
                 }
                 FragmentCargas.progresspush += 3
-                FragmentCargas.showNotification(context,"TESTE1","Titulo1","sff")
+                FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","veja o progresso da carga")
             }
             lendoEstoque.join()
             val drawable = icon.drawable
@@ -117,7 +118,7 @@ class TaskEstoqueSeparado {
                 icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
 
             }
-            delay(10000)
+            delay(5000)
             CoroutineScope(Dispatchers.Main).launch {
 
                 val colorcorazultext = ContextCompat.getColor(context, R.color.corazultext)
@@ -128,10 +129,10 @@ class TaskEstoqueSeparado {
                 constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
                 texttitulocarga.setTextColor(Color.parseColor("#21262F"))
                 subtitulocarga.setTextColor(Color.parseColor("#737880"))
-                val currentDate: String = SimpleDateFormat("dd/MMyyyy", Locale.getDefault()).format(
+                val currentDate: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(
                     Date()
                 )
-                subtitulocarga.text ="atualizado em: ${currentDate} "
+                subtitulocarga.text ="atualizado em: ${currentDate} ${HoraAtual.horaAtual()}"
 
             }
         }

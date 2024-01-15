@@ -125,7 +125,7 @@ class CarrinhoDAO (context:Context) {
         while (cursor.moveToNext()){
             val valorProgressiva = cursor.getDouble(0)
             val desconto = cursor.getDouble(1)
-            valores = "| R$ ${valorProgressiva}|  ${desconto} %"
+            valores = "R$ ${valorProgressiva}|  ${desconto} %"
             break
         }
         return valores
