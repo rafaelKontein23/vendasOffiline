@@ -52,21 +52,7 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
         val  fechado = view.findViewById<TextView>(R.id.fechado)
         val pedidosAbertosCarrinho = view.findViewById<TextView>(R.id.abertosPendentes)
         val  viewAbertosPedendes = view.findViewById<View>(R.id.viewAbertosPedendes)
-        adapterViewPagerPedidos = AdapterViewPagerPedidos(getChildFragmentManager(), lifecycle)
-
-        val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
-        val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
-        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad, true, this,0)
-
-        val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
-        val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
-        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad,false,this,1)
-
-        adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
-        adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
-        adapterViewPagerPedidos!!.addFragment(FraggmentPedidoAbertos())
-        arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        arrastaParaLado.adapter = adapterViewPagerPedidos
+        iniciaInterface()
 
         abertos.setOnClickListener {
             arrastaParaLado.setCurrentItem(0,true)
@@ -152,5 +138,23 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
 
     override fun vaiparaEnviados() {
          arrastaParaLado.setCurrentItem(1)
+    }
+
+    fun iniciaInterface(){
+        adapterViewPagerPedidos = AdapterViewPagerPedidos(getChildFragmentManager(), lifecycle)
+
+        val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
+        val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
+        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad, true, this,0)
+
+        val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
+        val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
+        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad,false,this,1)
+
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
+        adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
+        adapterViewPagerPedidos!!.addFragment(FraggmentPedidoAbertos())
+        arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        arrastaParaLado.adapter = adapterViewPagerPedidos
     }
 }
