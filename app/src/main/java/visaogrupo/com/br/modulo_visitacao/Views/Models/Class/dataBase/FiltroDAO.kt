@@ -26,8 +26,14 @@ class FiltroDAO (context: Context){
 
     }
 
-    fun listar():MutableList<Filtros>{
-        val query = "SELECT * FROM TB_Filtros"
+    fun listar(lojaid:Int):MutableList<Filtros>{
+        val query = "SELECT DISTINCT Filtros.* \n" +
+                "FROM TB_FiltroPricipal FiltroPrincipal\n" +
+                "inner join TB_Filtros Filtros on FiltroPrincipal.FiltroCategoriaID = Filtros.filtrocategoriaid\n" +
+                "inner join TB_FiltroProdutos FiltroPrd on FiltroPrd.FiltroCategoriaID =FiltroPrincipal.filtrocategoriaid \n" +
+                "and FiltroPrd.FiltroID = Filtros.filtroid\n" +
+                "INNER JOIN TB_produtos Prod on Prod.barra = FiltroPrd.barra\n" +
+                "inner join TB_Progressiva Prog on prog.prod_cod = prod.Produto_codigo and loja_id = ${lojaid}"
         val listaFiltro = mutableListOf <Filtros>()
         val cursor = dbFiltro.rawQuery(query,null)
         while (cursor.moveToNext()){

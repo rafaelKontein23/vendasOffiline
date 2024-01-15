@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -15,6 +16,7 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 
 class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.Adapter<AdapterPedido.ViewHolderPedido>() {
     var listaPedido = list
@@ -39,7 +41,13 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaosocial
         holder.unidades.text=  listaPedido[position].qtd_Total.toString() + "Uni."
-
+        holder.excluirItem.setOnClickListener {
+            val carrinhoDAO = CarrinhoDAO(context)
+            carrinhoDAO.excluirItemCarrinho(listaPedido[position].cliente_id,listaPedido[position].loja_id)
+            Toast.makeText(context,"Item Excluito com suceeso!",Toast.LENGTH_SHORT).show()
+            listaPedido.removeAt(position)
+            notifyDataSetChanged()
+        }
         holder.celula.setOnClickListener {
 
                 Log.d("Buscou:","vai abrir detalhes")
@@ -63,6 +71,8 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
         val unidades = itemView.findViewById<TextView>(R.id.unidades)
         val img = itemView.findViewById<ImageView>(R.id.excluirItem)
         val celula = itemView.findViewById<ConstraintLayout>(R.id.iempedido)
+
+        val excluirItem = itemView.findViewById<ImageView>(R.id.excluirItem)
 
     }
 }

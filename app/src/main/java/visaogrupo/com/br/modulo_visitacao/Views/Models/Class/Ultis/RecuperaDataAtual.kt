@@ -17,7 +17,7 @@ class RecuperaDataAtual {
             val minutosAtuais = calendar.get(Calendar.MINUTE)
             val segundosAtuais = calendar.get(Calendar.SECOND)
 
-            data= dataFormatada+horaAtual+ ":"+minutosAtuais + ":" +segundosAtuais
+            data= dataFormatada+" "+horaAtual+ ":"+minutosAtuais + ":" +segundosAtuais
 
             return data
         }

@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
@@ -33,11 +35,19 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.Serializable
 
-class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Context,atualizaPedido: AtualizaPedido, mostra:MostraLoad) : RecyclerView.Adapter<AdpterPedidosFinalizado.ViewHolderPedidoFinalizado>() {
+class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Context,
+                               atualizaPedido: AtualizaPedido,
+                               mostra:MostraLoad,
+                               mostrarEnvio:Boolean,
+                               vaiParaEnviados:VaiParaEnviados,
+                               envioPedido:Int) : RecyclerView.Adapter<AdpterPedidosFinalizado.ViewHolderPedidoFinalizado>() {
     var listaPedido = list
     val context = context
     val atualizaPedido = atualizaPedido
     val mostra = mostra
+    val mostrarEnvio = mostrarEnvio
+    val vaiParaEnviados = vaiParaEnviados
+    val envioPedido = envioPedido;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPedidoFinalizado {
         val view=  LayoutInflater.from(parent.context).inflate(R.layout.pedido_enviar,parent,false)
@@ -71,6 +81,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         holder.valorTotal.text = "R$ " + valorTot
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaoSocial
+
         holder.data.text  = listaPedido[position].dataPedido+ " | ${nomeFormaPag}"
 
         holder.celula.setOnClickListener(object :OnClickListener{
@@ -82,6 +93,15 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
             }
 
         })
+         holder.enviarPedido.isVisible =mostrarEnvio
+
+        holder.excluirItem.setOnClickListener {
+              val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+              pedidosFinalizadosDAO.excluirItemPedido(listaPedido[position].pedidoID,envioPedido)
+              Toast.makeText(context,"Item Excluido com sucesso!",Toast.LENGTH_SHORT).show()
+              listaPedido.removeAt(position)
+              notifyDataSetChanged()
+        }
          holder.enviarPedido.setOnClickListener{
              val  verificaInternet = Verifica_Internet()
              val isInternet = verificaInternet.isOnline(context)
@@ -100,6 +120,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
                                  mostra.mostraLoad(false,"")
                                  val  dialogErro = DialogErro()
                                  dialogErro.Dialog(context,"Sucesso!",mensagem,"Ok",""){
+                                     vaiParaEnviados.vaiparaEnviados()
 
                                  }
                              }
@@ -134,9 +155,9 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         val razaoSocial = itemView.findViewById<TextView>(R.id.razaoSocial)
         val valorTotal = itemView.findViewById<TextView>(R.id.valorTotal)
         val unidades = itemView.findViewById<TextView>(R.id.unidades)
-        val img = itemView.findViewById<ImageView>(R.id.excluirItem)
         val celula = itemView.findViewById<ConstraintLayout>(R.id.iempedido)
         val  enviarPedido = itemView.findViewById<ImageView>(R.id.enviarPedido)
+        val  excluirItem = itemView.findViewById<ImageView>(R.id.excluirItem)
 
     }
 }

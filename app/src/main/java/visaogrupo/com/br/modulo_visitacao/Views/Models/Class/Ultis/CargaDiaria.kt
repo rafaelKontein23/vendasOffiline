@@ -249,7 +249,7 @@ class CargaDiaria {
                                   coroutines.awaitAll()
                               }
 
-                              Log.d("Terminou", jsonarayProgressiva?.size.toString())
+                              Log.d("Terminou Alou", jsonarayProgressiva?.size.toString())
                               Log.d("Terminou","Progressiva")
 
                               FragmentCargas.progresspush += 1

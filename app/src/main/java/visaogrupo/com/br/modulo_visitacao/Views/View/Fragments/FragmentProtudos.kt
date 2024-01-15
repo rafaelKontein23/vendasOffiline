@@ -85,7 +85,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
 
         binding.filtros.setOnClickListener {
             val dialogFiltro = DialogFiltro()
-            dialogFiltro.dialogFiltro(context,this,limparFiltro,this)
+            dialogFiltro.dialogFiltro(context,this,limparFiltro,this, lojaSelecionada.loja_id)
         }
 
         binding.edtBuscaProdutos.addTextChangedListener(object:TextWatcher{
@@ -288,9 +288,9 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
                         "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
                         "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
                         "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
-                        "and carrinho.cliente_id = 1908  \n" +
+                        "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}   \n" +
                         "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
-                        "where Progressiva.loja_id = 4 and Progressiva.uf = 'MG' \n" +
+                        "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
                         filtroIdNull+
                         "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by ${filtro}"
 

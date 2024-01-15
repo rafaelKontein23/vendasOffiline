@@ -21,18 +21,20 @@ import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterViewPagerPedidos
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinalizado
 
 
-class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido {
+class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , VaiParaEnviados{
         val  content = this
         var  adapterViewPagerPedidos:AdapterViewPagerPedidos? = null
         var adpterPedidoFinalizado :AdpterPedidosFinalizado?= null
         var adpterPedidoFinalizadoEnviado :AdpterPedidosFinalizado?= null
         val mostraLoad = mostraLoad
-        override fun onCreate(savedInstanceState: Bundle?) {
+        lateinit var  arrastaParaLado:ViewPager2
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
@@ -43,7 +45,7 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido {
     ): View? {
 
         val  view = inflater.inflate(R.layout.fragment_pedidos, container, false)
-        val  arrastaParaLado = view.findViewById<ViewPager2>(R.id.arrastaParaLado);
+        arrastaParaLado = view.findViewById<ViewPager2>(R.id.arrastaParaLado);
         val  viewFechado = view.findViewById<View>(R.id.viewFechado)
         val  viewAberto = view.findViewById<View>(R.id.viewAberto)
         val  abertos = view.findViewById<TextView>(R.id.abertos)
@@ -54,11 +56,11 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido {
 
         val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
         val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
-        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad)
+        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad, true, this,0)
 
         val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
         val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
-        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad)
+        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad,false,this,1)
 
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
@@ -146,5 +148,9 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido {
             adpterPedidoFinalizadoEnviado?.notifyDataSetChanged()
 
         }
+    }
+
+    override fun vaiparaEnviados() {
+         arrastaParaLado.setCurrentItem(1)
     }
 }

@@ -32,7 +32,11 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFiltroPrinci
 class DialogFiltro :AtualizaListaFiltro {
     val listaFiltroIDSelecionados = mutableListOf<Int>()
     var filtroOrdenar = "1"
-    fun dialogFiltro(context: Context?,atualizaFiltrosProduto: AtualizaFiltrosProduto,limparFiltro:Boolean,limparFiltrosProdutos: LimparFiltrosProdutos){
+    fun dialogFiltro(context: Context?,
+                     atualizaFiltrosProduto: AtualizaFiltrosProduto,
+                     limparFiltro:Boolean,
+                     limparFiltrosProdutos: LimparFiltrosProdutos,
+                     lojaId:Int){
 
         val dialog = android.app.Dialog(context!!)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -44,6 +48,7 @@ class DialogFiltro :AtualizaListaFiltro {
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window!!.attributes.windowAnimations = R.style.DialoAnimationEsquerParaDireita
         dialog.window!!.setGravity(Gravity.LEFT)
+        dialog.setCanceledOnTouchOutside(true)
         dialog.show()
         val  xFiltros = dialog.findViewById<ImageView>(R.id.xFiltros)
 
@@ -80,8 +85,8 @@ class DialogFiltro :AtualizaListaFiltro {
         CoroutineScope(Dispatchers.IO).launch {
            val filtroPrincipalDAO = FiltroPrincipalDAO(context)
            val filtroDao = FiltroDAO(context)
-           val listaFiltroPrincipal  =filtroPrincipalDAO.listar()
-           val listaFiltro = filtroDao.listar()
+           val listaFiltroPrincipal  =filtroPrincipalDAO.listar(lojaId)
+           val listaFiltro = filtroDao.listar(lojaId)
             var listaFiltrosPricipaisFilt =  mutableListOf<FiltrosPricipaisFilt>()
 
 

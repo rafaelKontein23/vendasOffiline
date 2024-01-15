@@ -16,13 +16,15 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizadetalhesProdutos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import java.io.Serializable
 
-class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Context, atualza: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizadetalhesProdutos, startaAtividade: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade)  : RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
+class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Context, atualza: AtualizadetalhesProdutos, startaAtividade: StartaAtividade)  : RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
 
     var  listaProdutoCarrinho = list
     val view = view
@@ -62,8 +64,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
                         super.onDismissed(transientBottomBar, event)
                         if (event != DISMISS_EVENT_ACTION) {
                             val carrinhoDAO = CarrinhoDAO(context)
-                            carrinhoDAO.excluirItem(listaProdutoCarrinho[position].lojaId,listaProdutoCarrinho[position].clienteId,listaProdutoCarrinho[position].produtoCodigo)
-                            listaProdutoCarrinho.removeAt(position)
+                            carrinhoDAO.excluirItem(item.lojaId,item.clienteId,item.produtoCodigo)
                             atualza.detalhes(listaProdutoCarrinho,true,position,0.0)
                         }
                     }

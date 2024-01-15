@@ -242,4 +242,10 @@ class PedidosFinalizadosDAO(context: Context) {
         return valortotal
     }
 
+    fun excluirItemPedido(pedidoID:Long, pedidoEnviado:Int){
+        val queryCarrinho = "DELETE from TBPedidosFinalizados WHERE pedidoid = ${pedidoID} AND pedidoenviado = ${pedidoEnviado}"
+
+        dbPedido.writableDatabase.execSQL(queryCarrinho)
+    }
+
 }

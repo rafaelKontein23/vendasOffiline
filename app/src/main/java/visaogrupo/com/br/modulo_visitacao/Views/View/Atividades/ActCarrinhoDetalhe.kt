@@ -52,10 +52,6 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         }
 
         atualizarInterface()
-
-
-
-
     }
 
     override fun detalhes(
@@ -64,13 +60,13 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         position: Int,
         valor: Double
     ) {
-        if(!atualiza){
-            lista[position].valortotal = valor
-            atualzza(lista,valorminimo)
-        }else{
+
             adpterCarrinhoDetalhes.listaProdutoCarrinho = lista
             adpterCarrinhoDetalhes.notifyDataSetChanged()
-        }
+           atualzza(lista,valorminimo)
+            if (lista.isEmpty()){
+               onBackPressed()
+           }
 
     }
     fun atualzza(lista: MutableList<Carrinho>, valorMinimo: Double){
