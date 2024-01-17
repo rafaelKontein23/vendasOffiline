@@ -73,7 +73,7 @@ class DialogOperadorLogistico (context:Context){
         val  observacao = dialog.findViewById<EditText>(R.id.observacao)
         val  tituloAr = dialog.findViewById<TextView>(R.id.tituloAr)
         val  Description = dialog.findViewById<TextView>(R.id.Description)
-        val NunerodoPedido = dialog.findViewById<EditText>(R.id.NunerodoPedido)
+        val  NunerodoPedido = dialog.findViewById<EditText>(R.id.NunerodoPedido)
 
 
         observacao.isVisible = list[0].Anr == 1
@@ -111,7 +111,9 @@ class DialogOperadorLogistico (context:Context){
                         numeroPedio,
                         oplId.toString(),
                         observacaocap,
-                        formaDePagmento
+                        formaDePagmento,
+                        list[0].RegraPrazo,
+                        list[0].QtdMaxima_Operador
                     )
                 }
                 val carrinhoDao = CarrinhoDAO(context)

@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Views.View.Atividades.ActPedidoEnviado">
+
+
     <TextView
         android:id="@+id/tituloPedido"
         style="@style/text_sub_titulo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/inter_medium"
 
@@ -19,9 +20,8 @@
 
         android:textFontWeight="@integer/material_motion_duration_long_1"
         android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/voltarPedido"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/containerInfoPedidos"
@@ -202,5 +202,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/voltarPedido"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/voltarcompra" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

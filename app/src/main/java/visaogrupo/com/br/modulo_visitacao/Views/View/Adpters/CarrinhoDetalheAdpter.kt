@@ -95,6 +95,11 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
             bundle.putSerializable("ProtudoSelecionado", produto as Serializable)
             intent.putExtra("ProtudoSelecionado_bundle", bundle)
             intent.putExtra("estaNoCarrinho",1)
+            intent.putExtra("estaNoPedido", false)
+            intent.putExtra("pedidoID", 0)
+            intent.putExtra("Pedido", false)
+            intent.putExtra("CarrinhoDetalhe", true)
+
             start.atividade(intent)
         }
 

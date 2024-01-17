@@ -3,8 +3,6 @@ package visaogrupo.com.br.modulo_visitacao.Views.View.Adpters
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -21,17 +19,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.IniciaPedidoDetalhes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.FormaDePagamentoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskEnviaPedido
-import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActDetalhePedidoSalvo
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPedidoEnviado
-import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.Serializable
 
@@ -40,7 +37,8 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
                                mostra:MostraLoad,
                                mostrarEnvio:Boolean,
                                vaiParaEnviados:VaiParaEnviados,
-                               envioPedido:Int) : RecyclerView.Adapter<AdpterPedidosFinalizado.ViewHolderPedidoFinalizado>() {
+                               envioPedido:Int,
+                               iniciaAtividade:IniciaPedidoDetalhes) : RecyclerView.Adapter<AdpterPedidosFinalizado.ViewHolderPedidoFinalizado>() {
     var listaPedido = list
     val context = context
     val atualizaPedido = atualizaPedido
@@ -48,6 +46,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
     val mostrarEnvio = mostrarEnvio
     val vaiParaEnviados = vaiParaEnviados
     val envioPedido = envioPedido;
+    val  iniciaPedidoDetalhes = iniciaAtividade
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderPedidoFinalizado {
         val view=  LayoutInflater.from(parent.context).inflate(R.layout.pedido_enviar,parent,false)
@@ -86,10 +85,18 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
 
         holder.celula.setOnClickListener(object :OnClickListener{
             override fun onClick(v: View?) {
-                val pedido = listaPedido[position]
-                val intent = Intent(context, ActPedidoEnviado::class.java)
-                intent.putExtra("PedidoClicado", pedido as Serializable)
-                context.startActivity(intent)
+                if (envioPedido == 1){
+                    val pedido = listaPedido[position]
+                    val intent = Intent(context, ActPedidoEnviado::class.java)
+                    intent.putExtra("PedidoClicado", pedido as Serializable)
+                    context.startActivity(intent)
+                }else {
+                    val pedido = listaPedido[position]
+                    val intent = Intent(context, ActDetalhePedidoSalvo::class.java)
+                    intent.putExtra("PedidoClicado", pedido as Serializable)
+                    iniciaPedidoDetalhes.inicia(intent)
+                }
+
             }
 
         })
@@ -131,7 +138,9 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
                                  mostra.mostraLoad(false,"")
 
                                  val  dialogErro = DialogErro()
-                                 dialogErro.Dialog(context,"Ops!",mensagem,"Ok","",{})
+                                 dialogErro.Dialog(context,"Ops!",mensagem,"Ok",""){
+
+                                 }
                              }
 
                          }

@@ -31,7 +31,6 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes

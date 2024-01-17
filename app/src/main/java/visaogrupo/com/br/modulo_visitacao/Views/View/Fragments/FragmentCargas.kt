@@ -28,10 +28,8 @@ import kotlinx.android.synthetic.main.fragment_cargas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CargaDiaria
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoqueSeparado
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskModeloPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskImagem
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro

@@ -16,7 +16,9 @@ class PedidosFinalizadosDAO(context: Context) {
     }
     fun insert(carrinho:Carrinho, data:String,hora:String, chave:String,
                listaProdutduos:MutableList<Carrinho>,
-               numeroPedido:String,opls:String, justificativaAnr :String, formaDePagamento:FormaDePagaemnto){
+               numeroPedido:String,opls:String, justificativaAnr :String,
+               formaDePagamento:FormaDePagaemnto,
+               RegraPrazo:Int, QuantidadeMaxima:Int){
 
         val valoresPedidos = ContentValues().apply {
             put("loja_id", carrinho.lojaId)
@@ -61,6 +63,8 @@ class PedidosFinalizadosDAO(context: Context) {
             put("Chave", chave)
             put("justificativaANR", justificativaAnr)
             put("TipoLoja", carrinho.LojaTipo)
+            put("RegraPrazo",RegraPrazo)
+            put("QtdMaximaOpl",QuantidadeMaxima)
 
 
 
@@ -143,6 +147,8 @@ class PedidosFinalizadosDAO(context: Context) {
             val chave = cursor.getString(40)
             val  justificativaANR=  cursor.getString(41)
             val  TipoLoja=  cursor.getInt(42)
+            val regraPrazo = cursor.getInt(43)
+            val quantidadeMaxima = cursor.getInt(44)
 
             val pedido = PedidoFinalizado(
                 pedidoId.toLong(),
@@ -187,7 +193,9 @@ class PedidosFinalizadosDAO(context: Context) {
                 formaPagamentoExclusiva,
                 chave,
                 justificativaANR,
-                TipoLoja
+                TipoLoja,
+                regraPrazo,
+                quantidadeMaxima
             )
             listPedidoFinalizado.add(pedido)
         }
@@ -229,6 +237,41 @@ class PedidosFinalizadosDAO(context: Context) {
 
         return listaProdutosFinalizados
     }
+     fun  adicionaItemNoPedido(pedidoID:Int,carrinh:Carrinho){
+
+             val valoresProdutosPedidos = ContentValues()
+             valoresProdutosPedidos.put("NomeProduto",carrinh.nomeProduto)
+             valoresProdutosPedidos. put("PedidoID", pedidoID)
+             valoresProdutosPedidos. put("Barra", carrinh.barra)
+             valoresProdutosPedidos. put("Produto_codigo", carrinh.produtoCodigo)
+             valoresProdutosPedidos. put("Desconto", carrinh.desconto)
+             valoresProdutosPedidos. put("DescontoOriginal", carrinh.descontoOriginal)
+             valoresProdutosPedidos. put("formalizacao", carrinh.formalizacao)
+             valoresProdutosPedidos. put("PF", carrinh.pf)
+             valoresProdutosPedidos. put("Quantidade", carrinh.quantidade)
+             valoresProdutosPedidos. put("ValorRepasse", carrinh.valor)
+             valoresProdutosPedidos. put("ST", carrinh.st)
+             valoresProdutosPedidos. put("Valor", carrinh.valortotal)
+             try {
+                 dbPedido.writableDatabase.insertOrThrow("TB_Produtos_Pedidos_Finalizado", null,valoresProdutosPedidos)
+
+             }catch (e:SQLiteException){
+                 println("Erroo ${e.message}")
+             }
+
+     }
+    fun atualizaProdutoPedidoValores(pedidoId:Int, produtoCodigo:Int, carrinho:Carrinho){
+        val conteudos=  ContentValues()
+
+        conteudos.put("Desconto",carrinho.desconto)
+        conteudos.put("Quantidade",carrinho.quantidade)
+        conteudos.put("Valor",carrinho.valortotal)
+
+
+
+        dbPedido.writableDatabase.update("TB_Produtos_Pedidos_Finalizado",conteudos,
+            "PedidoID = ${pedidoId} AND Produto_codigo = ${produtoCodigo}", null)
+    }
 
     fun somarTotalPedido(pedidoId:Long):Double{
         val query = "SELECT Valor FROM TB_Produtos_Pedidos_Finalizado WHERE pedidoid = ${pedidoId}"
@@ -241,11 +284,40 @@ class PedidosFinalizadosDAO(context: Context) {
         }
         return valortotal
     }
+    fun countarItensPedidos(pedidoId:Int):Int{
+        val query = "SELECT COUNT (*) FROM TB_Produtos_Pedidos_Finalizado WHERE pedidoid = ${pedidoId}"
+        val cursor = dbPedido.readableDatabase.rawQuery(query, null)
+
+        var count = 0
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+
+        cursor.close()
+        return count
+    }
 
     fun excluirItemPedido(pedidoID:Long, pedidoEnviado:Int){
         val queryCarrinho = "DELETE from TBPedidosFinalizados WHERE pedidoid = ${pedidoID} AND pedidoenviado = ${pedidoEnviado}"
 
         dbPedido.writableDatabase.execSQL(queryCarrinho)
     }
+    fun excluirItemPedidoProduto(pedidoID:Long, produtosCodigo:Int){
+        val queryCarrinho = "DELETE from TB_Produtos_Pedidos_Finalizado WHERE pedidoid = ${pedidoID} AND Produto_codigo = ${produtosCodigo}"
 
+        dbPedido.writableDatabase.execSQL(queryCarrinho)
+    }
+    fun atualizarItem(pedidoId:Int,operadorLogistigo:String, formaDePagaemtocap:String, formaDePagaemto: FormaDePagaemnto){
+        val conteudos=  ContentValues()
+        if (!operadorLogistigo.isEmpty()){
+            conteudos.put("OperadorLogistigo",operadorLogistigo)
+        }
+        if (!formaDePagaemtocap.isEmpty()){
+            conteudos.put("formaDePagemento",formaDePagaemto.Cod_FormaPgto)
+            conteudos.put("FormaPagamentoExclusiva",formaDePagaemto.exlusiva)
+        }
+
+        dbPedido.writableDatabase.update("TBPedidosFinalizados",conteudos,
+            "PedidoID = ${pedidoId}", null) // o Interrogação serve para
+    }
 }

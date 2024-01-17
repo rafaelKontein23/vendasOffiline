@@ -1,12 +1,10 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -90,7 +88,7 @@ class Task_Login {
                             } else {
 
                                 val dialogErro = DialogErro()
-                                dialogErro.Dialog(context, "Atenção", mensagem,"aceitar","cancelar",{})
+                                dialogErro.Dialog(context, "Atenção", mensagem,"aceitar","cancelar",){}
                             }
 
                             break

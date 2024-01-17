@@ -73,26 +73,6 @@ class FormaDePagamentoDAO(context: Context):
                      " where ${valorToatalPedido} BETWEEN valorde and valorate " +
                      ") and loja_id = ${loja_id}"
 
-             val curso = dbFormaDePagamento.rawQuery(query,null)
-
-             while (curso.moveToNext()){
-                 try {
-                     val tipo = curso.getInt(0)
-
-                     val loja_id = curso.getInt(1)
-                     val Cod_FormaPgto = curso.getString(2)
-                     val FormaPgto   = curso.getString(3)
-                     val ValorMinimo = curso.getDouble(4)
-                     val Alternativa = curso.getInt(6)
-                     val  PrazoMedio = curso.getInt(5)
-
-                     val formaDePagaemnto = FormaDePagaemnto(Alternativa,Cod_FormaPgto,FormaPgto,ValorMinimo,loja_id,PrazoMedio,tipo)
-                     listaFprm.add(formaDePagaemnto)
-                 }catch (e:Exception){
-                     e.printStackTrace()
-                 }
-
-             }
         }else {
               query = "SELECT 0 Tipo,* FROM TB_formaDePagamento WHERE loja_id = ${loja_id} " +
                       "UNION "+
@@ -103,24 +83,22 @@ class FormaDePagamentoDAO(context: Context):
                       ") and loja_id = ${loja_id}"
 
 
-             val curso = dbFormaDePagamento.rawQuery(query,null)
-             while (curso.moveToNext()){
-
-                 val tipo = curso.getInt(0)
-                 val loja_id = curso.getInt(0)
-                 val Cod_FormaPgto = curso.getString(2)
-                 val FormaPgto   = curso.getString(3)
-                 val ValorMinimo = curso.getDouble(4)
-                 val Alternativa = curso.getInt(6)
-                 val  PrazoMedio = curso.getInt(5)
-
-                 val formaDePagaemnto = FormaDePagaemnto(Alternativa,Cod_FormaPgto,FormaPgto,ValorMinimo,loja_id,PrazoMedio,tipo)
-                 listaFprm.add(formaDePagaemnto)
-
-             }
-
          }
+        val curso = dbFormaDePagamento.rawQuery(query,null)
+        while (curso.moveToNext()){
 
+            val tipo = curso.getInt(0)
+            val loja_id = curso.getInt(0)
+            val Cod_FormaPgto = curso.getString(2)
+            val FormaPgto   = curso.getString(3)
+            val ValorMinimo = curso.getDouble(4)
+            val Alternativa = curso.getInt(6)
+            val  PrazoMedio = curso.getInt(5)
+
+            val formaDePagaemnto = FormaDePagaemnto(Alternativa,Cod_FormaPgto,FormaPgto,ValorMinimo,loja_id,PrazoMedio,tipo)
+            listaFprm.add(formaDePagaemnto)
+
+        }
         return listaFprm
     }
 }

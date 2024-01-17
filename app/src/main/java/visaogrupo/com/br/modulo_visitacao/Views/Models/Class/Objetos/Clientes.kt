@@ -1,5 +1,5 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos
-
+// Empresa_id, UF, RazaoSocial,CNPJ, FormaPagamentoExclusiva
 data class Clientes(
     val AlertaMensagem: String,
     val Associativismo: String,

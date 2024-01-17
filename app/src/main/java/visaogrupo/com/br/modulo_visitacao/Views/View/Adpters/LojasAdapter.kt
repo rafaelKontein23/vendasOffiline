@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.shape.CornerFamily
 import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
@@ -61,7 +62,7 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
             editor.apply()
 
             //inicia produtos
-            ActPricipal.troca = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.TrocaItemSelecionado.Prodtudos
+            ActPricipal.troca = TrocaItemSelecionado.Prodtudos
             trocarcorItem.trocacor()
             val mudarFragment = MudarFragment()
             mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)

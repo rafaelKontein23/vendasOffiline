@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
@@ -17,7 +16,6 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Funcao_erro
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Task_Login
 

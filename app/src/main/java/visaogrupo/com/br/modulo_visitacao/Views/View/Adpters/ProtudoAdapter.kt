@@ -25,14 +25,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluirPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.Serializable
 
 class ProtudoAdapter(list:MutableList<ProdutoProgressiva>, context:
-Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinho: ExcluiItemcarrinho, fragmentView:View): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
+Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinho: ExcluiItemcarrinho,
+                     fragmentView:View,
+                     estaNoPedido:Boolean = false,
+                     pedidoId:Int = 0,
+                     pedido :Boolean = false,
+                     excluirPedido
+                     :ExcluirPedido? = null, pedidoEsta: PedidoFinalizado? = null
+): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
     val  context = context
     val start =  start
@@ -42,6 +54,13 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
     val  fragmentView = fragmentView
     var count = 20
     var carregando = true
+    val estaNoPedido = estaNoPedido
+    val pedidoId = pedidoId
+    val pedido = pedido
+    val excluirPedido = excluirPedido
+    val pedidoEsta = pedidoEsta
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
        val view =  LayoutInflater.from(parent.context).inflate(R.layout.celula_produtos,parent,false)
 
@@ -78,6 +97,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                     holder.excluiritem.isVisible = false
                     holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
                     holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
+                    holder.progressivaSelecionada.text = ""
                 }
                 holder.constrainProtudos.setOnClickListener {
                     val intent = Intent(context, ActProtudoDetalhe::class.java)
@@ -85,10 +105,23 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                     bundle.putSerializable("ProtudoSelecionado", listaProtudos[position] as Serializable)
                     intent.putExtra("ProtudoSelecionado_bundle", bundle)
 
+                    val estapedido = estaNoPedido && listaProtudos[position].estaNoCarrinho == 1
+
                     bundle.putSerializable("ImagemProd", listaProtudos[position].base64)
                     intent.putExtra("ProtudoSelecionado_bundle", bundle)
                     intent.putExtra("ImagemProd_bundle", bundle)
                     intent.putExtra("estaNoCarrinho", listaProtudos[position].estaNoCarrinho)
+                    intent.putExtra("estaNoPedido", estapedido)
+                    intent.putExtra("pedidoID", pedidoId)
+                    intent.putExtra("Pedido", pedido)
+                    if (pedidoEsta != null){
+                        intent.putExtra("PedidoClicado", pedidoEsta as Serializable)
+                    }else {
+                        intent.putExtra("PedidoClicado", "" )
+                    }
+                    intent.putExtra("CarrinhoDetalhe", false)
+
+
                     start.atividade(intent)
 
                 }
@@ -128,9 +161,36 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                                 super.onDismissed(transientBottomBar, event)
                                 if (event != DISMISS_EVENT_ACTION) {
-                                    val carrinhoDAO = CarrinhoDAO(context)
-                                    carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
-                                    excluiItemcarrinho.exluiItem()
+                                    if (estaNoPedido){
+                                        val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                                        val totalPedido = pedidosFinalizadosDAO.countarItensPedidos(pedidoId)
+                                        if (totalPedido == 1){
+                                            val funcaonao ={
+                                                holder.quantidade.isVisible = true
+                                                holder.excluiritem.isVisible = true
+                                                holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
+                                                holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
+                                                holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
+                                            }
+                                            val dialogErro = DialogErro()
+                                            dialogErro.Dialog(context,"Atenção", "caso prossiga com a ação o pedido inteiro será excluido, deseja continuar", "Sim","Não",funcaonao,false){
+                                                pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
+                                                pedidosFinalizadosDAO.excluirItemPedido(pedidoId.toLong(),0)
+                                                excluirPedido!!.excluirPedido()
+
+                                            }
+                                        }else{
+                                            pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
+                                            excluiItemcarrinho.exluiItem()
+
+                                        }
+
+                                    }else{
+                                        val carrinhoDAO = CarrinhoDAO(context)
+                                        carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
+                                        excluiItemcarrinho.exluiItem()
+                                    }
+
                                 }
                             }
                         })

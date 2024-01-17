@@ -1,5 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.IniciaPedidoDetalhes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
@@ -27,7 +30,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterViewPagerPed
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinalizado
 
 
-class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , VaiParaEnviados{
+class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , VaiParaEnviados, IniciaPedidoDetalhes{
         val  content = this
         var  adapterViewPagerPedidos:AdapterViewPagerPedidos? = null
         var adpterPedidoFinalizado :AdpterPedidosFinalizado?= null
@@ -38,6 +41,7 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
         super.onCreate(savedInstanceState)
 
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +57,7 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
         val pedidosAbertosCarrinho = view.findViewById<TextView>(R.id.abertosPendentes)
         val  viewAbertosPedendes = view.findViewById<View>(R.id.viewAbertosPedendes)
         iniciaInterface()
+
 
         abertos.setOnClickListener {
             arrastaParaLado.setCurrentItem(0,true)
@@ -145,11 +150,11 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
 
         val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
         val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
-        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad, true, this,0)
+        adpterPedidoFinalizado = AdpterPedidosFinalizado(listaPedidos,requireContext(), this, mostraLoad, true, this,0, this)
 
         val  pedidosFinalizadosDAOEnviados = PedidosFinalizadosDAO(requireContext())
         val  listaPedidosEnviados = pedidosFinalizadosDAOEnviados.listarPedidos(1)
-        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad,false,this,1)
+        adpterPedidoFinalizadoEnviado = AdpterPedidosFinalizado(listaPedidosEnviados,requireContext(), this,mostraLoad,false,this,1, this)
 
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosPendendes(adpterPedidoFinalizado!!,listaPedidos))
         adapterViewPagerPedidos!!.addFragment(FragmentPedidosFechados(adpterPedidoFinalizadoEnviado!!, listaPedidosEnviados))
@@ -157,4 +162,23 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
         arrastaParaLado.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         arrastaParaLado.adapter = adapterViewPagerPedidos
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK ) {
+                val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(requireContext())
+                val  listaPedidos = pedidosFinalizadosDAO.listarPedidos(0)
+                adpterPedidoFinalizado?.listaPedido = listaPedidos
+                adpterPedidoFinalizado?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun inicia(intent: Intent) {
+       startActivityForResult(intent,3)
+
+    }
+
 }

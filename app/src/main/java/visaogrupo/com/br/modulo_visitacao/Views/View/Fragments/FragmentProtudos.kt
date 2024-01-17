@@ -36,7 +36,6 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetal
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ImagensDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFiltroAZ
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogFiltro
@@ -124,6 +123,8 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
 
             }
             protudosIniciais()
+            atualizaProgressBar()
+            quatidadeinCarrinho()
 
         }
 
@@ -144,8 +145,6 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
 
         // esconde carrinho (Button flutuante)
         carrinhoVisible.carrinhoVisivel()
-        atualizaProgressBar()
-        quatidadeinCarrinho()
 
 
         binding.carrinhoProtudo.setOnClickListener {
@@ -225,7 +224,10 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
     fun  quatidadeinCarrinho(){
         val carrinhoDAO=  CarrinhoDAO(requireContext())
         val count = carrinhoDAO.quantidadeItens(clienteSelecionado.Empresa_id, lojaSelecionada.loja_id)
-        binding.quatidadeItens.text = count.toString()
+        MainScope().launch {
+            binding.quatidadeItens.text = count.toString()
+
+        }
     }
 
     override fun letraFiltro(letra:String) {

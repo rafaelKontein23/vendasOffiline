@@ -11,7 +11,7 @@ class LojasDAO (context:Context):
     ILojas {
 
     var DBLojas = DataBaseHelber(context).writableDatabase
-
+    var DBLojasalterna = DataBaseHelber(context).readableDatabase
     override   fun insert(lojas: JSONArray): Boolean {
          try {
 
@@ -131,5 +131,64 @@ class LojasDAO (context:Context):
         }
 
         return  listaLojasobject
+    }
+    fun  pegaLojaCarrinnho( query:String) :Lojas?{
+        var lojas:Lojas? =  null
+
+
+
+        val  cursor = DBLojasalterna.rawQuery(query,null)
+        while (cursor.moveToNext()){
+            val loja_id = cursor.getInt(1)
+            val nome =  cursor.getString(2)
+            val MinimoUnidades =   cursor.getInt(4)
+            val MinimoValor =  cursor.getDouble(5)
+            val LojaTipo =   cursor.getInt(6)
+            val tipo =  cursor.getString(7)
+            val LogoHome =    cursor.getString(8)
+            val Distribuidora =    cursor.getInt(9)
+            val Loja_Desconto =   cursor.getString(10)
+            val DescontoMaximo =    cursor.getDouble(11)
+            val Tipo_Imposto_ID =  cursor.getInt(12)
+            val Tipo_Imposto =  cursor.getInt(13)
+            val Libera_Fidelidade =  cursor.getString(14)
+            val Qtd_ProdutosLoja =   cursor.getInt(15)
+            val Loja_Tablet = cursor.getString(16)
+            val Venda_Tipo_id =  cursor.getInt(17)
+            val Data_Inicio =  cursor.getString(19)
+            val Data_Fim = cursor.getString(20)
+            val Portal_Tablet =  cursor.getInt(21)
+            val Qtd_Minima_Operador =   cursor.getInt(22)
+            val Qtd_Maxima_Operador =  cursor.getInt(23)
+            val Loja_Online =   cursor.getString(24)
+            val Minimo_Aprovacao =  cursor.getDouble(25)
+            val Valida_Estoque =    cursor.getString(26)
+            val Loja_Preco =    cursor.getString(27)
+            val ANR        =      cursor.getInt(28)
+            val exibe_Estoque = cursor.getInt(29)
+            val RegraPrazoMedio = cursor.getInt(30)
+            var imagembase64 = ""
+            if (cursor.getString(32) != null){
+                imagembase64 = cursor.getString(32)
+            }
+
+            lojas= Lojas(loja_id, nome,
+                MinimoUnidades, MinimoValor,
+                LojaTipo, tipo, LogoHome,
+                Distribuidora, Loja_Desconto,
+                DescontoMaximo, Tipo_Imposto_ID,
+                Tipo_Imposto, Libera_Fidelidade,
+                Qtd_ProdutosLoja, Loja_Tablet,
+                Venda_Tipo_id, Data_Inicio, Data_Fim,
+                Portal_Tablet, Qtd_Minima_Operador,
+                Qtd_Maxima_Operador, Loja_Online,
+                Minimo_Aprovacao, Valida_Estoque,
+                Loja_Preco, exibe_Estoque,ANR, RegraPrazoMedio,imagembase64)
+
+            break
+
+        }
+
+        return  lojas
     }
 }

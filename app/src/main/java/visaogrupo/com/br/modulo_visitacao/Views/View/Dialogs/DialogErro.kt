@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Funcao_erro
 import visaogrupo.com.br.recursos.R
 
 class DialogErro {
@@ -18,7 +17,10 @@ class DialogErro {
             mensagem: String?,
             aceitar: String?,
             cancelarr: String?,
-            funcao :() -> Unit
+            funcaonao: (() -> Unit?)? = null,
+            cancel:Boolean = true,
+            funcao:() -> Unit,
+
     ) {
             val dialog = android.app.Dialog(context!!)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -27,10 +29,12 @@ class DialogErro {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
+            dialog.setCancelable(cancel)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.window!!.attributes.windowAnimations = R.style.DialoAnimation
             dialog.window!!.setGravity(Gravity.CENTER)
             dialog.show()
+
 
             val Titulo_dialog: TextView
             val mensagem_dialog: TextView
@@ -40,6 +44,14 @@ class DialogErro {
             mensagem_dialog = dialog.findViewById(R.id.mensagem_dialog)
             confirma = dialog.findViewById(R.id.dialog_aceitar)
             cancelar = dialog.findViewById(R.id.Cancelar_diallog)
+
+            cancelar.setOnClickListener {
+                    dialog.dismiss()
+                    if (funcaonao != null){
+                            funcaonao()
+                    }
+            }
+
             Titulo_dialog.text = titulo
             mensagem_dialog.text = mensagem
             confirma.text = aceitar

@@ -12,11 +12,14 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.SalvarLojaeClientePrefereferciaUser
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.LojasDAO
 
 class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.Adapter<AdapterPedido.ViewHolderPedido>() {
     var listaPedido = list
@@ -49,6 +52,8 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
             notifyDataSetChanged()
         }
         holder.celula.setOnClickListener {
+                SalvarLojaeClientePrefereferciaUser.salvarLoja(listaPedido[position].cliente_id,listaPedido[position].loja_id,context)
+                SalvarLojaeClientePrefereferciaUser.salvaCliente(context,listaPedido[position].cliente_id)
 
                 Log.d("Buscou:","vai abrir detalhes")
                 ActPricipal.lojavalorMinimo = listaPedido[position].lojavalorMinomo

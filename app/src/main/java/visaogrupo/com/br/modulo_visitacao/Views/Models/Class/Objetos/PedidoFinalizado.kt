@@ -43,6 +43,8 @@ data class PedidoFinalizado(
         val formaPagamentoExclusiva: Int?,
         val chave:String?,
         val justificativaANR:String,
-        val TipoLoja:Int
+        val TipoLoja:Int,
+        val RegraPrazo:Int,
+        val quantidadeMaximaOpl:Int
 ):java.io.Serializable
 

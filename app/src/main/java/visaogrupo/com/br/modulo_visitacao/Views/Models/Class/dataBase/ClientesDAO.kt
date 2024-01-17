@@ -137,6 +137,56 @@ class ClientesDAO (context: Context): IClientes {
         return clientesList
     }
 
+    fun pegaClienteCarrinho(query:String,context: Context):Clientes?{
+        val lojaxcliente :List<LojaXCliente> = mutableListOf<LojaXCliente>()
+        var clientes:Clientes? = null
+        val db = DataBaseHelber(context)
+        val listaclientes = query
+        val cursor: Cursor = db.readableDatabase.rawQuery(listaclientes,null)
+
+        while (cursor.moveToNext()){
+
+            val Empresa_id:Int = cursor.getInt(0)
+            val cnpj =  cursor.getString(1)
+            val RazaoSocial =   cursor.getString(2)
+            val Fantasia =  cursor.getString(3)
+            val Endereco =   cursor.getString(4)
+            val Numero =  cursor.getString(5)
+            val Complemento =    cursor.getString(6)
+            val Bairro =    cursor.getString(7)
+            val Cidade =   cursor.getString(8)
+            val UF =    cursor.getString(9)
+            val Cep =  cursor.getString(10)
+            val UltimoPedido =  cursor.getString(13)
+            val VendaDireta =  cursor.getString(14)
+            val Associativismo =   cursor.getString(15)
+            val Telefone = cursor.getString(16)
+            val Email =  cursor.getString(17)
+            val DuplicataVencida =  cursor.getInt(20)
+            val Compra  = cursor.getInt(23)
+            val Exbibelerta = cursor.getString(24)
+            val  FormaPagamentoExclusiva = cursor.getInt(26)
+
+            clientes = Clientes(
+                "",Associativismo,Bairro,"",Cep,cnpj,
+                "",0,
+                0,Cidade,0,"",Complemento,
+                Compra, false,
+                "","","",
+                DuplicataVencida,Email,Empresa_id,
+                Endereco,Exbibelerta,
+                Fantasia,0,
+                0,"",""
+                ,1,lojaxcliente,"",
+                "","","",Numero,RazaoSocial,Telefone,"","","",
+                UF,UltimoPedido,
+                VendaDireta, FormaPagamentoExclusiva)
+            break
+
+        }
+        return clientes
+    }
+
     override fun countar(context:Context): Int {
         val dbHelper = DataBaseHelber(context)
         val db = dbHelper.readableDatabase

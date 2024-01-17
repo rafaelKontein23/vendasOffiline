@@ -12,8 +12,6 @@ import android.util.Base64
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.CompoundButton
-import android.widget.RadioGroup
-import android.widget.RadioGroup.OnCheckedChangeListener
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +19,6 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_protudo_detalhe.edtQuantidade
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaProgressiva
@@ -34,6 +31,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.*
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
@@ -48,6 +46,9 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
     val atualizaValorProduto: AtualizaValorProduto = this
     val  atualizaQuantidadeProduto :AtualizaQuantidadeProduto = this
+    lateinit  var lojaSelecionada:Lojas
+    lateinit var clienteSelecionado:Clientes
+    val  lojasxclienets = mutableListOf<LojaXCliente>()
 
     companion object {
         lateinit var progressivaSelecionada: ProgressivaSelecionada
@@ -68,11 +69,48 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         val gsonuserid = Gson()
         val objetoSerializadoLogin = sharedPreferences?.getString("UserLogin", null)
         login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
-        val objetoSerializado = sharedPreferences?.getString("LojaSelecionada", null)
-        val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
-        val lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
-        val clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+
+        var  pedidoFinalizado = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
         val estaNoCarrinho  = intent.getIntExtra("estaNoCarrinho",0)
+        val estaNoPedidoSalvo = intent.getBooleanExtra("estaNoPedido",false)
+        val pedidodID = intent.getIntExtra("pedidoID",0)
+        val  pedido = intent.getBooleanExtra("Pedido",false)
+        val  carrinhoDetalhe = intent.getBooleanExtra("CarrinhoDetalhe",false)
+
+
+       if (pedido){
+           var anr =0
+           if (pedidoFinalizado!!.anr == true){
+               anr = 1
+           }
+           lojaSelecionada = Lojas(pedidoFinalizado!!.lojaId,pedidoFinalizado.nomeLoja.toString(),0,
+               pedidoFinalizado!!.valorMinimoLoja!!.toDouble(),
+               pedidoFinalizado.TipoLoja,"","",0,
+               "",0.0,0,0,
+               "",0,"",0,"","",0,
+               pedidoFinalizado!!.qtdMinimaOperador!!.toInt(),pedidoFinalizado!!.qtdMaximaOperador!!.toInt(),"",0.0,"","",0,anr,pedidoFinalizado!!.RegraPrazo.toInt(),"")
+
+
+           clienteSelecionado = Clientes("","","","",
+               "",pedidoFinalizado!!.cnpj.toString(),
+               "",0,0,"",
+               0,"","",0, false,"","","",0,"",pedidoFinalizado!!.clienteId.toInt(),
+               "","","",0,0,"","",0,lojasxclienets,"","","","",
+               "","",pedidoFinalizado!!.razaoSocial!!,"","","",pedidoFinalizado!!.uf,"","",pedidoFinalizado!!.formaPagamentoExclusiva!!.toInt())
+       }else {
+           if (carrinhoDetalhe){
+               val objetoSerializadoLoja = sharedPreferences?.getString("LojaSelecionadaCarrinho", null)
+               val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionadaCarrinho", null)
+               lojaSelecionada =  gson.fromJson(objetoSerializadoLoja, Lojas::class.java)
+               clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+           }else{
+               val objetoSerializadoLoja = sharedPreferences?.getString("LojaSelecionada", null)
+               val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
+               lojaSelecionada =  gson.fromJson(objetoSerializadoLoja, Lojas::class.java)
+               clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
+           }
+
+       }
 
 
 
@@ -324,16 +362,31 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
                val carrinhoDAO = CarrinhoDAO(this)
                try {
-                   if (estaNoCarrinho  == 1){
+                   if (pedido){
+                       if (estaNoPedidoSalvo){
+                           val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(baseContext)
+                           pedidosFinalizadosDAO.atualizaProdutoPedidoValores(pedidodID,carrinho.produtoCodigo,carrinho)
+                           Toast.makeText(baseContext,"Item atualizado com sucesso nos pedidos",Toast.LENGTH_SHORT).show()
 
-                       carrinhoDAO.atualizaItemCarrinho(carrinho)
-                       Toast.makeText(baseContext,"Item atualizado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+                       }else{
+                           val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(baseContext)
+                           pedidosFinalizadosDAO.adicionaItemNoPedido(pedidodID,carrinho)
+                           Toast.makeText(baseContext,"Item adicionado com sucesso nos pedidos",Toast.LENGTH_SHORT).show()
+                       }
+                   }else {
+                       if (estaNoCarrinho  == 1){
+                           carrinhoDAO.atualizaItemCarrinho(carrinho)
+                           Toast.makeText(baseContext,"Item atualizado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
 
-
-                   }else{
-                       carrinhoDAO.insertCarrinho(carrinho)
-                       Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+                       }else{
+                           carrinhoDAO.insertCarrinho(carrinho)
+                           Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
+                       }
                    }
+
+
+
+
                }catch (e:Exception){
                    e.printStackTrace()
                    val dialogErro = DialogErro()

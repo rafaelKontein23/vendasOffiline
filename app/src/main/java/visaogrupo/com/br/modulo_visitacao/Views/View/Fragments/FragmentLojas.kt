@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_lojas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.LojasAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.LojasDAO
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentLojasBinding
 
-class FragmentLojas (trocarcorItem: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem, carrinhoVisible: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible, atualizaCarrinho: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho): Fragment() {
+class FragmentLojas (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho): Fragment() {
 
     private  lateinit var  binding: FragmentLojasBinding
     lateinit var clienteSelecionado: Clientes

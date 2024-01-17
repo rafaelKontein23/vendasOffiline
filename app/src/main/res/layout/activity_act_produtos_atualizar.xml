@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Views.View.Atividades.ActProdutosAtualizar">
+
+    <TextView
+        android:id="@+id/textView5"
+        style="@style/text_sub_titulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="29dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="Produtos"
+        android:textColor="#2E3642"
+
+        android:textFontWeight="@integer/material_motion_duration_long_1"
+        android:textSize="20dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view9"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/corviewicon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lojasSelecionadas" />
+
+    <TextView
+        android:id="@+id/cnpjClienteSelecionado"
+        style="@style/textbold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="-"
+        android:textColor="@color/corazultext"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view9" />
+
+    <TextView
+        android:id="@+id/textRazaosocialclienteSelecionado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="-"
+        style="@style/text_sub_titulo"
+        android:textSize="14dp"
+        android:textColor="@color/corazultext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cnpjClienteSelecionado" />
+
+
+    <EditText
+        android:id="@+id/edtBuscaProdutos"
+        style="@style/editinputbusca"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:drawableEnd="@drawable/buscaedit"
+        android:drawablePadding="20dp"
+        android:hint="Buscar Produtos"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view9"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/lojasSelecionadas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#2E3642"
+        android:textSize="12dp"
+        style="@style/text_sub_titulo"
+        android:text="-"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyProtudo"
+        android:layout_width="0dp"
+
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/view10"
+        app:layout_constraintEnd_toStartOf="@+id/recyclerFiltroAZ"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtBuscaProdutos" />
+
+
+
+    <View
+        android:id="@+id/view10"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:background="@color/corazultext"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBarValorminimo"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:background="#A7F3D0"
+        android:layout_height="5dp"
+        android:progress="0"
+
+        android:progressTint="#00FBA0"
+        app:layout_constraintBottom_toBottomOf="@+id/recyProtudo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView16"
+        style="@style/text_comum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+
+        android:text="Valor mínimo"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/view10"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarValorminimo" />
+
+    <TextView
+        android:id="@+id/textView17"
+        style="@style/text_comum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="68dp"
+        android:text="Total no Pedido"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarValorminimo" />
+
+    <TextView
+        android:id="@+id/valor_minimo"
+        style="@style/textbold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:text="R$ -"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/view10"
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+    <TextView
+        android:id="@+id/TotalCarrinho"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="R$ -"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView17"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+
+
+
+    <TextView
+        android:id="@+id/quatidadeItens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="10dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/view12"
+        app:layout_constraintEnd_toEndOf="@+id/view12"
+        app:layout_constraintStart_toStartOf="@+id/view12"
+        app:layout_constraintTop_toTopOf="@+id/view12" />
+
+    <TextView
+        android:id="@+id/SemFiltro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Não Encontramos Produtos para sua Pesquisa!"
+        app:layout_constraintBottom_toTopOf="@+id/progressBarValorminimo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtBuscaProdutos" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFiltroAZ"
+        android:layout_width="28dp"
+        android:layout_height="0dp"
+        android:background="#66BDE1DA"
+        app:layout_constraintBottom_toTopOf="@+id/progressBarValorminimo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view9" />
+
+    <ImageView
+        android:id="@+id/filtros"
+        android:layout_width="41dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bordasiconfiltro"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/filtroicones" />
+
+    <View
+        android:id="@+id/view14"
+        android:layout_width="19dp"
+        android:layout_height="18dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bordas_carga"
+        android:backgroundTint="@color/corazultext"
+        app:layout_constraintBottom_toBottomOf="@+id/filtros"
+        app:layout_constraintStart_toStartOf="@+id/filtros"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/quatidadefiltros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="10dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/view14"
+        app:layout_constraintEnd_toEndOf="@+id/view14"
+        app:layout_constraintStart_toStartOf="@+id/view14"
+        app:layout_constraintTop_toTopOf="@+id/view14" />
+
+    <ProgressBar
+        android:id="@+id/carregandoProduto"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/azulrua"
+        android:indeterminateTintMode="src_atop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtBuscaProdutos"
+        app:layout_constraintVertical_bias="0.359" />
+
+    <ImageView
+        android:id="@+id/FinalizaAlteracoes"
+        android:layout_width="42dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/filtros"
+        app:layout_constraintEnd_toStartOf="@+id/filtros"
+        app:layout_constraintTop_toTopOf="@+id/filtros"
+        app:srcCompat="@drawable/certoicon" />
+</androidx.constraintlayout.widget.ConstraintLayout>

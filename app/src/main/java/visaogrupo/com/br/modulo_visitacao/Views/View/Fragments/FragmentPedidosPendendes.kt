@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinali
 class FragmentPedidosPendendes( adpterPedidoFinalizado:AdpterPedidosFinalizado,listaPedidos:List<PedidoFinalizado>) : Fragment() {
     val AdpterPedidosFinalizado = adpterPedidoFinalizado
     val listaPedidos = listaPedidos
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,6 +49,9 @@ class FragmentPedidosPendendes( adpterPedidoFinalizado:AdpterPedidosFinalizado,l
 
 
         return view
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

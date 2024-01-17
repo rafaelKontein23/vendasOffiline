@@ -7,9 +7,9 @@ import android.util.Log
 
 class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
-    "CargaHertz.db",
+    "CargaHertz11.db",
     null,
-    112 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    117 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -269,8 +269,9 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "FormaPagamentoExclusiva INTEGER,"+
                 "Chave VARCHAR(255),"+
                 "justificativaANR VARCHAR(255),"+
-                "TipoLoja INT"+
-
+                "TipoLoja INT,"+
+                "RegraPrazo INT,"+
+                "QtdMaximaOpl INT"+
                 ")"
 
 

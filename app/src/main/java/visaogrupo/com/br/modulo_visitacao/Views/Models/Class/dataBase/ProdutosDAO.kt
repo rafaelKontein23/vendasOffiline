@@ -82,7 +82,49 @@ class ProdutosDAO(context:Context):
         return listaprotudos
 
     }
+     fun litarPedidosProdutos(query: String): MutableList<ProdutoProgressiva> {
+        var listaprotudos = mutableListOf<ProdutoProgressiva>()
 
+        val curso = dblistaproudos.rawQuery(query,null)
+        while (curso.moveToNext()){
+
+            val Nome = curso.getString(0)
+            val Apresentacao = curso.getString(1)
+            val Barra = curso.getString(2)
+            val Imagem = curso.getString(3)
+            val Produto_codigo = curso.getInt(4)
+            val Caixapadrao = curso.getInt(5)
+            val PMC = curso.getDouble(6)
+            val Quantidade = curso.getInt(7)
+            val valor = curso.getString(8)
+            var imagebase64 =""
+            if (curso.getString(9) != null) {
+                imagebase64 = curso.getString(9)
+            }
+            val quantidadeEstoque = curso.getInt(11)
+            val  valor_total = curso.getDouble(12)
+            val valorcarrinho = curso.getDouble(12)
+
+            var estaNoPedido = 0
+            estaNoPedido = curso.getInt(13)
+            val quantidadeProduto = curso.getInt(14)
+
+
+
+
+
+
+
+
+
+
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaNoPedido,valorcarrinho,quantidadeProduto,valor_total, imagebase64, quantidadeEstoque)
+
+            listaprotudos.add(produtos)
+        }
+        return listaprotudos
+
+    }
     fun countar(context:Context): Int {
         val dbHelper = DataBaseHelber(context)
         val db = dbHelper.readableDatabase
