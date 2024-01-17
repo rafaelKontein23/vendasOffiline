@@ -41,6 +41,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
     var listaProtudos = mutableListOf<ProdutoProgressiva>()
     var query = ""
     lateinit var produtos: ProdutosDAO
+    var queryFiltro =""
 
     val contextThis = this
     val context = this
@@ -176,7 +177,14 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
         Log.d("Atualiza","Atuliza os produtos adicionados")
         produtos = ProdutosDAO(baseContext)
         listaProtudos.clear()
-        listaProtudos = produtos.litarPedidosProdutos(query)
+        var queryAtualiza =""
+        if (limparFiltro){
+            queryAtualiza = queryFiltro
+        }else{
+            queryAtualiza = query
+
+        }
+        listaProtudos = produtos.litar(queryAtualiza)
         adpterProtudos.listaProtudos =listaProtudos
         adpterProtudos.notifyDataSetChanged()
 
@@ -244,7 +252,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
                         "where Filtro.filtroid in (${idfiltros})\n" +
                         ")"
             }
-            val queryFiltro = "SELECT \n" +
+             queryFiltro = "SELECT \n" +
                     "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                     "Progressiva.pf,imagens.imagembase64, Estoque.centro, Estoque.quantidade as qtdEstoque, PedProd.valor, \n" +
                     "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido\n" +

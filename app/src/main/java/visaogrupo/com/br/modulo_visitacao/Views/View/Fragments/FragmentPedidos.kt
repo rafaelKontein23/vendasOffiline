@@ -25,18 +25,20 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.IniciaPedidoDetalhes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterViewPagerPedidos
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterPedidosFinalizado
 
 
-class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , VaiParaEnviados, IniciaPedidoDetalhes{
+class FragmentPedidos(mostraLoad: MostraLoad,carrinhoVisible: carrinhoVisible) : Fragment(), AtualizaPedido , VaiParaEnviados, IniciaPedidoDetalhes{
         val  content = this
         var  adapterViewPagerPedidos:AdapterViewPagerPedidos? = null
         var adpterPedidoFinalizado :AdpterPedidosFinalizado?= null
         var adpterPedidoFinalizadoEnviado :AdpterPedidosFinalizado?= null
         val mostraLoad = mostraLoad
         lateinit var  arrastaParaLado:ViewPager2
+        val  carrinhoVisible = carrinhoVisible
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -58,7 +60,7 @@ class FragmentPedidos(mostraLoad: MostraLoad) : Fragment(), AtualizaPedido , Vai
         val  viewAbertosPedendes = view.findViewById<View>(R.id.viewAbertosPedendes)
         iniciaInterface()
 
-
+        carrinhoVisible.carrinhoVisivel()
         abertos.setOnClickListener {
             arrastaParaLado.setCurrentItem(0,true)
             visivelSelecionado(abertos,fechado)

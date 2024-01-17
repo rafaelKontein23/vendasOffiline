@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Paint.Align
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +28,7 @@ class ActPedidoEnviado : AppCompatActivity() {
     lateinit var containerCopiar:ConstraintLayout
     lateinit var tituloPedido:TextView
     lateinit var totalPedido :TextView
+    lateinit var voltarPedido:ImageView
 
 
 
@@ -42,6 +44,11 @@ class ActPedidoEnviado : AppCompatActivity() {
         containerCopiar = findViewById(R.id.containerCopiar)
         tituloPedido = findViewById(R.id.tituloPedido)
         totalPedido= findViewById(R.id.totalPedido)
+        voltarPedido =findViewById(R.id.voltarPedido)
+
+        voltarPedido.setOnClickListener {
+            onBackPressed()
+        }
 
         val pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
 

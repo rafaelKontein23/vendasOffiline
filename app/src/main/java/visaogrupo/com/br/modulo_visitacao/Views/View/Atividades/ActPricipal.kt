@@ -57,7 +57,7 @@ class ActPricipal : AppCompatActivity(),
     val fragmentCargas =   FragmentCargas()
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
-    val fragementPedido = FragmentPedidos(this)
+    val fragementPedido = FragmentPedidos(this, this)
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View

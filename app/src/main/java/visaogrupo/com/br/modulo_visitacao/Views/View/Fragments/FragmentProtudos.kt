@@ -51,6 +51,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
     lateinit var   adpterProtudos : ProtudoAdapter
     var listaProtudos = mutableListOf<ProdutoProgressiva>()
     var query = ""
+    var queryFiltro =""
     val atualizaCarrinho = atulizaCarrinho
     lateinit var lojaSelecionada: Lojas
     lateinit var produtos: ProdutosDAO
@@ -202,7 +203,14 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         Log.d("Atualiza","Atuliza os produtos adicionados")
         produtos = ProdutosDAO(requireContext())
         listaProtudos.clear()
-        listaProtudos = produtos.litar(query)
+        var queryAtualiza =""
+        if (limparFiltro){
+            queryAtualiza = queryFiltro
+        }else{
+            queryAtualiza = query
+
+        }
+        listaProtudos = produtos.litar(queryAtualiza)
         adpterProtudos.listaProtudos =listaProtudos
         adpterProtudos.notifyDataSetChanged()
 
@@ -275,7 +283,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
                             "where Filtro.filtroid in (${idfiltros})\n" +
                             ")"
                 }
-                val queryFiltro = "SELECT \n" +
+                 queryFiltro = "SELECT \n" +
                         "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                         "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
                         "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
