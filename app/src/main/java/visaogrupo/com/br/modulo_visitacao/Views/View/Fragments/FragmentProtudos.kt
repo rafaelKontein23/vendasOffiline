@@ -87,6 +87,17 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             dialogFiltro.dialogFiltro(context,this,limparFiltro,this, lojaSelecionada.loja_id)
         }
 
+        binding.totalCarrinho.setOnClickListener {
+            irParaCarrinho()
+        }
+        binding.TotalCarrinho.setOnClickListener {
+            irParaCarrinho()
+
+        }
+        binding.carrinhoProtudo.setOnClickListener {
+            irParaCarrinho()
+
+        }
         binding.edtBuscaProdutos.addTextChangedListener(object:TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -147,23 +158,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         carrinhoVisible.carrinhoVisivel()
 
 
-        binding.carrinhoProtudo.setOnClickListener {
-            val capcarrinhoitem = binding.quatidadeItens.text
 
-            if(capcarrinhoitem.equals(0)){
-                val alertas = Alertas()
-                alertas.alerta(requireActivity().supportFragmentManager,"Por favor, Adicione ao menos um item no carrinho!","#B89A00",
-                    R.drawable.atencao,R.drawable.bordas_amerala_alert)
-            }else{
-                ActPricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
-                ActPricipal.clienteUF = clienteSelecionado.UF
-                ActPricipal.cliente_id = clienteSelecionado.Empresa_id
-                ActPricipal.loja_id =lojaSelecionada.loja_id
-
-                startActivity(Intent(requireContext(), ActCarrinhoDetalhe::class.java))
-            }
-
-        }
 
         return view
 
@@ -376,6 +371,23 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             adpterProtudos.notifyDataSetChanged()
             binding.carregandoProduto.isVisible = false
 
+        }
+    }
+
+    fun irParaCarrinho(){
+        val capcarrinhoitem = binding.quatidadeItens.text
+
+        if(capcarrinhoitem.equals("0")){
+            val alertas = Alertas()
+            alertas.alerta(requireActivity().supportFragmentManager,"Por favor, Adicione ao menos um item no carrinho!","#B89A00",
+                R.drawable.atencao,R.drawable.bordas_amerala_alert)
+        }else{
+            ActPricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
+            ActPricipal.clienteUF = clienteSelecionado.UF
+            ActPricipal.cliente_id = clienteSelecionado.Empresa_id
+            ActPricipal.loja_id =lojaSelecionada.loja_id
+
+            startActivity(Intent(requireContext(), ActCarrinhoDetalhe::class.java))
         }
     }
 }

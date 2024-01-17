@@ -60,6 +60,12 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
             val dialogFiltro = DialogFiltro()
             dialogFiltro.dialogFiltro(context,this,limparFiltro,this, pedido!!.lojaId)
         }
+        binding.FinalizaAlteracoes.setOnClickListener {
+            val intent = Intent()
+            setResult(Activity.RESULT_OK, intent)
+            intent.putExtra("excluirPedido", false)
+            finish()
+        }
 
         binding.edtBuscaProdutos.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -123,6 +129,14 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
 
 
     }
+
+    override fun onBackPressed() {
+        val intent = Intent()
+        setResult(Activity.RESULT_OK, intent)
+        intent.putExtra("excluirPedido", false)
+        finish()
+    }
+
     // Atualza os protudos que foram adiconado pela Tela ActProtudoDetalhe
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -232,17 +246,17 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
             }
             val queryFiltro = "SELECT \n" +
                     "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
-                    "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
-                    "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                    "Progressiva.pf,imagens.imagembase64, Estoque.centro, Estoque.quantidade as qtdEstoque, PedProd.valor, \n" +
+                    "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido\n" +
                     "FROM TB_produtos Produtos \n" +
                     "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
                     "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
                     "LEFT join TB_Imagens imagens on Produtos.barra = imagens.barra \n" +
-                    "LEFT JOIN TB_Carrinho Carrinho on Carrinho.Loja_ID = Progressiva.Loja_id \n" +
-                    "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
-                    "and carrinho.cliente_id = ${pedido!!.clienteId}   \n" +
                     "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
-                    "where Progressiva.loja_id = ${pedido!!.lojaId} and Progressiva.uf = '${pedido!!.uf}' \n" +
+                    "LEFT JOIN TBPedidosFinalizados AS Ped on Ped.cliente_id = CLI.empresa_id and Ped.loja_id = Progressiva.loja_id AND PEd.pedidoid = ${pedido!!.pedidoID}\n" +
+                    "LEFT JOIN TB_Produtos_Pedidos_Finalizado PedProd on PedProd.PedidoID = Ped.pedidoid \n" +
+                    "                                                  and PedProd.produto_codigo = Progressiva.prod_cod \n" +
+                    "where Progressiva.loja_id = ${pedido!!.lojaId} and Progressiva.uf = '${pedido!!.uf}' AND ClI.Empresa_id = ${pedido!!.clienteId}\n" +
                     filtroIdNull+
                     "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by ${filtro}"
 

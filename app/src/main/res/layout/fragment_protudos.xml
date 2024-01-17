@@ -161,7 +161,7 @@
             app:layout_constraintTop_toBottomOf="@+id/progressBarValorminimo" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/totalCarrinho"
             style="@style/text_comum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -197,8 +197,8 @@
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView17"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintStart_toStartOf="@+id/totalCarrinho"
+            app:layout_constraintTop_toBottomOf="@+id/totalCarrinho" />
 
 
 

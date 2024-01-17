@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_act_pedido.buscaPedido
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -41,19 +42,7 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
         setContentView(binding.root)
         pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
 
-        val pedidosFinalizadosDAO = PedidosFinalizadosDAO(applicationContext)
-        var listaProdutos  = mutableListOf<ProdutosFinalizados>()
-        val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
-        if (pedido != null) {
-            listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido!!.pedidoID)
-        }
         BuscaInfos()
-        val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,this)
-        val linearLayout = LinearLayoutManager(this)
-        binding.recyProdutos.layoutManager = linearLayout
-        binding. recyProdutos.adapter = adpterProdutosPedidos
-        binding.descontoMedio.text = pedido!!.desconto.toString() + "% méd."
-        binding.totalPedido.text = "Tot : R$ " +valorTotalPedido.toString() + ","
 
         binding.atualizarItensCarrinho.setOnClickListener {
             val intent = Intent(context,ActProdutosAtualizar::class.java)
@@ -61,6 +50,13 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
 
             startActivityForResult(intent,4)
         }
+        binding.voltarPedido.setOnClickListener {
+            val  intent = Intent()
+            intent.putExtra("excluirPedido",true)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
+
 
         binding.atualizaInfos.setOnClickListener {
             val formadepagamentocap = binding.formaDepagamentospiner.selectedItem.toString()
@@ -70,7 +66,11 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                 val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
                 val formaDePagmento = infoFormaDePagamentoSalvo(context,pedido!!.valorTotal!!.toDouble(),pedido!!.RegraPrazo,pedido!!.cnpj!!,formadepagamentocap)
                 pedidosFinalizadosDAO.atualizarItem(pedido!!.pedidoID.toInt(),oplId.toString(),formadepagamentocap,formaDePagmento!!)
+                val  intent = Intent()
+                intent.putExtra("excluirPedido",true)
+                setResult(Activity.RESULT_OK, intent)
 
+                finish()
 
                 Toast.makeText(context,"Informações atualizadas com sucesso!" , Toast.LENGTH_SHORT).show()
 
@@ -91,6 +91,14 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val  intent = Intent()
+        intent.putExtra("excluirPedido",true)
+        setResult(Activity.RESULT_OK, intent)
+
+        finish()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 4 && resultCode == Activity.RESULT_OK) {
@@ -100,6 +108,9 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                  setResult(Activity.RESULT_OK, intent)
 
                  finish()
+             }else{
+                 BuscaInfos()
+
              }
         }
 
@@ -142,6 +153,19 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                 binding.recyclerOpl.adapter= oplAdapter
 
                 binding.formaDepagamentospiner.adapter = adapterForm
+                val pedidosFinalizadosDAO = PedidosFinalizadosDAO(applicationContext)
+                var listaProdutos  = mutableListOf<ProdutosFinalizados>()
+                val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
+                if (pedido != null) {
+                    listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido!!.pedidoID)
+                }
+                val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,context)
+                val linearLayout = LinearLayoutManager(context)
+                binding.recyProdutos.layoutManager = linearLayout
+                binding. recyProdutos.adapter = adpterProdutosPedidos
+                binding.descontoMedio.text = pedido!!.desconto.toString() + "% méd."
+                val valorTot = String.format("%.2f",valorTotalPedido)
+                binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
             }
         }
     }
