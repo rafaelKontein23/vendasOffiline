@@ -286,7 +286,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
                  queryFiltro = "SELECT \n" +
                         "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                         "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
-                        "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                        "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade,,Repasse.*\n" +
                         "FROM TB_produtos Produtos \n" +
                         "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
                         "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
@@ -295,7 +295,9 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
                         "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
                         "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}   \n" +
                         "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
+                        " LEFT join TB_Repasse  Repasse ON PROGRESSIVA.prod_cod = Repasse.material AND Repasse.UF = ClI.uf AND Repasse.centro = CLI.codestoque "+
                         "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
+                        "and CLI.empresa_id = ${clienteSelecionado.Empresa_id} \n"+
                         filtroIdNull+
                         "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by ${filtro}"
 
@@ -345,7 +347,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         query = "SELECT \n" +
                 "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                 "Progressiva.pf,Carrinho.valor,Carrinho.quantidade,Carrinho.ValorTotal,imagens.imagembase64,\n" +
-                "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade\n" +
+                "(CASE WHEN Carrinho.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoCarrinho , Estoque.centro, Estoque.quantidade,Repasse.*\n" +
                 "FROM TB_produtos Produtos \n" +
                 "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
                 "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
@@ -354,7 +356,9 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
                 "and Carrinho.produto_codigo = Progressiva.Prod_cod and Carrinho.UF = Progressiva.UF \n" +
                 "and carrinho.cliente_id = ${clienteSelecionado.Empresa_id}  \n" +
                 "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra AND Estoque.centro = CLI.codestoque \n" +
+                "LEFT join TB_Repasse  Repasse ON PROGRESSIVA.prod_cod = Repasse.material AND Repasse.UF = ClI.uf AND Repasse.centro = CLI.codestoque "+
                 "where Progressiva.loja_id = ${lojaSelecionada.loja_id} and Progressiva.uf = '${clienteSelecionado.UF}' \n" +
+                "and CLI.empresa_id = ${clienteSelecionado.Empresa_id} \n"+
                 "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by 1"
 
 
@@ -394,8 +398,9 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             ActPricipal.clienteUF = clienteSelecionado.UF
             ActPricipal.cliente_id = clienteSelecionado.Empresa_id
             ActPricipal.loja_id =lojaSelecionada.loja_id
-
-            startActivity(Intent(requireContext(), ActCarrinhoDetalhe::class.java))
+            val intent  = Intent(requireContext(), ActCarrinhoDetalhe::class.java)
+            intent.putExtra("CarrinhoDetalhe",false)
+            startActivity(intent)
         }
     }
 }

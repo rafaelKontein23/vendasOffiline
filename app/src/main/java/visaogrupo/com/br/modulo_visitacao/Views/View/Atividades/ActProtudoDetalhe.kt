@@ -49,6 +49,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
     lateinit  var lojaSelecionada:Lojas
     lateinit var clienteSelecionado:Clientes
     val  lojasxclienets = mutableListOf<LojaXCliente>()
+    var repasse = 0.0
 
     companion object {
         lateinit var progressivaSelecionada: ProgressivaSelecionada
@@ -88,7 +89,9 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                pedidoFinalizado.TipoLoja,"","",0,
                "",0.0,0,0,
                "",0,"",0,"","",0,
-               pedidoFinalizado!!.qtdMinimaOperador!!.toInt(),pedidoFinalizado!!.qtdMaximaOperador!!.toInt(),"",0.0,"","",0,anr,pedidoFinalizado!!.RegraPrazo.toInt(),"")
+               pedidoFinalizado!!.qtdMinimaOperador!!.toInt(),
+               pedidoFinalizado!!.qtdMaximaOperador!!.toInt(),"",0.0,"",
+               "",0,anr,pedidoFinalizado!!.RegraPrazo.toInt(),"")
 
 
            clienteSelecionado = Clientes("","","","",
@@ -117,6 +120,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         // Atualiza as informações do front
         binding.PMC.text = "R$ " + protudoSelecionado.PMC.toString()
         binding.PF.text = "R$ " + protudoSelecionado.valor
+        binding.repasse.text =  protudoSelecionado.porcentagem.toString().replace(".",",") + "%"
         binding.estoque.text = protudoSelecionado.quatidade.toString()
         binding.caixaPadrao.text = protudoSelecionado.caixapadrao.toString()
         binding.nomeProtudo.text = protudoSelecionado.nome
@@ -182,9 +186,9 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
             }
 
             listaProgressiva.addAll(lista_progressivapresona)
+             repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
 
-
-            progressivaAdpter = ProgressivaAdpter(listaProgressiva,baseContext,binding.recyProgressiva,supportFragmentManager, atualizaValorProduto, binding.edtQuantidade,atualizaQuantidadeProduto)
+            progressivaAdpter = ProgressivaAdpter(listaProgressiva,baseContext,binding.recyProgressiva,supportFragmentManager, atualizaValorProduto, binding.edtQuantidade,atualizaQuantidadeProduto,repasse)
             val layoutManager = LinearLayoutManager(baseContext)
 
             CoroutineScope(Dispatchers.Main).launch {
@@ -312,7 +316,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         }
 
 
-        //Para adicionar nova Progressiva
+
         binding.adicionarProgressiva.setOnClickListener {
             val dialogProgressiva = DialogProgressiva()
             var valorProduto =  binding.PF.text.toString()
@@ -320,14 +324,18 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
             dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado,this)
         }
 
-       // Para Adiconar ao carrinho
+
         binding.adiconarCarrinho.setOnClickListener {
            val quatidadeadd =  binding.edtQuantidade.text.toString()
-           if(quatidadeadd.isEmpty() || quatidadeadd.toInt() == 0 ){
+           if(quatidadeadd.isEmpty() ){
                Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
-           } else{
-               val valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
+           }else if (quatidadeadd.toInt() == 0 ){
+               Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
 
+           } else{
+               var valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
+               var repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
+               var valorProduto =  binding.PF.text.toString().replace("R$","").replace(" ","").replace(",",".").toDouble()
                val  daataformat = DataAtual()
                val  data = daataformat.recuperaData()
                var anr =  0
@@ -344,6 +352,8 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                    }
 
                }
+
+
                val  carrinho = Carrinho(lojaSelecionada.loja_id,
                    clienteSelecionado.Empresa_id,
                    protudoSelecionado.ProdutoCodigo,"",
@@ -352,12 +362,12 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                    protudoSelecionado.barra,quatidadeadd.toInt(),protudoSelecionado.valor.toDouble(),
                    progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
                    progressivaSelecionada.porcentagemProgressivaSelecionda,
-                   descontoOriginal
-                   /*Lembra de colocar a faixa desconto original aqui*/,0.0,
+                   descontoOriginal,0.0,
                    "",1,"",valortotal.toDouble(),
                    protudoSelecionado.nome,lojaSelecionada.nome,clienteSelecionado.RazaoSocial,clienteSelecionado.CNPJ,data,
                    lojaSelecionada.MinimoValor,imagemBase64,protudoSelecionado.PMC,
-                   clienteSelecionado.FormaPagamentoExclusiva,protudoSelecionado.caixapadrao,lojaSelecionada.Qtd_Minima_Operador,lojaSelecionada.Qtd_Maxima_Operador,anr, lojaSelecionada.RegraPrazoMedio,lojaSelecionada.LojaTipo)
+                   clienteSelecionado.FormaPagamentoExclusiva,protudoSelecionado.caixapadrao,lojaSelecionada.Qtd_Minima_Operador,
+                   lojaSelecionada.Qtd_Maxima_Operador,anr, lojaSelecionada.RegraPrazoMedio,lojaSelecionada.LojaTipo,protudoSelecionado.centro,protudoSelecionado.porcentagem)
 
 
                val carrinhoDAO = CarrinhoDAO(this)
@@ -411,19 +421,35 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
     }
 
     fun somaProdutos(quantidade:Int,valorProtudo:Double,caixapardrao:Boolean){
-          val valorAdicionado = quantidade * valorProtudo
+            var valorProdutoItem = valorProtudo
+            if(repasse > 0.0){
+                var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
+                valorProdutoItem = discount;
+
+            }else{
+                valorProdutoItem = valorProtudo
+            }
+          val valorAdicionado = quantidade * valorProdutoItem
           val valorFormatado = String.format("%.2f", valorAdicionado)
           binding.valorTotal.text = "R$ "+ valorFormatado
 
     }
     fun subtrairPrutudos(valortotal:Double,valorProtudo:Double,caixapadrao:Boolean,quantidade: Int){
+        var valorProdutoItem = valorProtudo
+        if(repasse > 0.0){
+            var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
+            valorProdutoItem = discount;
+
+        }else{
+            valorProdutoItem = valorProtudo
+        }
         if(caixapadrao){
-            val valortotalCal  =  quantidade *valorProtudo
+            val valortotalCal  =  quantidade *valorProdutoItem
             val valorFormatado = String.format("%.2f", valortotalCal)
             binding.valorTotal.text = "R$ "+ valorFormatado
 
         }else{
-            val valorAdicionadosub = valortotal - valorProtudo
+            val valorAdicionadosub = valortotal - valorProdutoItem
             val valorFormatado = String.format("%.2f", valorAdicionadosub)
             binding.valorTotal.text = "R$ "+ valorFormatado
 

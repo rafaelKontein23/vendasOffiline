@@ -20,6 +20,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FiltroPrincipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FiltroProduto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Filtros
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Repasse
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.*
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoque
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltro
@@ -28,6 +29,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.Tas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFormaDePagamentoExclusiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRegraPrazoMedio
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRepasse
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.Task_Cargadiaria
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import java.text.SimpleDateFormat
@@ -63,8 +65,9 @@ class CargaDiaria {
                 var jsonFormaDePagamento = ""
                 var jsonOperadorLogistico = ""
 
-
                 try {
+
+
 
 
                     //grava no banco lojas
@@ -315,7 +318,7 @@ class CargaDiaria {
                               val dblistaProgre = DataBaseHelber(context)
 
                               Log.d("Começou o Estoque","")
-                              val lojasOP = "SELECT CodEstoque FROM TB_clientes"
+                              val lojasOP = "SELECT DISTINCT CodEstoque FROM TB_clientes"
 
 
                               val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
@@ -374,6 +377,59 @@ class CargaDiaria {
                               FragmentCargas.progresspush += 3
                               FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Filtros...")
                           }
+
+
+                    Log.d("Deley","Deley")
+                    delay(10000)
+                    val  lendorepasse = launch{
+                        val queryrespasse =  "SELECT DISTINCT CodEstoque, uf FROM TB_clientes"
+                        val dbCliente = DataBaseHelber(context)
+
+                        val curso = dbCliente.writableDatabase.rawQuery(queryrespasse,null)
+                        var count =0
+                        val jsonarayRepasse: MutableList<JSONArray>? = mutableListOf()
+                        val coroutines = mutableListOf<Deferred<Unit>>()
+                        while (curso.moveToNext()){
+
+                            val codigoEstoque = curso.getInt(0)
+                            val uf = curso.getString(1)
+
+                            val lendoRepasse =   async{
+                                val taskRepasse = TaskRepasse()
+                                val jsonArray =taskRepasse.requestrepase(uf,codigoEstoque)
+                                if (jsonArray != null) {
+                                    jsonarayRepasse?.add(jsonArray)
+                                }
+                            }
+                            coroutines.add(lendoRepasse)
+
+                        }
+                        runBlocking {
+                            coroutines.awaitAll()
+                        }
+
+                        try {
+                            for ( i in 0 until  jsonarayRepasse!!.size){
+                                val jsonArrayAtual = jsonarayRepasse[i]
+                                val repasseDAO = RepasseDAO(context)
+                                for ( j in 0 until  jsonArrayAtual.length()){
+                                    val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
+
+                                    val repasse = Repasse(jsonClientesPorLojasRetorno.optInt("MATERIAL",0),
+                                        jsonClientesPorLojasRetorno.optDouble("PERCENTUAL",0.0),
+                                        jsonClientesPorLojasRetorno.optString("UF",""),
+                                        jsonClientesPorLojasRetorno.optInt("CENTRO",0)  )
+                                    repasseDAO.insert(repasse)
+
+
+                                }
+                            }
+                        }catch (e:Exception) {
+                            e.printStackTrace()
+                        }
+
+                    }
+                    lendorepasse.join()
                    lendoEstoque.join()
                     // fazendo carga de filtro
                     var jsonArrayFiltroPrincipal: JSONArray? = null
@@ -394,6 +450,8 @@ class CargaDiaria {
                     lendoFiltroPrincipal.join()
                     lendoFiltros.join()
                     lendoFiltroProduto.join()
+
+
 
                     val gravandoFiltroPrincipal = launch {
                         for ( i in  0 until jsonArrayFiltroPrincipal!!.length()){
@@ -437,6 +495,7 @@ class CargaDiaria {
 
                         }
                     }
+
                     gravandoFiltroPrincipal.join()
                     gravandoFiltro.join()
                     gravandoFiltroProduto.join()

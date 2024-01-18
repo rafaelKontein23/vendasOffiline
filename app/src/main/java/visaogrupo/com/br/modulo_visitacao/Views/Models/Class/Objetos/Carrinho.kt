@@ -39,6 +39,8 @@ data class Carrinho(
     val QtdMaxima_Operador:Int,
     val Anr:Int,
     val  RegraPrazo:Int,
-    val  LojaTipo:Int
+    val  LojaTipo:Int,
+    val centro:Int,
+    val porecentagem:Double
 
 )

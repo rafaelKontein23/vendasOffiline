@@ -24,13 +24,14 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProg
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import java.io.Serializable
 
-class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Context, atualza: AtualizadetalhesProdutos, startaAtividade: StartaAtividade)  : RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
+class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Context, atualza: AtualizadetalhesProdutos, startaAtividade: StartaAtividade,carrinhodetalhe:Boolean)  : RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
 
     var  listaProdutoCarrinho = list
     val view = view
     val context = context
     val  atualza = atualza
     val start = startaAtividade
+    val carrinhodetalhe= carrinhodetalhe
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetalheCarrrinhoHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.celula_carrinhodetalhe,parent,false)
         return  DetalheCarrrinhoHolder(view)
@@ -84,7 +85,8 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
                 listaProdutoCarrinho[position].caixapadrao,1,
                 listaProdutoCarrinho[position].valor,
                 listaProdutoCarrinho[position].quantidade,
-                listaProdutoCarrinho[position].valortotal,"", 0)
+                listaProdutoCarrinho[position].valortotal,"", 0,listaProdutoCarrinho[position].centro
+                , listaProdutoCarrinho[position].porecentagem)
 
 
 
@@ -98,7 +100,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
             intent.putExtra("estaNoPedido", false)
             intent.putExtra("pedidoID", 0)
             intent.putExtra("Pedido", false)
-            intent.putExtra("CarrinhoDetalhe", true)
+            intent.putExtra("CarrinhoDetalhe", carrinhodetalhe)
 
             start.atividade(intent)
         }

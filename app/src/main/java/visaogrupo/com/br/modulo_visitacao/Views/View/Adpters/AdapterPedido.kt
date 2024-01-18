@@ -60,7 +60,10 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
                 ActPricipal.clienteUF = listaPedido[position].ufCliente
                 ActPricipal.cliente_id = listaPedido[position].cliente_id
                 ActPricipal.loja_id =listaPedido[position].loja_id
-                context.startActivity(Intent(context, ActCarrinhoDetalhe::class.java))
+                val intent =Intent(context, ActCarrinhoDetalhe::class.java)
+                intent.putExtra("CarrinhoDetalhe",false)
+
+                context.startActivity(intent)
         }
     }
 

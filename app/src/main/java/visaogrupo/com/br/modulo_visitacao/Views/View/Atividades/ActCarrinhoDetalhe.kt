@@ -27,12 +27,13 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
     lateinit var   listaProdutoCarrinho :MutableList<Carrinho>
     var valorminimo = 0.0
     var valorTotal = 0.0
+    var  carrinhoDetalhe = false
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onPostCreate(savedInstanceState: Bundle?) {
         binding  = ActivityActCarrinhoDetalheBinding.inflate(layoutInflater)
         setContentView(binding.root)
         super.onPostCreate(savedInstanceState)
-
+          carrinhoDetalhe = intent.getBooleanExtra("CarrinhoDetalhe",false)
 
         binding.continuarCarrinho.setOnClickListener {
             if(valorTotal < valorminimo){
@@ -130,7 +131,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         listaProdutoCarrinho = carrinhoDAO.listaritensCarrinho(ActPricipal.loja_id,ActPricipal.cliente_id)
 
         val linearLayoutManager = LinearLayoutManager(this)
-        adpterCarrinhoDetalhes =  CarrinhoDetalheAdpter(listaProdutoCarrinho,binding.root,this,this,this)
+        adpterCarrinhoDetalhes =  CarrinhoDetalheAdpter(listaProdutoCarrinho,binding.root,this,this,this,carrinhoDetalhe)
         binding.recyprotudo.layoutManager = linearLayoutManager
         binding.recyprotudo.adapter = adpterCarrinhoDetalhes
         val  valorformatMinimo = String.format("%.2f",ActPricipal.lojavalorMinimo)

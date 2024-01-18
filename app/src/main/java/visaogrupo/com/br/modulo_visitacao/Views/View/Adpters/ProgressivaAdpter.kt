@@ -32,7 +32,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
 class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, recyclerview:RecyclerView,
                          fragmentmeneger:FragmentManager,atualizaValorProduto: AtualizaValorProduto,
-                         edtQuatidade :EditText,atualizaQuantidadeProduto: AtualizaQuantidadeProduto ): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
+                         edtQuatidade :EditText,atualizaQuantidadeProduto: AtualizaQuantidadeProduto, repasse:Double ): Adapter<ProgressivaAdpter.ProgressivaViewholder>() {
 
     var listaProgrssiva = list
     val personaFalse = 0
@@ -50,6 +50,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
 
     val atualizaValorProduto = atualizaValorProduto
     val edtQuatidade = edtQuatidade
+    val repasse = repasse
 
 
 
@@ -66,11 +67,19 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
     override fun onBindViewHolder(holder: ProgressivaViewholder, position: Int) {
 
 
+       var valorProdutoItem = 0.0
+        if(repasse > 0.0){
+            var discount = listaProgrssiva[position].valor.toDouble() - (listaProgrssiva[position].valor.toDouble() * (repasse) / 100);
+            valorProdutoItem = discount;
+
+        }else{
+            valorProdutoItem = listaProgrssiva[position].valor
+        }
         val descontoFormat = String.format("%.2f",listaProgrssiva[position].desconto)
-        val  valorprogressivaformat = String.format("%.2f",listaProgrssiva[position].valor)
+        val  valorprogressivaformat = String.format("%.2f",valorProdutoItem)
         holder.desconto.setText( descontoFormat)
         holder.quatidade.text = listaProgrssiva[position].quantidade.toString() +" Desc."
-        holder.valorProgressiva.setText("R$ "  + valorprogressivaformat)
+        holder.valorProgressiva.setText("R$ "  + valorprogressivaformat.toString())
 
 
 

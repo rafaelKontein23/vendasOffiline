@@ -51,7 +51,7 @@ class CarrinhoDAO (context:Context) {
         valoresCarrinhos.put("ANR",carrinho.Anr)
         valoresCarrinhos.put("RegraPrazo",carrinho.RegraPrazo)
         valoresCarrinhos.put("LojaTipo",carrinho.LojaTipo)
-
+        valoresCarrinhos.put("PERCENTUALRepasse",carrinho.porecentagem)
 
 
         dbCarrinho.insert("TB_Carrinho",null,valoresCarrinhos)
@@ -61,7 +61,7 @@ class CarrinhoDAO (context:Context) {
         val  where = "loja_id = ${loja_id} AND cliente_id = ${cliente_id} AND produto_codigo = ${produto_codigo} "
         dbCarrinho.delete("TB_Carrinho",where,null)
     }
-    fun  atualizaItemCarrinho( carrinho: Carrinho){
+    fun atualizaItemCarrinho( carrinho: Carrinho){
         val  daataformat = DataAtual()
         val  data = daataformat.recuperaData()
         val valoresCarrinhos=  ContentValues()
@@ -193,6 +193,7 @@ class CarrinhoDAO (context:Context) {
             val RegraPrazo  = cursor.getInt(35)
             val FormaDePagExclusiva = cursor.getInt(34)
             val lojaTipo = cursor.getInt(36)
+            val porcentagem = cursor.getDouble(37)
             val  carrinho= Carrinho(loja_id,cliente_id,produto_codigo,
                 opf,usuario_if,UF,
                 Comiisao,
@@ -205,7 +206,7 @@ class CarrinhoDAO (context:Context) {
                 codListaOrecosSync,apontador,
                 valorTotal,nome,nomeLoja,razaoSocial,cnpj,data,
                 valoloja,base64,pmc,FormaDePagExclusiva,caixapadrao,
-                Qtd_Minima_Operador,Qtd_Maxima_Operador,anr,RegraPrazo,lojaTipo)
+                Qtd_Minima_Operador,Qtd_Maxima_Operador,anr,RegraPrazo,lojaTipo,0,porcentagem)
 
             listaProdutosCArrinhos.add(carrinho)
         }

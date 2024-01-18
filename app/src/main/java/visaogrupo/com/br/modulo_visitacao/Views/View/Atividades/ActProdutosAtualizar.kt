@@ -255,7 +255,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
              queryFiltro = "SELECT \n" +
                     "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                     "Progressiva.pf,imagens.imagembase64, Estoque.centro, Estoque.quantidade as qtdEstoque, PedProd.valor, \n" +
-                    "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido\n" +
+                    "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido,Repasse.*\n" +
                     "FROM TB_produtos Produtos \n" +
                     "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
                     "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
@@ -264,7 +264,9 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
                     "LEFT JOIN TBPedidosFinalizados AS Ped on Ped.cliente_id = CLI.empresa_id and Ped.loja_id = Progressiva.loja_id AND PEd.pedidoid = ${pedido!!.pedidoID}\n" +
                     "LEFT JOIN TB_Produtos_Pedidos_Finalizado PedProd on PedProd.PedidoID = Ped.pedidoid \n" +
                     "                                                  and PedProd.produto_codigo = Progressiva.prod_cod \n" +
-                    "where Progressiva.loja_id = ${pedido!!.lojaId} and Progressiva.uf = '${pedido!!.uf}' AND ClI.Empresa_id = ${pedido!!.clienteId}\n" +
+                     "LEFT join TB_Repasse  Repasse ON PROGRESSIVA.prod_cod = Repasse.material AND Repasse.UF = ClI.uf AND Repasse.centro = CLI.codestoque "+
+
+                     "where Progressiva.loja_id = ${pedido!!.lojaId} and Progressiva.uf = '${pedido!!.uf}' AND ClI.Empresa_id = ${pedido!!.clienteId}\n" +
                     filtroIdNull+
                     "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo order by ${filtro}"
 
@@ -314,7 +316,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
         query = "SELECT \n" +
                 "Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo,Produtos.caixapadrao,Progressiva.pmc,Estoque.Quantidade,\n" +
                 "Progressiva.pf,imagens.imagembase64, Estoque.centro, Estoque.quantidade as qtdEstoque, PedProd.valor, \n" +
-                "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido\n" +
+                "(CASE WHEN PedProd.Quantidade > 0 THEN 1 ELSE 0 END) AS EstaNoPedido, PedProd.quantidade as QtdPedido,Repasse.*\n" +
                 "FROM TB_produtos Produtos \n" +
                 "inner join TB_Progressiva Progressiva on Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
                 "INNER JOIN TB_clientes CLI ON CLI.uf = Progressiva.uf AND CLI.codigo = PROGRESSIVA.codigo\n" +
@@ -323,6 +325,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
                 "LEFT JOIN TBPedidosFinalizados AS Ped on Ped.cliente_id = CLI.empresa_id and Ped.loja_id = Progressiva.loja_id AND PEd.pedidoid = ${pedido!!.pedidoID}\n" +
                 "LEFT JOIN TB_Produtos_Pedidos_Finalizado PedProd on PedProd.PedidoID = Ped.pedidoid \n" +
                 "                                                  and PedProd.produto_codigo = Progressiva.prod_cod \n" +
+                "LEFT join TB_Repasse  Repasse ON PROGRESSIVA.prod_cod = Repasse.material AND Repasse.UF = ClI.uf AND Repasse.centro = CLI.codestoque "+
                 "where Progressiva.loja_id = ${pedido!!.lojaId} and Progressiva.uf = '${pedido!!.uf}' AND ClI.Empresa_id = ${pedido!!.clienteId}\n" +
                 "group by Produtos.nome, Produtos.Apresentacao, Produtos.barra,Produtos.Imagem,Produtos.Produto_codigo \n" +
                 "order by 1"

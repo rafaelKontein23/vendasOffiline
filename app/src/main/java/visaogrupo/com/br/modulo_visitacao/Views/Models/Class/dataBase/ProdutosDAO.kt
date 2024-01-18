@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase
 
 import android.content.ContentValues
 import android.content.Context
+import androidx.core.database.getDoubleOrNull
 import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
@@ -72,10 +73,15 @@ class ProdutosDAO(context:Context):
             estaCarrinhp = curso.getInt(13)
 
             val quantidadeEstoque = curso.getInt(15)
+            val  centro = curso.getInt(14)
+            var porecentagem = 0.0
+            if (curso.getDouble(18) != null){
+                porecentagem = curso.getDouble(18)
+            }
 
 
-
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total, imagebase64, quantidadeEstoque)
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,
+                estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total, imagebase64, quantidadeEstoque,centro,porecentagem)
 
             listaprotudos.add(produtos)
         }
@@ -108,6 +114,11 @@ class ProdutosDAO(context:Context):
             var estaNoPedido = 0
             estaNoPedido = curso.getInt(13)
             val quantidadeProduto = curso.getInt(14)
+            val  centro = curso.getInt(14)
+            var porecentagem = 0.0
+            if (curso.getDouble(18) != null){
+                porecentagem = curso.getDouble(18)
+            }
 
 
 
@@ -117,8 +128,7 @@ class ProdutosDAO(context:Context):
 
 
 
-
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaNoPedido,valorcarrinho,quantidadeProduto,valor_total, imagebase64, quantidadeEstoque)
+            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaNoPedido,valorcarrinho,quantidadeProduto,valor_total, imagebase64, quantidadeEstoque, centro,porecentagem)
 
             listaprotudos.add(produtos)
         }

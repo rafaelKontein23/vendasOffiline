@@ -17,5 +17,9 @@ data class ProdutoProgressiva(
     val  quantidadeCarrinho:Int,
     val  valorTotal:Double,
     val base64 :String,
-    val quantidadeEstoque:Int
+    val quantidadeEstoque:Int,
+    val centro:Int,
+    val porcentagem:Double,
+
+
 ):java.io.Serializable

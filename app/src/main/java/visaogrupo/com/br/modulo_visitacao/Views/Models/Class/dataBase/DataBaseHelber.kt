@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    117 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    121 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -222,6 +222,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "FormaPagamentoExclusiva INTEGER,"+
                 "RegraPrazo  INT," +
                 "LojaTipo  INT," +
+                "PERCENTUALRepasse REAL," +
+
 
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
@@ -336,6 +338,14 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "FiltroCategoriaID INTEGER PRIMARY KEY," +
                 "Descricao VARCHAR" +
                 ")"
+
+        val sqlReapsse ="CREATE TABLE IF NOT EXISTS TB_Repasse(" +
+                "repasseId  INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                "MATERIAL INTEGER," +
+                "PERCENTUAL REAL," +
+                "CENTRO INTEGER," +
+                "UF VARCHAR(25)" +
+                ")"
         try {
             db?.execSQL(sqlFiltro)
             db?.execSQL(sqlFiltroProduto)
@@ -358,6 +368,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlFormpagExclusivo)
             db?.execSQL(sqlPedidos)
             db?.execSQL(sqlProdutoItemFinalizadoPedido)
+            db?.execSQL(sqlReapsse)
 
 
         }catch (e:Exception) {
