@@ -39,7 +39,9 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CapturaDeviceToken
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinnerAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
@@ -114,7 +116,6 @@ class ActPricipal : AppCompatActivity(),
             Deseleciona_itens(text_home,text_clientes,text_lojas,text_protudo,view_home,
                 view_clientes,view_lojas,view_produto,icon_home,icon_clientes,icon_lojas,icon_produtos)
             itensVisible()
-
             supportFragmentManager.
             beginTransaction()
                 .replace(R.id.fragmentContainerViewPrincipal, fragementPedido).addToBackStack(null).commit()
@@ -136,10 +137,7 @@ class ActPricipal : AppCompatActivity(),
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val fragmentTransaction: FragmentTransaction =
                     fragmentManager.beginTransaction()
-                fragmentTransaction.setCustomAnimations(
-                    android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right
-                )
+
 
                 fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentCargas, "h")
                 fragmentTransaction.addToBackStack("h")
@@ -159,10 +157,7 @@ class ActPricipal : AppCompatActivity(),
                 val fragmentManager: FragmentManager = supportFragmentManager
                 val fragmentTransaction: FragmentTransaction =
                     fragmentManager.beginTransaction()
-                fragmentTransaction.setCustomAnimations(
-                    android.R.anim.slide_in_left,
-                    android.R.anim.slide_out_right
-                )
+
 
                 fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragementPedido)
                 fragmentTransaction.addToBackStack(null)
@@ -195,10 +190,7 @@ class ActPricipal : AppCompatActivity(),
                     val fragmentManager: FragmentManager = supportFragmentManager
                     val fragmentTransaction: FragmentTransaction =
                         fragmentManager.beginTransaction()
-                    fragmentTransaction.setCustomAnimations(
-                        android.R.anim.slide_in_left,
-                        android.R.anim.slide_out_right
-                    )
+
                     fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentClientes)
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commit()
@@ -238,10 +230,7 @@ class ActPricipal : AppCompatActivity(),
                     val fragmentManager: FragmentManager = supportFragmentManager
                     val fragmentTransaction: FragmentTransaction =
                         fragmentManager.beginTransaction()
-                    fragmentTransaction.setCustomAnimations(
-                        android.R.anim.slide_in_left,
-                        android.R.anim.slide_out_right
-                    )
+
 
                     fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
                     fragmentTransaction.addToBackStack("h")

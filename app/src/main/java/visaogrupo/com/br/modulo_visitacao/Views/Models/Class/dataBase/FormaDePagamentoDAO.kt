@@ -99,6 +99,8 @@ class FormaDePagamentoDAO(context: Context):
             listaFprm.add(formaDePagaemnto)
 
         }
+        curso.close()
+
         return listaFprm
     }
 }

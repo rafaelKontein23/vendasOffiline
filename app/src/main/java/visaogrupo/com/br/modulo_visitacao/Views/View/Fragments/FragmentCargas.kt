@@ -1,10 +1,12 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -18,6 +20,7 @@ import android.widget.RemoteViews
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -28,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_cargas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CargaDiaria
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskEstoqueSeparado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.taskImagem
@@ -46,23 +50,9 @@ class FragmentCargas () : Fragment() ,
     companion object {
         var alertvisible = false
         var progresspush = 0
-        // exibi push
-        fun showNotification(context: Context, channelId: String, title: String, message: String) {
-            val contentView = RemoteViews(context.packageName, R.layout.celula_notificacao_carga)
-            contentView.setTextViewText(R.id.notification_title,"Atualizando")
-            contentView.setProgressBar(R.id.notification_content,10, progresspush,false)
-            val notificationBuilder = NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.tdf_azul) // Ícone da notificação
-                .setContentTitle(title) // Título da notificação
-                .setCustomBigContentView(contentView)
-                .setContentText(message)
+        var context = this
 
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Prioridade da notificação
-                .setAutoCancel(true) // Fechar notificação automaticamente ao ser clicada
 
-            val notificationManager = NotificationManagerCompat.from(context)
-            notificationManager.notify(1, notificationBuilder.build())
-        }
 
     }
 
@@ -163,7 +153,7 @@ class FragmentCargas () : Fragment() ,
         binding.caragDiaria.setOnClickListener {
             if (verificaInternet.isOnline(requireContext())){
                 creadordepush(requireContext())
-                showNotification(requireContext(),"TESTE1","Titulo1","sff")
+                PushNativo.showNotification(requireContext(),"TESTE1","Carga","carga")
                 binding.caragDiaria.isEnabled =false
                 val animatdor = animandoCarregando(view.carregandocargadiaria)
                 atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)

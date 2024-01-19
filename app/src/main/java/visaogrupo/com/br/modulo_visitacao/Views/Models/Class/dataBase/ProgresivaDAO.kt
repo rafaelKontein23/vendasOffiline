@@ -24,6 +24,8 @@ class ProgresivaDAO(context: Context):
          val ProgressivaLista = ProgressivaLista(Produto_codigo,CaixaPadrao,PMC,PF,Valor,Quantidade,Desconto,personalizada,false,DescontoMaxima)
          listaProgresiva.add(ProgressivaLista)
         }
+        cursor.close()
+
         return listaProgresiva
 
     }

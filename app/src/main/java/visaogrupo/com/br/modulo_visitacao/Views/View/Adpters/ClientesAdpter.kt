@@ -14,15 +14,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogDetalhesClientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 
-class ClientesAdpter (list: MutableList<Clientes>, val  idfram:Int, val supoortfragment:FragmentManager, trocarcoritem: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem, carrinhoVisible: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible, atualizaCarrinho: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho): RecyclerView.Adapter<ClientesAdpter.ViewClientesHolders>() {
+class ClientesAdpter (list: MutableList<Clientes>, val  idfram:Int, val supoortfragment:FragmentManager, trocarcoritem: TrocarcorItem, carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho): RecyclerView.Adapter<ClientesAdpter.ViewClientesHolders>() {
     var listaClientes = list
     val  trocarcoritem = trocarcoritem
     val carrinhoVisible = carrinhoVisible
     val atualizaCarrinho = atualizaCarrinho
-    var count = 5
     var carregando = true
 
 

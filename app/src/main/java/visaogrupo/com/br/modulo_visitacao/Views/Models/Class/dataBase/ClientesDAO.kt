@@ -134,6 +134,8 @@ class ClientesDAO (context: Context): IClientes {
                 VendaDireta, FormaPagamentoExclusiva)
             clientesList.add(clientes)
         }
+        cursor.close()
+
         return clientesList
     }
 
@@ -184,6 +186,8 @@ class ClientesDAO (context: Context): IClientes {
             break
 
         }
+        cursor.close()
+
         return clientes
     }
 
@@ -255,6 +259,8 @@ class ClientesDAO (context: Context): IClientes {
 
                 }
             }
+            cursor.close()
+
             return  clientesList
         }catch (e:Exception){
             e.printStackTrace()

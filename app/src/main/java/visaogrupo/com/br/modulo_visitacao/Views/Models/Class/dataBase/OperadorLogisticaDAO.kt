@@ -53,6 +53,8 @@ class OperadorLogisticaDAO (context: Context):
             val OperadorLogistico = OperadorLogistico(estado,grupo,loja_id,minimoValor,nome,grupo_id,operadorLogisticoid)
             listaopl.add(OperadorLogistico)
         }
+        cursor.close()
+
 
         return listaopl
     }

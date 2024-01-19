@@ -41,6 +41,8 @@ class FiltroPrincipalDAO (context: Context){
             listaFiltroPrincipal.add(filtroPrincipal)
 
         }
+        cursor.close()
+
         return listaFiltroPrincipal
     }
 }

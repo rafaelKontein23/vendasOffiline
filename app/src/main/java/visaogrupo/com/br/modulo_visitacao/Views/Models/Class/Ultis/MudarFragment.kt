@@ -13,10 +13,7 @@ class MudarFragment {
          val fragmentManager: FragmentManager = fragmentManager
          val fragmentTransaction: FragmentTransaction =
              fragmentManager.beginTransaction()
-         fragmentTransaction.setCustomAnimations(
-             android.R.anim.slide_in_left,
-             android.R.anim.slide_out_right
-         )
+
 
          fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentLojas, "h")
          fragmentTransaction.addToBackStack("h")
@@ -28,10 +25,7 @@ class MudarFragment {
         val fragmentManager: FragmentManager = fragmentManager
         val fragmentTransaction: FragmentTransaction =
             fragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(
-            android.R.anim.slide_in_left,
-            android.R.anim.slide_out_right
-        )
+
 
         fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentProtudos, "h")
         fragmentTransaction.addToBackStack("h")

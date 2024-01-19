@@ -184,7 +184,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
             queryAtualiza = query
 
         }
-        listaProtudos = produtos.litar(queryAtualiza)
+        listaProtudos = produtos.litarPedidosProdutos(queryAtualiza)
         adpterProtudos.listaProtudos =listaProtudos
         adpterProtudos.notifyDataSetChanged()
 
@@ -275,7 +275,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
 
 
             produtos = ProdutosDAO(baseContext)
-            listaProtudosFiltro = produtos.litar(queryFiltro)
+            listaProtudosFiltro = produtos.litarPedidosProdutos(queryFiltro)
 
 
             val letrasIniciais = listaProtudosFiltro.map { it.nome.first().toUpperCase() }

@@ -35,6 +35,10 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFin
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValorProduto , AtualizaQuantidadeProduto{
 
@@ -185,7 +189,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
             }
 
-            listaProgressiva.addAll(lista_progressivapresona)
+             listaProgressiva.addAll(lista_progressivapresona)
              repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
 
             progressivaAdpter = ProgressivaAdpter(listaProgressiva,baseContext,binding.recyProgressiva,supportFragmentManager, atualizaValorProduto, binding.edtQuantidade,atualizaQuantidadeProduto,repasse)
@@ -426,6 +430,10 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                 var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
                 valorProdutoItem = discount;
 
+                val formato = DecimalFormat("#.##")
+                val numeroFormatado = formato.format(valorProdutoItem)
+                valorProdutoItem = numeroFormatado.replace(",",".").toDouble()
+
             }else{
                 valorProdutoItem = valorProtudo
             }
@@ -439,6 +447,15 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         if(repasse > 0.0){
             var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
             valorProdutoItem = discount;
+
+
+            val symbols = DecimalFormatSymbols()
+            symbols.decimalSeparator = ','
+            val formato = DecimalFormat("#,##0.00", symbols)
+
+            val numeroFormatado = formato.format(valorProdutoItem)
+
+            valorProdutoItem = numeroFormatado.replace(",",".").toDouble()
 
         }else{
             valorProdutoItem = valorProtudo

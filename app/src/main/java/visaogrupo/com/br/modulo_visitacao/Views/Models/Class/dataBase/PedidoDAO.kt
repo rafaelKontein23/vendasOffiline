@@ -28,6 +28,8 @@ class PedidoDAO (context:Context) {
            listaPedido.add(pedido)
 
          }
+         cursor.close()
+
          return listaPedido;
      }
 

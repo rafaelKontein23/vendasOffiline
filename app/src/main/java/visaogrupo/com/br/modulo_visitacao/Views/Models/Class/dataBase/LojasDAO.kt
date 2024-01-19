@@ -73,7 +73,7 @@ class LojasDAO (context:Context):
         TODO("Not yet implemented")
     }
 
-    override fun listarlojas(context: Context, empresaID: Int,query:String): List<Lojas> {
+    override fun listarlojas(context: Context, empresaID: Int,query:String): MutableList<Lojas> {
         val listaLojasobject = mutableListOf<Lojas>()
         val dblistalojas = DataBaseHelber(context)
 
@@ -129,6 +129,7 @@ class LojasDAO (context:Context):
             listaLojasobject.add(loja)
 
         }
+        cursor.close()
 
         return  listaLojasobject
     }

@@ -38,6 +38,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.RecuperaDataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
@@ -100,7 +101,8 @@ class DialogOperadorLogistico (context:Context){
                 val login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
                 var chave = login.Usuario_id + list[0]?.clienteId +data
                 chave = chave.replace(":","").replace("/","").replace(" ","")
-
+                PushNativo.showNotificationPedido(context,"TESTE1","Pedido Salvo ","Seu pedido foi salvo com sucesso\n" +
+                        "Data do Pedido: ${data} | ${HoraAtual.horaAtual()}")
                 if (formaDePagmento != null) {
                     pedidoFinalizado.insert(
                         list[0],
@@ -120,6 +122,7 @@ class DialogOperadorLogistico (context:Context){
                 carrinhoDao.excluirItemCarrinho(list[0].clienteId,list[0].lojaId)
                 ExcluirPrefuser.excluirItemPref(context,"LojaSelecionada")
                 ExcluirPrefuser.excluirItemPref(context,"ClienteSelecionado")
+
                 dialog.dismiss()
                 val  intent = Intent(context,ActPricipal::class.java)
                 intent.putExtra("Tela","pedido")

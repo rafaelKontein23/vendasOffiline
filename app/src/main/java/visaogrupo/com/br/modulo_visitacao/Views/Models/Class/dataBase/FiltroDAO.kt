@@ -47,6 +47,8 @@ class FiltroDAO (context: Context){
 
 
         }
+        cursor.close()
+
         return listaFiltro
     }
 }

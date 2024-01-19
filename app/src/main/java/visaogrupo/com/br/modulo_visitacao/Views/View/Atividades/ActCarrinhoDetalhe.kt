@@ -33,7 +33,7 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         binding  = ActivityActCarrinhoDetalheBinding.inflate(layoutInflater)
         setContentView(binding.root)
         super.onPostCreate(savedInstanceState)
-          carrinhoDetalhe = intent.getBooleanExtra("CarrinhoDetalhe",false)
+        carrinhoDetalhe = intent.getBooleanExtra("CarrinhoDetalhe",false)
 
         binding.continuarCarrinho.setOnClickListener {
             if(valorTotal < valorminimo){

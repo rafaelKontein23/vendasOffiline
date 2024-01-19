@@ -77,7 +77,7 @@ class PedidosFinalizadosDAO(context: Context) {
 
 
         for (i in listaProdutduos){
-            val valoresProdutosPedidos = ContentValues()
+             val valoresProdutosPedidos = ContentValues()
             valoresProdutosPedidos.put("NomeProduto",i.nomeProduto)
             valoresProdutosPedidos. put("PedidoID", pedidoID)
             valoresProdutosPedidos. put("Barra", i.barra)

@@ -114,6 +114,8 @@ class CarrinhoDAO (context:Context) {
             count +=1
        }
 
+      curso.close()
+
       return count
 
     }
@@ -128,6 +130,8 @@ class CarrinhoDAO (context:Context) {
             valores = "R$ ${valorProgressiva}|  ${desconto} %"
             break
         }
+        cursor.close()
+
         return valores
     }
 
@@ -210,6 +214,7 @@ class CarrinhoDAO (context:Context) {
 
             listaProdutosCArrinhos.add(carrinho)
         }
+        cursor.close()
 
         return listaProdutosCArrinhos
     }

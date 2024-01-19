@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
@@ -64,60 +65,28 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
         val listaFiltroVazia =listaclientesFiltroButton != null
 
-        val scrollListener = ViewTreeObserver.OnScrollChangedListener {
 
-            if (filtrolista){
-                if (binding.nestedScrollView3.getChildAt(binding.nestedScrollView3.childCount - 1).bottom
-                    <= (binding.nestedScrollView3.height + binding.nestedScrollView3.scrollY)
-                ) {
-                    val linearLayoutManager = view.recyClientes.layoutManager as LinearLayoutManager
-                    val lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition()
 
-                    val totalItemCount = adapterCliente.itemCount
 
-                    if (lastVisibleItemPosition >= 0 && totalItemCount >= 5) {
-                        if (lastVisibleItemPosition >= totalItemCount - 1) {
-                            val currentSize = adapterCliente.itemCount
-                            val remainingItems = listaClientesFiltro.size - currentSize
+        CoroutineScope(Dispatchers.Main).launch {
+            binding.progressBar.isVisible = true
 
-                            if (remainingItems > 0) {
-                                val nextItems = if (remainingItems >= 5) {
-                                    listaClientesFiltro.subList(currentSize, currentSize + 5).toList()
-                                } else {
-                                    listaClientesFiltro.subList(currentSize, currentSize + remainingItems).toList()
-                                }
-                                adapterCliente.addItems(nextItems)
-                            }
-                        }
-                    }
-                }
+            val layoutManager: LayoutManager = LinearLayoutManager(context)
+            binding.recyClientes.layoutManager = layoutManager
 
-            }else{
-                if (binding.nestedScrollView3.getChildAt(binding.nestedScrollView3.getChildCount() - 1).getBottom()
-                    <= binding.nestedScrollView3.getHeight() + binding.nestedScrollView3.getScrollY()
-                ) {
+            adapterCliente = ClientesAdpter(listaclientes, R.id.fragmentContainerViewPrincipal, getParentFragmentManager(), trocarcorItem, carrinhoVisible, atualizaCarrinho)
+            binding.recyClientes.adapter = adapterCliente
 
-                    Log.d("ScrollView", "Chegou ao final")
-                    val capBusca = binding.buscaClientesedt.text
-                    if (capBusca.toString().isEmpty()){
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val layoutManager = view.recyClientes.layoutManager as LinearLayoutManager
-                            val visibleItemCount = layoutManager.childCount
-                            val totalItemCount = layoutManager.itemCount
-                            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-                            // Verifique se o usuário está próximo ao final da lista
-                            if (visibleItemCount + firstVisibleItemPosition >= totalItemCount - 20 && totaldeclientes != listaclientes.size) {
-                                // Carregue mais 30 itens do banco de dados
-                                loadMoreItems(30,adapterCliente)
-                            }
-
-                        }
-
-                    }
-
-                }
+            val initialClientes = withContext(Dispatchers.Default) {
+                val clientesDAO = ClientesDAO(requireContext())
+                clientesDAO.listar(requireContext(), "SELECT * FROM TB_clientes")
             }
+
+            adapterCliente.listaClientes = initialClientes
+            adapterCliente.carregando = false
+            adapterCliente.notifyDataSetChanged()
+            binding.progressBar.isVisible = false
+            binding.recyClientes.isVisible  = true
 
         }
 
@@ -133,7 +102,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
                 }
                 if (listaClientesFiltro.isEmpty()){
-                    binding.nestedScrollView3.viewTreeObserver.addOnScrollChangedListener(scrollListener)
+
 
                     Toast.makeText(context,"Não existem clientes para o filtro selecionado",Toast.LENGTH_SHORT).show()
                     adapterCliente.listaClientes = listaclientesFiltroButton
@@ -141,7 +110,6 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
                     filtrolista = true
                     adapterCliente.notifyDataSetChanged()
                 }else{
-                    binding.nestedScrollView3.viewTreeObserver.removeOnScrollChangedListener(scrollListener)
                     binding.progressBar.isVisible = false
                     adapterCliente.listaClientes = listaClientesFiltro
                     adapterCliente.carregando = false
@@ -158,8 +126,6 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
         view.filtro_naopositivados.setOnClickListener{
             if (listaFiltroVazia){
                 listaClientesFiltro.clear()
-
-                binding.nestedScrollView3.viewTreeObserver.addOnScrollChangedListener(scrollListener)
 
                 for ( i in listaclientesFiltroButton){
                     if (i.Compra == 0){
@@ -192,7 +158,6 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
            if (listaFiltroVazia){
                listaClientesFiltro.clear()
 
-               binding.nestedScrollView3.viewTreeObserver.addOnScrollChangedListener(scrollListener)
 
                for ( i in listaclientesFiltroButton){
                    if (i.ExibeAlerta.equals("true")){
@@ -250,46 +215,6 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
             }
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
-            adapterCliente = ClientesAdpter(listaclientes,R.id.fragmentContainerViewPrincipal,getParentFragmentManager(), trocarcorItem,carrinhoVisible, atualizaCarrinho )
-            val layoutManegerCliente:LayoutManager = LinearLayoutManager(context)
-
-            binding.recyClientes.layoutManager = layoutManegerCliente
-            binding.recyClientes .adapter = adapterCliente
-            loadedItems = 0
-
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-
-           val clientes = ClientesDAO(requireContext())
-           val queryListaClientes ="SELECT * FROM TB_clientes ORDER BY 1 LIMIT 5"
-           val queryListaClientesToatal ="SELECT * FROM TB_clientes "
-           listaclientes = clientes.listar(requireContext(),queryListaClientes)
-           listaclientesFiltroButton = clientes.listar(requireContext(),queryListaClientesToatal)
-          CoroutineScope(Dispatchers.Main).launch{
-
-                adapterCliente.listaClientes = listaclientes
-                adapterCliente.carregando = false
-                Log.d("fafaff",listaclientesFiltroButton.size.toString())
-                adapterCliente.notifyDataSetChanged()
-            }
-
-            launch {
-                totaldeclientes = clientes.countar(requireContext())
-                MainScope().launch {
-                    binding.quatidadeClienetes.text = totaldeclientes.toString() + " Clientes"
-                }
-            }
-        }
-
-
-        binding.nestedScrollView3.getViewTreeObserver().addOnScrollChangedListener(scrollListener)
-
-
-
-
-
 
         binding.buscaClientesedt.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -339,24 +264,4 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
         return view
     }
 
-    private fun loadMoreItems(count: Int,adpter: ClientesAdpter) {
-
-        if (loadedItems >= totaldeclientes) {
-            CoroutineScope(Dispatchers.Main).launch{
-                binding.progressBar.isVisible = false
-            }
-
-        }else{
-            val clientes = ClientesDAO(requireContext())
-            val queryListaClientes ="SELECT * FROM TB_clientes ORDER BY 1 LIMIT $count OFFSET $loadedItems"
-            val listaclientes = clientes.listar(requireContext(),queryListaClientes)
-            CoroutineScope(Dispatchers.Main).launch{
-                binding.progressBar.isVisible = true
-                adpter.addItems(listaclientes)
-            }
-            loadedItems += listaclientes.size
-
-
-        }
-    }
 }

@@ -23,6 +23,7 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.DataBaseHelber
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import java.text.SimpleDateFormat
@@ -98,7 +99,7 @@ class TaskEstoqueSeparado {
                     db_Estoque.endTransaction()
                 }
                 FragmentCargas.progresspush += 3
-                FragmentCargas.showNotification(context,"TESTE1","Carga Tudo Farma","veja o progresso da carga")
+                PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","veja o progresso da carga")
             }
             lendoEstoque.join()
             val drawable = icon.drawable
