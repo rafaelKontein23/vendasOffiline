@@ -119,12 +119,13 @@ class ProdutosDAO(context:Context):
             if (curso.getDouble(18) != null){
                 porecentagem = curso.getDouble(18)
             }
-            curso.close()
+
 
             val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaNoPedido,valorcarrinho,quantidadeProduto,valor_total, imagebase64, quantidadeEstoque, centro,porecentagem)
 
             listaprotudos.add(produtos)
         }
+         curso.close()
         return listaprotudos
 
     }
