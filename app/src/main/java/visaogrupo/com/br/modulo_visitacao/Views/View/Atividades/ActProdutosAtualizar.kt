@@ -52,7 +52,7 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
         pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
 
 
-        adpterProtudos = ProtudoAdapter(listaProtudos, contextThis,contextThis,pedido!!.lojaId,pedido!!.clienteId,contextThis,binding.root,true,pedido!!.pedidoID.toInt(), true, this,pedido!!)
+        adpterProtudos = ProtudoAdapter(listaProtudos, contextThis,contextThis,pedido!!.lojaId,pedido!!.clienteId,contextThis,binding.root,true,pedido!!.pedidoID.toInt(), true, this,pedido!!, uf = pedido!!.uf)
         val layoutManager = LinearLayoutManager(baseContext)
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager

@@ -154,6 +154,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/filtro_naopositivados" />
 
+                <ImageView
+                    android:id="@+id/limparfiltro"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/filtro_duplicadas"
+                    app:layout_constraintStart_toEndOf="@+id/filtro_duplicadas"
+                    app:layout_constraintTop_toTopOf="@+id/filtro_duplicadas"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/limparfiltro" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

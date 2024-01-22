@@ -7,6 +7,7 @@ import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Produtos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ValoresProgressiva
 
 class ProdutosDAO(context:Context):
     IProtudos {
@@ -36,6 +37,23 @@ class ProdutosDAO(context:Context):
         }
 
       return true
+    }
+
+    fun buscarDescontoeValor(produtoCodido:Int, lojaId:Int, uf:String):ValoresProgressiva?{
+        var valoresProgressiva: ValoresProgressiva? = null
+        val  query = "SELECT valor, desconto, uf FROM TB_Progressiva progressiva WHERE progressiva.Prod_cod = ${produtoCodido} AND progressiva.loja_id = ${lojaId} AND progressiva.uf = '${uf}'"
+        val  cursor = dblistaproudos.rawQuery(query,null)
+
+        while (cursor.moveToNext()){
+            val valorProgressiva = cursor.getDouble(0)
+            val desconto = cursor.getDouble(1)
+
+            valoresProgressiva = ValoresProgressiva(desconto.toString(),"",valorProgressiva.toString())
+            break
+        }
+        cursor.close()
+
+        return valoresProgressiva
     }
 
     override fun atualizar(produtos: Produtos): Boolean {

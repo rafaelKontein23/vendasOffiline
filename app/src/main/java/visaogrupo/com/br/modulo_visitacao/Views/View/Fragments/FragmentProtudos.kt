@@ -78,7 +78,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         val objetoSerializadoCliente = sharedPreferences?.getString("ClienteSelecionado", null)
         lojaSelecionada =  gson.fromJson(objetoSerializado, Lojas::class.java)
         clienteSelecionado = gsonclientes.fromJson(objetoSerializadoCliente, Clientes::class.java)
-        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),contextThis,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,contextThis,view)
+        adpterProtudos = ProtudoAdapter(listaProtudos, requireContext(),contextThis,lojaSelecionada.loja_id,clienteSelecionado.Empresa_id,contextThis,view,uf = clienteSelecionado!!.UF)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recyProtudo.adapter = adpterProtudos
         binding.recyProtudo.layoutManager = layoutManager

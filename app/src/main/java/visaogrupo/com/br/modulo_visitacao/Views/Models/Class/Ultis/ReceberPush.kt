@@ -22,6 +22,7 @@ import com.google.firebase.messaging.RemoteMessage
 import org.json.JSONException
 import org.json.JSONObject
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActLogin
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import java.io.IOException
 import java.io.InputStream
@@ -39,120 +40,20 @@ class ReceberPush: FirebaseMessagingService() {
     private var notficationjson = ""
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        remoteMessage1 = remoteMessage
+            sendNotification(messageBody = remoteMessage)
 
-
-        remoteMessage.data?.let { data ->
-            notficationjson = data["Json"] ?: ""
-            notficationjson = notficationjson.replace(Regex("[\\p{Cntrl}]"), "")
-
-            if (notficationjson.isNotEmpty()) {
-                try {
-                    val jsonObject = JSONObject(notficationjson)
-                    val tempoDeExpiracao = jsonObject.getString("TempoDeExpiracao")
-                    val mensagem = jsonObject.getString("Mensagem")
-                    val tipo = jsonObject.getInt("Tipo")
-                    val link = jsonObject.getString("Link")
-                    val irPara = jsonObject.getString("Dados")
-                    val data = jsonObject.getString("DiaDeEnvio")
-                    val titulo = jsonObject.getString("Titulo")
-                    val id = jsonObject.getInt("Id")
-                    val imgLink = jsonObject.optString("Imagem", "")
-                    val visto = jsonObject.optString("PushVisualizado", "")
-
-
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
-        remoteMessage.data?.let { data ->
-            link = data["Link"]
-            remoteMessage.from?.let { Log.d("From: ", it) }
-        }
-
-        remoteMessage.data?.let { data ->
-            sendNotification(remoteMessage)
-            token = data["Body"]
-
-            val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            val ed = prefs.edit()
-            ed.putString("linkpush", data["Link"])
-            ed.apply()
-
-        }
     }
 
     private fun sendNotification(messageBody: RemoteMessage) {
-        if (link.isNullOrEmpty()) {
-            val intent = Intent(this, ActPricipal::class.java)
+
+             val intent = Intent(this, ActLogin::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
             val pendingIntent = PendingIntent.getActivity(
                 this,
                 ((Date().time / 1000L) % Int.MAX_VALUE).toInt(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            bitmap = getBitmapFromURL(messageBody.data["Image"])
-
-            val channelId = "My channel ID"
-            val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.tdf_azul)
-                .setColor(Color.parseColor("#000000"))
-                .setContentText(messageBody.data["Body"])
-                .setContentTitle(messageBody.data["Title"])
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
-
-            bitmap?.let {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.tdf_azul))
-                    .setStyle(NotificationCompat.BigPictureStyle().bigPicture(it))
-            } ?: run {
-                notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(messageBody.data["Body"]))
-                    .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.tdf_azul))
-            }
-
-            val notificationManager = NotificationManagerCompat.from(this)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return
-            }
-            notificationManager.notify(((Date().time / 1000L) % Int.MAX_VALUE).toInt(), notificationBuilder.build())
-        } else {
-            val intent = Intent(this, ActPricipal::class.java)
-            intent.putExtra("Link", remoteMessage1?.data?.get("Link"))
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-            val pendingIntent = PendingIntent.getActivity(
-                this,
-                ((Date().time / 1000L) % Int.MAX_VALUE).toInt(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
             )
 
             bitmap = getBitmapFromURL(messageBody.data["Image"])
@@ -165,16 +66,21 @@ class ReceberPush: FirebaseMessagingService() {
                 .setContentTitle(messageBody.data["Title"])
                 .setContentText(messageBody.data["Body"])
                 .setAutoCancel(true)
+
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
 
-            bitmap?.let {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.tdf_azul))
-                    .setStyle(NotificationCompat.BigPictureStyle().bigPicture(it))
-            } ?: run {
-                notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.tdf_azul))
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody.data["Body"]))
-            }
+               if (bitmap != null){
+                   notificationBuilder.setLargeIcon(bitmap)
+                       .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody.data["Body"]))
+               }else{
+                   notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources, R.drawable.imgpush))
+                       .setStyle(NotificationCompat.BigTextStyle().bigText(messageBody.data["Body"]))
+               }
+
+
+
+
 
             val notificationManager = NotificationManagerCompat.from(this)
 
@@ -188,7 +94,7 @@ class ReceberPush: FirebaseMessagingService() {
             }
 
             notificationManager.notify(((Date().time / 1000L) % Int.MAX_VALUE).toInt(), notificationBuilder.build())
-        }
+
 
     }
 

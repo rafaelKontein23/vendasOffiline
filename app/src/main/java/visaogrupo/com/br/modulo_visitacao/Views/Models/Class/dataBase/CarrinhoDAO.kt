@@ -3,7 +3,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase
 import android.content.ContentValues
 import android.content.Context
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagExclusiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ValoresProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 
 class CarrinhoDAO (context:Context) {
@@ -120,19 +120,22 @@ class CarrinhoDAO (context:Context) {
 
     }
 
-    fun buscaProgressivavalor(produtoCodigo:Int):String{
-        val  query = "SELECT valor, desconto FROM TB_Carrinho carrinho WHERE carrinho.produto_codigo = ${produtoCodigo}"
+    fun buscaProgressivavalor(produtoCodigo:Int, loja_id: Int ): ValoresProgressiva? {
+        var valoresProgressiva: ValoresProgressiva? = null
+        val  query = "SELECT valor, desconto,ValorTotal FROM TB_Carrinho carrinho WHERE carrinho.produto_codigo = ${produtoCodigo}  And carrinho.loja_id  = ${loja_id}"
         val  cursor = dbCarrinho.rawQuery(query,null)
-        var valores =""
+
         while (cursor.moveToNext()){
             val valorProgressiva = cursor.getDouble(0)
             val desconto = cursor.getDouble(1)
-            valores = "R$ ${valorProgressiva}|  ${desconto} %"
+            val valorTotal = cursor.getString(2)
+            valoresProgressiva = ValoresProgressiva(desconto.toString(),valorTotal,valorProgressiva.toString())
+
             break
         }
         cursor.close()
 
-        return valores
+        return valoresProgressiva
     }
 
     fun quantidadeItens(cliente_id: Int,loja_id: Int):Int{

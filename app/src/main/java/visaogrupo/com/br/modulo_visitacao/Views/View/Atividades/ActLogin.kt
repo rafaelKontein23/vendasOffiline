@@ -104,7 +104,8 @@ class ActLogin:  AppCompatActivity() ,
             }
 
           Login_Erro.Sucesso ->{
-
+                carregandoprogress!!.visibility = View.GONE
+                entrar!!.text = "Entrar"
                 carregandoprogress!!.visibility = View.GONE
                 entrar!!.text = "Entrar"
                 var intent = Intent(baseContext, ActPricipal::class.java)

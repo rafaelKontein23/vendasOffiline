@@ -52,6 +52,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentClientesBinding.inflate(layoutInflater)
@@ -65,31 +66,11 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
         val listaFiltroVazia =listaclientesFiltroButton != null
 
-
-
-
-        CoroutineScope(Dispatchers.Main).launch {
-            binding.progressBar.isVisible = true
-
-            val layoutManager: LayoutManager = LinearLayoutManager(context)
-            binding.recyClientes.layoutManager = layoutManager
-
-            adapterCliente = ClientesAdpter(listaclientes, R.id.fragmentContainerViewPrincipal, getParentFragmentManager(), trocarcorItem, carrinhoVisible, atualizaCarrinho)
-            binding.recyClientes.adapter = adapterCliente
-
-            val initialClientes = withContext(Dispatchers.Default) {
-                val clientesDAO = ClientesDAO(requireContext())
-                clientesDAO.listar(requireContext(), "SELECT * FROM TB_clientes")
-            }
-
-            adapterCliente.listaClientes = initialClientes
-            adapterCliente.carregando = false
-            adapterCliente.notifyDataSetChanged()
-            binding.progressBar.isVisible = false
-            binding.recyClientes.isVisible  = true
-
+        binding.limparfiltro.setOnClickListener {
+            carregaInfos()
         }
 
+        carregaInfos()
 
         view.filtro_positivo.setOnClickListener{
             if (listaFiltroVazia){
@@ -263,5 +244,27 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
         return view
     }
+    fun carregaInfos(){
+        CoroutineScope(Dispatchers.Main).launch {
+            binding.progressBar.isVisible = true
 
+            val layoutManager: LayoutManager = LinearLayoutManager(context)
+            binding.recyClientes.layoutManager = layoutManager
+
+            adapterCliente = ClientesAdpter(listaclientes, R.id.fragmentContainerViewPrincipal, getParentFragmentManager(), trocarcorItem, carrinhoVisible, atualizaCarrinho)
+            binding.recyClientes.adapter = adapterCliente
+
+            val initialClientes = withContext(Dispatchers.Default) {
+                val clientesDAO = ClientesDAO(requireContext())
+                clientesDAO.listar(requireContext(), "SELECT * FROM TB_clientes")
+            }
+            binding.quatidadeClienetes.text = initialClientes.size.toString() + " Clientes"
+            adapterCliente.listaClientes = initialClientes
+            adapterCliente.carregando = false
+            adapterCliente.notifyDataSetChanged()
+            binding.progressBar.isVisible = false
+            binding.recyClientes.isVisible  = true
+
+        }
+    }
 }

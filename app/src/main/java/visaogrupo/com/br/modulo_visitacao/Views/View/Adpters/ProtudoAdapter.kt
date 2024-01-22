@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalh
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.io.Serializable
 
@@ -43,7 +45,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                      pedidoId:Int = 0,
                      pedido :Boolean = false,
                      excluirPedido
-                     :ExcluirPedido? = null, pedidoEsta: PedidoFinalizado? = null
+                     :ExcluirPedido? = null, pedidoEsta: PedidoFinalizado? = null, uf:String
 ): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
     val  context = context
@@ -59,6 +61,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
     val pedido = pedido
     val excluirPedido = excluirPedido
     val pedidoEsta = pedidoEsta
+    val  uf = uf
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProdutoViewHolder {
@@ -82,22 +85,40 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                 holder.barra.text = listaProtudos[position].barra
                 holder.valor.text = "R$ " + listaProtudos[position].valor.toString().replace(".",",")
                 holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
-
+                holder.valor.paintFlags = holder.valor.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 if (listaProtudos[position].estaNoCarrinho  == 1){
                     val carrinhoDAO = CarrinhoDAO(context)
-                    val valores = carrinhoDAO.buscaProgressivavalor(listaProtudos[position].ProdutoCodigo)
+                    val valores = carrinhoDAO.buscaProgressivavalor(listaProtudos[position].ProdutoCodigo, loja_id)
                     holder.quantidade.isVisible = true
                     holder.excluiritem.isVisible = true
+                    holder.containerItens.isVisible = true
+
                     holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
                     holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
-                    holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
-                    holder.progressivaSelecionada.text = valores
+                    holder.quantidade.text =  listaProtudos[position].quantidadeCarrinho.toString() +" Uni."
+                    holder.progressivaSelecionada.isVisible = false
+                    holder.valorPorcentagem.text = valores?.desconto + "%"
+                    val valorFormatadoDesconto = String.format("%.2f",  valores?.valorDesconto?.toDouble())
+                    holder.valorDesconto.text = "R$" + valorFormatadoDesconto
+                    val valorFormatadoTotal = String.format("%.2f",  valores?.valorToral?.toDouble())
+                    holder.valorTotal.text = "R$ " + valorFormatadoTotal
+                    holder.valorDesconto.setTextColor(Color.parseColor("#FF059669"))
                 }else{
                     holder.quantidade.isVisible = false
                     holder.excluiritem.isVisible = false
                     holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
                     holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
                     holder.progressivaSelecionada.text = ""
+                    holder.containerItens.isVisible = false
+
+                    val produtos = ProdutosDAO(context)
+                    val buscarvValores = produtos.buscarDescontoeValor(listaProtudos[position].ProdutoCodigo,loja_id,uf)
+                    val valorFormatadoDesconto = String.format("%.2f",  buscarvValores?.valorDesconto?.toDouble())
+
+                    holder.valorDesconto.setTextColor(Color.parseColor("#FF737880"))
+                    holder.valorDesconto.text = "R$" + valorFormatadoDesconto
+                    holder.valorPorcentagem.text = buscarvValores!!.desconto + "%"
+
                 }
                 holder.constrainProtudos.setOnClickListener {
                     val intent = Intent(context, ActProtudoDetalhe::class.java)
@@ -143,66 +164,41 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
 
                 holder.excluiritem.setOnClickListener {
 
-                    holder.quantidade.isVisible = false
-                    holder.excluiritem.isVisible = false
-                    holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.corlinhaorigin)
-                    holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.transparente)
-
-                    val  snackbar =Snackbar.make(fragmentView, "Item excluído", Snackbar.LENGTH_LONG).setBackgroundTint(Color.WHITE).setTextColor(Color.BLACK)
-                        .setAction("Desfazer") {
-
-                            holder.quantidade.isVisible = true
-                            holder.excluiritem.isVisible = true
-                            holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
-                            holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
-                            holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
-                        }
-                        .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                                super.onDismissed(transientBottomBar, event)
-                                if (event != DISMISS_EVENT_ACTION) {
-                                    if (estaNoPedido){
-                                        val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
-                                        val totalPedido = pedidosFinalizadosDAO.countarItensPedidos(pedidoId)
-                                        if (totalPedido == 1){
-                                            val funcaonao ={
-                                                holder.quantidade.isVisible = true
-                                                holder.excluiritem.isVisible = true
-                                                holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
-                                                holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
-                                                holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
-                                            }
-                                            val dialogErro = DialogErro()
-                                            dialogErro.Dialog(context,"Atenção", "caso prossiga com a ação o pedido inteiro será excluido, deseja continuar", "Sim","Não",funcaonao,false){
-                                                pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
-                                                pedidosFinalizadosDAO.excluirItemPedido(pedidoId.toLong(),0)
-                                                excluirPedido!!.excluirPedido()
-
-                                            }
-                                        }else{
-                                            pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
-                                            excluiItemcarrinho.exluiItem()
-
-                                        }
-
-                                    }else{
-                                        val carrinhoDAO = CarrinhoDAO(context)
-                                        carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
-                                        excluiItemcarrinho.exluiItem()
-                                    }
+                    val dialogErro = DialogErro()
+                    dialogErro.Dialog(context,"Atenção","Deseja realmente excluir o item?","Sim","Não"){
+                        if (estaNoPedido){
+                            val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                            val totalPedido = pedidosFinalizadosDAO.countarItensPedidos(pedidoId)
+                            if (totalPedido == 1){
+                                val funcaonao ={
+                                    holder.quantidade.isVisible = true
+                                    holder.excluiritem.isVisible = true
+                                    holder.linhaProtudos.background = ContextCompat.getDrawable(context,R.color.verdenutoon)
+                                    holder.constrainProtudos.background = ContextCompat.getDrawable(context,R.color.corprodto)
+                                    holder.quantidade.text = "x" + listaProtudos[position].quantidadeCarrinho.toString()
+                                }
+                                val dialogErro = DialogErro()
+                                dialogErro.Dialog(context,"Atenção", "caso prossiga com a ação o pedido inteiro será excluido, deseja continuar", "Sim","Não",funcaonao,false){
+                                    pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
+                                    pedidosFinalizadosDAO.excluirItemPedido(pedidoId.toLong(),0)
+                                    excluirPedido!!.excluirPedido()
 
                                 }
+                            }else{
+                                pedidosFinalizadosDAO.excluirItemPedidoProduto(pedidoId.toLong(),listaProtudos[position].ProdutoCodigo)
+                                excluiItemcarrinho.exluiItem()
+
                             }
-                        })
-                    val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-                    layoutParams.setMargins(
-                        layoutParams.leftMargin,
-                        layoutParams.topMargin,
-                        layoutParams.rightMargin,
-                        200
-                    )
-                    snackbar.view.layoutParams = layoutParams
-                    snackbar.show()
+
+                        }else{
+                            val carrinhoDAO = CarrinhoDAO(context)
+                            carrinhoDAO.excluirItem(loja_id,cliente_id,listaProtudos[position].ProdutoCodigo)
+                            excluiItemcarrinho.exluiItem()
+                        }
+                    }
+
+
+
                 }
             }
 
@@ -234,10 +230,14 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
         val codigoProduto = itemView.findViewById<TextView>(R.id.codigoProtudo)
         val imgProduto = itemView.findViewById<ImageView>(R.id.imageView3)
         val quantidade = itemView.findViewById<TextView>(R.id.quatidadeadicionada)
-        val excluiritem = itemView.findViewById<TextView>(R.id.excluirItem)
+        val excluiritem = itemView.findViewById<ImageView>(R.id.excluirItem)
         val linhaProtudos = itemView.findViewById<View>(R.id.linhaProtudos)
         val efeito =itemView.findViewById<ShimmerFrameLayout>(R.id.shimmerLayout)
         val progressivaSelecionada = itemView.findViewById<TextView>(R.id.progressivaSelecionada)
+        val valorTotal = itemView.findViewById<TextView>(R.id.valorTotal)
+        val valorPorcentagem = itemView.findViewById<TextView>(R.id.valorPorcentagem)
+        val  valorDesconto = itemView.findViewById<TextView>(R.id.valorDesconto)
+        val containerItens = itemView.findViewById<ConstraintLayout>(R.id.containerItens)
 
     }
      fun exibirImagemBase64(imagemBase64: String):Bitmap {
