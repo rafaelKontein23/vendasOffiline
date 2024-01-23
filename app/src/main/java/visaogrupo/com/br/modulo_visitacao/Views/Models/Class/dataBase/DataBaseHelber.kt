@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    121 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou mude algo nas query
+    125 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -346,6 +346,42 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "CENTRO INTEGER," +
                 "UF VARCHAR(25)" +
                 ")"
+
+        val  sqlKit = "CREATE TABLE IF NOT EXISTS TB_Kits(" +
+                "Kit_id INTEGER PRIMARY KEY," +
+                "kit_Nome VARCHAR" +
+                ")"
+
+        val sqlKitProtudo = "CREATE TABLE IF NOT EXISTS Tb_Kit_Produtos(" +
+                "Kit_id INTEGER," +
+                "Produto_Codigo INTEGER," +
+                "Produto_Nome VARCHAR," +
+                "Fabricante VARCHAR," +
+                "Desconto REAL," +
+                "Quantidade INTEGER," +
+                "Imagem VARCHAR" +
+                ")"
+
+        val sqlKitXPreco = "CREATE TABLE IF NOT EXISTS TB_kit_x_preco(" +
+                "Produto_codigo INTEGER," +
+                "PF REAL," +
+                "PMC REAL," +
+                "UF VARCHAR," +
+                "Nome VARCHAR," +
+                "Apresentacao VARCHAR," +
+                "CODLISTAPRECOSYNC VARCHAR," +
+                "Portfolio VARCHAR"+
+                ")"
+
+        val sqlKitXClientes = "CREATE TABLE IF NOT EXISTS TB_KItXcliente(" +
+                "Kit_cod Integer," +
+                "CNPJ VARCHAR(20) PRIMARY KEY" +
+                ")"
+
+        val sqlkitxloja = "CREATE TABLE IF NOT EXISTS TB_KitxLoja(" +
+                "Kit_id INTEGER," +
+                "Loja_id INTEGER " +
+                ")"
         try {
             db?.execSQL(sqlFiltro)
             db?.execSQL(sqlFiltroProduto)
@@ -369,7 +405,11 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlPedidos)
             db?.execSQL(sqlProdutoItemFinalizadoPedido)
             db?.execSQL(sqlReapsse)
-
+            db?.execSQL(sqlKit)
+            db?.execSQL(sqlKitProtudo)
+            db?.execSQL(sqlKitXPreco)
+            db?.execSQL(sqlKitXClientes)
+            db?.execSQL(sqlkitxloja)
 
         }catch (e:Exception) {
             e.printStackTrace()

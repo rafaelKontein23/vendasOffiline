@@ -64,12 +64,49 @@ class CargaDiaria {
                 var jsonProtudos = ""
                 var jsonFormaDePagamento = ""
                 var jsonOperadorLogistico = ""
-
+                var jsonKit =""
+                var jsonKitxPreco = ""
+                var jsonkitCliente = ""
+                var jsonKitxLoja = ""
                 try {
 
 
+                    val lerkit = launch {
+                        jsonKit = lerZip.readTextFileFromZip(patch,"Kit.json","Kit").toString()
+                        val jsonObjectKit = JSONObject(jsonKit)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITS"))
+                        val lerKits = LerKitItens()
+                        lerKits.lerJsonKit(jsonArray,context)
 
 
+                    }
+                    val  lerKitxPreco = launch {
+                        jsonKitxPreco = lerZip.readTextFileFromZip(patch,"KitxPreco.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonKitxPreco)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxPRECO"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonKitxPreco(jsonArray,context)
+                    }
+
+                    val  lerKitXCliente = launch {
+                        jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonkitCliente)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonkitCliente(jsonArray,context)
+                    }
+
+                    val lerkitxLoja = launch {
+                        jsonKitxLoja = lerZip.readTextFileFromZip(patch,"KitxLoja.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonKitxLoja)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxLOJA"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonkitxLoja(jsonArray,context)
+                    }
+                    lerkit.join()
+                    lerKitxPreco.join()
+                    lerKitXCliente.join()
+                     lerkitxLoja.join()
                     //grava no banco lojas
                     val lendoLojas =launch {
                         //Lendo Arquivo de Loja
@@ -494,6 +531,9 @@ class CargaDiaria {
                     gravandoFiltroPrincipal.join()
                     gravandoFiltro.join()
                     gravandoFiltroProduto.join()
+
+
+
                     Log.d("Terminou carga","")
                     PushNativo.showNotification(context,"TESTE1","Carga Atualizada","Tudo Pronto, Boas vendas!")
 

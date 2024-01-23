@@ -144,6 +144,10 @@ class FragmentPedidos(mostraLoad: MostraLoad,carrinhoVisible: carrinhoVisible) :
     }
 
     override fun vaiparaEnviados() {
+         val  pedidosFinalizadosDAOEnviado = PedidosFinalizadosDAO(requireContext())
+         val  listaPedidosEnviado = pedidosFinalizadosDAOEnviado.listarPedidos(1)
+         adpterPedidoFinalizadoEnviado?.listaPedido = listaPedidosEnviado
+         adpterPedidoFinalizadoEnviado?.notifyDataSetChanged()
          arrastaParaLado.setCurrentItem(1)
     }
 

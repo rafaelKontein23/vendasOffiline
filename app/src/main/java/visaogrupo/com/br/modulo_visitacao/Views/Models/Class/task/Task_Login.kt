@@ -16,6 +16,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Request.
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Incript
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.Retrofit_URL
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActLogin
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -47,7 +48,7 @@ class Task_Login {
         jsonObject.put("Senha", senha)
         jsonObject.put("IP", "Teste")
         jsonObject.put("Origem", "app")
-        jsonObject.put("Device", "")
+        jsonObject.put("Device", ActLogin.device)
         val mensagemErro = arrayOf("")
 
 

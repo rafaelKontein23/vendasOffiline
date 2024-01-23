@@ -127,8 +127,12 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
                                  mostra.mostraLoad(false,"")
                                  val  dialogErro = DialogErro()
                                  dialogErro.Dialog(context,"Sucesso!",mensagem,"Ok",""){
-                                     vaiParaEnviados.vaiparaEnviados()
+
+
                                      atualizaPedido.atualizaPedidos()
+                                     vaiParaEnviados.vaiparaEnviados()
+
+
 
                                  }
                              }

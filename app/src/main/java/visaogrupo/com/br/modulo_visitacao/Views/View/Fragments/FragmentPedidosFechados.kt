@@ -33,6 +33,9 @@ class FragmentPedidosFechados(adpterPedidoFinalizado:AdpterPedidosFinalizado,lis
 
         val  recyclerPedido = view.findViewById<RecyclerView>(R.id.recyPedidoPendendes)
         val semPedidosFechados =view.findViewById<TextView>(R.id.semPedidosFechados)
+
+
+
         if (listaPeidosFechados.isEmpty()){
             recyclerPedido.isVisible = false
             semPedidosFechados.isVisible = true

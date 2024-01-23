@@ -98,8 +98,8 @@ class PedidosFinalizadosDAO(context: Context) {
             }
         }
     }
-    fun listarPedidos(peidoEviado:Int) :MutableList<PedidoFinalizado>{
-        val query = "SELECT * FROM TBPedidosFinalizados  WHERE pedidoEnviado = ${peidoEviado}"
+    fun listarPedidos(pedidoEviado:Int) :MutableList<PedidoFinalizado>{
+        val query = "SELECT * FROM TBPedidosFinalizados  WHERE pedidoEnviado = ${pedidoEviado}"
         val listPedidoFinalizado = mutableListOf<PedidoFinalizado>()
         val cursor = dbPedido.writableDatabase.rawQuery(query,null)
 

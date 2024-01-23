@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageView
@@ -22,7 +23,22 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.FirebaseApp
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_act_cargas.*
+import kotlinx.android.synthetic.main.activity_act_cargas.icon_clientes
+import kotlinx.android.synthetic.main.activity_act_cargas.icon_home
+import kotlinx.android.synthetic.main.activity_act_cargas.icon_lojas
+import kotlinx.android.synthetic.main.activity_act_cargas.icon_pedidos
+import kotlinx.android.synthetic.main.activity_act_cargas.icon_produtos
+import kotlinx.android.synthetic.main.activity_act_cargas.qtdNotification
+import kotlinx.android.synthetic.main.activity_act_cargas.text_clientes
+import kotlinx.android.synthetic.main.activity_act_cargas.text_home
+import kotlinx.android.synthetic.main.activity_act_cargas.text_lojas
+import kotlinx.android.synthetic.main.activity_act_cargas.text_pedidos
+import kotlinx.android.synthetic.main.activity_act_cargas.text_protudo
+import kotlinx.android.synthetic.main.activity_act_cargas.view_clientes
+import kotlinx.android.synthetic.main.activity_act_cargas.view_home
+import kotlinx.android.synthetic.main.activity_act_cargas.view_lojas
+import kotlinx.android.synthetic.main.activity_act_cargas.view_prdidos
+import kotlinx.android.synthetic.main.activity_act_cargas.view_produto
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
@@ -31,21 +47,19 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinnerAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentLojas
-import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CapturaDeviceToken
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CustomSpinnerAdapter
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.HoraAtual
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.MudarFragment
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Trocar_cor_de_icon
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
-import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
 class ActPricipal : AppCompatActivity(),
     TrocarcorItem,
@@ -86,8 +100,7 @@ class ActPricipal : AppCompatActivity(),
         list_menu.add("")
         FirebaseApp.initializeApp(this);
 
-        val  capDevice = CapturaDeviceToken()
-        capDevice.recuperaToken()
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
         }
@@ -281,10 +294,6 @@ class ActPricipal : AppCompatActivity(),
                 R.drawable.adm
             ),
             visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Personalizacao.CustomSpinnerItem(
-                "Sobre",
-                R.drawable.sobre
-            ),
-            visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Personalizacao.CustomSpinnerItem(
                 "Sair",
                 R.drawable.sair
             )
@@ -298,12 +307,33 @@ class ActPricipal : AppCompatActivity(),
                 // Lógica a ser executada quando um item é selecionado
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 if(selectedItem.contains("Portal")){
-                    val url = "${visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Request.URLs.urlportal}${login.Email}&senha=${login.Senha}"
+                    val json = "{" +
+                            "\"email\": \"" + login.Email + "\"," +
+                            "\"senha\": \"" + login.Senha + "\"," +
+                            "\"origem\":" + "\"app\"," +
+                            "\"versaoapp\":" + "\"" + "1.0.0" + "\"" +
+                            "}"
+
+                    // Encode para Base64
+                    val encodedString = Base64.encodeToString(json.toByteArray(), Base64.DEFAULT)
+
+                    val url = "${URLs.urlportal}${encodedString}"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
                 }else if(selectedItem.contains("Adm")){
+                    val json: String = login.Email + ":" +login.Senha
 
-                }else if(selectedItem.contains("Sobre")){
+                    // Encode para Base64
+
+                    // Encode para Base64
+                    val encodedString =
+                        org.apache.commons.codec.binary.Base64.encodeBase64String(json.toByteArray())
+
+                    val urladm: String = URLs.urlAdm + encodedString
+
+
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urladm))
+                    startActivity(intent)
 
                 }else if(selectedItem.contains("Sair")){
                     finish()

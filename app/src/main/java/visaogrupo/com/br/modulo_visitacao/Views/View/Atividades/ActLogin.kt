@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CapturaDeviceToken
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
@@ -30,9 +31,13 @@ class ActLogin:  AppCompatActivity() ,
     private var carregandoprogress: ProgressBar? = null
     private var  equesciSenha :TextView? =  null
     private var entrar: Button? = null
+
+
     val login_erro = visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Enuns.Login_Erro.Erro
     companion object {
         val  versao = "3.0.0"
+        var device = ""
+
     }
 
 
@@ -48,7 +53,8 @@ class ActLogin:  AppCompatActivity() ,
         // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
 
-
+        val  capDevice = CapturaDeviceToken()
+        capDevice.recuperaToken()
         entrar!!.setOnClickListener {
 
             entrar!!.text = ""
