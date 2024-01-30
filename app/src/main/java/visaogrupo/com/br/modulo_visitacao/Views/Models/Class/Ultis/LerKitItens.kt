@@ -20,8 +20,9 @@ class LerKitItens {
             val jsonItem = jsonArrayKit.optJSONObject(i)
 
             val kitid = jsonItem.getInt("Kit_id")
-            val kitNome = jsonItem.getString("kit_Nome")
-            val kit  = Kit(kitid,kitNome)
+            val kitNome = jsonItem.getString("kit_nome")
+            val Kit_Codigo = jsonItem.getInt("Kit_Codigo")
+            val kit  = Kit(kitid,Kit_Codigo,kitNome)
             val kitDAO = KitDAO(context = context)
             kitDAO.insertKit(kit)
 
@@ -34,7 +35,7 @@ class LerKitItens {
                 val desconto = jsonProdutoKit.getDouble("Desconto")
                 val quantidade = jsonProdutoKit.getInt("Quantidade")
                 val imagem = jsonProdutoKit.getString("Imagem")
-                val kitProtudos  = KitProtudos(kitid,produtoCodigo,produtoNome,fabricante,desconto,quantidade,imagem)
+                val kitProtudos  = KitProtudos(Kit_Codigo,produtoCodigo,produtoNome,fabricante,desconto,quantidade,imagem,0.0,"","")
                 kitDAO.insertKitProduto(kitProtudos)
             }
         }
@@ -73,8 +74,9 @@ class LerKitItens {
         for (i in 0  until  jsonArrayKit.length()){
             val jsonItemKitxLoja =  jsonArrayKit.getJSONObject(i)
             val KitId = jsonItemKitxLoja.getInt("Kit_id")
+            val kitCod = jsonItemKitxLoja.getInt("Kit_cod")
             val lojaId = jsonItemKitxLoja.getInt("Loja_id")
-            val kitxLojas = KitxLoja(KitId,lojaId)
+            val kitxLojas = KitxLoja(KitId,kitCod,lojaId)
             val kitxLojaDAO = kitxLojaDAO(context)
             kitxLojaDAO.insert(kitxLojas)
         }

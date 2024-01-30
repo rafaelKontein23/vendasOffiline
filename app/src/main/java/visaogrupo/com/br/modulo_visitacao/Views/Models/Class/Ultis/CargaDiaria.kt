@@ -71,42 +71,7 @@ class CargaDiaria {
                 try {
 
 
-                    val lerkit = launch {
-                        jsonKit = lerZip.readTextFileFromZip(patch,"Kit.json","Kit").toString()
-                        val jsonObjectKit = JSONObject(jsonKit)
-                        val jsonArray = JSONArray(jsonObjectKit.getString("KITS"))
-                        val lerKits = LerKitItens()
-                        lerKits.lerJsonKit(jsonArray,context)
 
-
-                    }
-                    val  lerKitxPreco = launch {
-                        jsonKitxPreco = lerZip.readTextFileFromZip(patch,"KitxPreco.json","KitPreco").toString()
-                        val jsonObjectKit = JSONObject(jsonKitxPreco)
-                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxPRECO"))
-                        val lerkits = LerKitItens()
-                        lerkits.lerJsonKitxPreco(jsonArray,context)
-                    }
-
-                    val  lerKitXCliente = launch {
-                        jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
-                        val jsonObjectKit = JSONObject(jsonkitCliente)
-                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
-                        val lerkits = LerKitItens()
-                        lerkits.lerJsonkitCliente(jsonArray,context)
-                    }
-
-                    val lerkitxLoja = launch {
-                        jsonKitxLoja = lerZip.readTextFileFromZip(patch,"KitxLoja.json","KitPreco").toString()
-                        val jsonObjectKit = JSONObject(jsonKitxLoja)
-                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxLOJA"))
-                        val lerkits = LerKitItens()
-                        lerkits.lerJsonkitxLoja(jsonArray,context)
-                    }
-                    lerkit.join()
-                    lerKitxPreco.join()
-                    lerKitXCliente.join()
-                     lerkitxLoja.join()
                     //grava no banco lojas
                     val lendoLojas =launch {
                         //Lendo Arquivo de Loja
@@ -223,12 +188,17 @@ class CargaDiaria {
 
                         val curso = dblistaOP.readableDatabase.rawQuery(LojasOP,null)
                         while (curso.moveToNext()){
-                            val lojaID = curso.getInt(0);
-                            val ufs = curso.getString(1)
-                            jsonOperadorLogistico = lerZip.readTextFileFromZip(patch,"OperadorLogistico_${lojaID}.json","OperdorLogistico").toString()
-                            val  jsonOP = JSONObject(jsonOperadorLogistico)
-                            val jsonArrayOperadorLogistico = JSONArray(jsonOP.getString("OPERADORES"))
-                            operadorLogisticoDAO.insert(jsonArrayOperadorLogistico,lojaID,ufs)
+                            try {
+                                val lojaID = curso.getInt(0);
+                                val ufs = curso.getString(1)
+                                jsonOperadorLogistico = lerZip.readTextFileFromZip(patch,"OperadorLogistico_${lojaID}.json","OperdorLogistico").toString()
+                                val  jsonOP = JSONObject(jsonOperadorLogistico)
+                                val jsonArrayOperadorLogistico = JSONArray(jsonOP.getString("OPERADORES"))
+                                operadorLogisticoDAO.insert(jsonArrayOperadorLogistico,lojaID,ufs)
+                            }catch (e:Exception){
+                                e.printStackTrace()
+                            }
+
                         }
                         FragmentCargas.progresspush += 1
                         PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando opls...")
@@ -532,7 +502,42 @@ class CargaDiaria {
                     gravandoFiltro.join()
                     gravandoFiltroProduto.join()
 
+                    val lerkit = launch {
+                        jsonKit = lerZip.readTextFileFromZip(patch,"Kit.json","Kit").toString()
+                        val jsonObjectKit = JSONObject(jsonKit)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITS"))
+                        val lerKits = LerKitItens()
+                        lerKits.lerJsonKit(jsonArray,context)
 
+
+                    }
+                    val  lerKitxPreco = launch {
+                        jsonKitxPreco = lerZip.readTextFileFromZip(patch,"KitxPreco.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonKitxPreco)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxPRECO"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonKitxPreco(jsonArray,context)
+                    }
+
+                    val  lerKitXCliente = launch {
+                        jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonkitCliente)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonkitCliente(jsonArray,context)
+                    }
+
+                    val lerkitxLoja = launch {
+                        jsonKitxLoja = lerZip.readTextFileFromZip(patch,"KitxLoja.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonKitxLoja)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxLOJA"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonkitxLoja(jsonArray,context)
+                    }
+                    lerkit.join()
+                    lerKitxPreco.join()
+                    lerKitXCliente.join()
+                    lerkitxLoja.join()
 
                     Log.d("Terminou carga","")
                     PushNativo.showNotification(context,"TESTE1","Carga Atualizada","Tudo Pronto, Boas vendas!")

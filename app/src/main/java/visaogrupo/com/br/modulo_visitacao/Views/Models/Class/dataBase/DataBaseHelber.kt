@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    125 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
+    131 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -228,6 +228,57 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
 
+
+        val sqlCarrinhoKit = "CREATE TABLE IF NOT EXISTS TB_CarrinhoKit(" +
+                "loja_id INTEGER NOT NULL," +
+                "cliente_id INTEGER NOT NULL," +
+                "OperadorLogistigo INTEGER NOT NULL," +
+                "Usuario_id INTEGER NOT NULL,"+
+                "UF INTEGER NOT NULL,"+
+                "Comissao REAL, " +
+                "ComissaoPorcentagem REAL, " +
+                "MarcasXComissoes_id INTEGER, " +
+                "kitCodigo INTEGER, " +
+                "Quantidade INTEGER, " +
+                "Por REAL NOT NULL, " +
+                "ValorDe REAL NOT NULL, " +
+                "Grupo_Codigo INTEGER, " +
+                "Desconto REAL NOT NULL, " +
+                "CODLISTAPRECOSYNC INTEGER, " +
+                "ValorTotal REAL, " +
+                "NomeKIT TEXT, " +
+                "nomeLoja TEXT,"+
+                "razaosocial TEXT,"+
+                "cnpj TEXT,"+
+                "dataPedido TEXT,"+
+                "valorminimoLoja REAL,"+
+                "Qtd_Minima_Operador INT," +
+                "Qtd_Maxima_Operador INT," +
+                "FormaPagamentoExclusiva INTEGER,"+
+                "RegraPrazo  INT," +
+                "LojaTipo  INT," +
+                "PERCENTUALRepasse REAL," +
+
+                "PRIMARY KEY (cliente_id,loja_id,kitCodigo)"+
+                ")"
+
+
+        var sqlProtudoCarrinhoKit =  "CREATE TABLE IF NOT EXISTS TB_carrinhoProdutoKit(" +
+                "loja_id INTEGER NOT NULL," +
+                "cliente_id INTEGER NOT NULL," +
+                "kitCodigo INTEGER, " +
+                "produtoCodigo TEXT, " +
+                "produtoNome TEXT, " +
+                "fabricante TEXT, " +
+                "desconto REAL, " +
+                "quantidade INTEGER, " +
+                "valorTotal REAL, " +
+                "barra TEXT," +
+
+                "PRIMARY KEY (cliente_id,loja_id,kitCodigo,produtoCodigo)"+
+
+                ")"
+
         val sqlPedidos = "CREATE TABLE IF NOT EXISTS TBPedidosFinalizados(" +
                 "PedidoID INTEGER PRIMARY KEY AUTOINCREMENT," + // Definindo PedidoID como PRIMARY KEY
                 "loja_id INTEGER NOT NULL," +
@@ -349,6 +400,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
 
         val  sqlKit = "CREATE TABLE IF NOT EXISTS TB_Kits(" +
                 "Kit_id INTEGER PRIMARY KEY," +
+                "Kit_codigo INTEGER,"+
                 "kit_Nome VARCHAR" +
                 ")"
 
@@ -380,6 +432,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
 
         val sqlkitxloja = "CREATE TABLE IF NOT EXISTS TB_KitxLoja(" +
                 "Kit_id INTEGER," +
+                "Kit_cod INTEGER," +
                 "Loja_id INTEGER " +
                 ")"
         try {
@@ -410,6 +463,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlKitXPreco)
             db?.execSQL(sqlKitXClientes)
             db?.execSQL(sqlkitxloja)
+            db?.execSQL(sqlCarrinhoKit)
+            db?.execSQL(sqlProtudoCarrinhoKit)
 
         }catch (e:Exception) {
             e.printStackTrace()

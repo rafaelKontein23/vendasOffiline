@@ -108,19 +108,20 @@ class ClientesDAO (context: Context): IClientes {
             val Cidade =   cursor.getString(8)
             val UF =    cursor.getString(9)
             val Cep =  cursor.getString(10)
-            val UltimoPedido =  cursor.getString(13)
-            val VendaDireta =  cursor.getString(14)
-            val Associativismo =   cursor.getString(15)
-            val Telefone = cursor.getString(16)
-            val Email =  cursor.getString(17)
-            val DuplicataVencida =  cursor.getInt(20)
-            val Compra  = cursor.getInt(23)
-            val Exbibelerta = cursor.getString(24)
+            val UltimoPedido =  cursor.getString(12)
+            val VendaDireta =  cursor.getString(13)
+            val Associativismo =   cursor.getString(14)
+            val Telefone = cursor.getString(15)
+            val Email =  cursor.getString(16)
+            val codigo = cursor.getInt(20)
+            val DuplicataVencida =  cursor.getInt(19)
+            val Compra  = cursor.getInt(22)
+            val Exbibelerta = cursor.getString(23)
             val  FormaPagamentoExclusiva = cursor.getInt(26)
 
             val clientes = Clientes(
                 "",Associativismo,Bairro,"",Cep,cnpj,
-                "",0,
+                "",codigo,
                 0,Cidade,0,"",Complemento,
                 Compra, false,
                 "","","",
@@ -159,19 +160,21 @@ class ClientesDAO (context: Context): IClientes {
             val Cidade =   cursor.getString(8)
             val UF =    cursor.getString(9)
             val Cep =  cursor.getString(10)
-            val UltimoPedido =  cursor.getString(13)
-            val VendaDireta =  cursor.getString(14)
-            val Associativismo =   cursor.getString(15)
-            val Telefone = cursor.getString(16)
-            val Email =  cursor.getString(17)
-            val DuplicataVencida =  cursor.getInt(20)
-            val Compra  = cursor.getInt(23)
-            val Exbibelerta = cursor.getString(24)
+            val UltimoPedido =  cursor.getString(12)
+            val VendaDireta =  cursor.getString(13)
+            val Associativismo =   cursor.getString(14)
+            val Telefone = cursor.getString(15)
+            val Email =  cursor.getString(16)
+            val codigo = cursor.getInt(20)
+            val DuplicataVencida =  cursor.getInt(19)
+            val Compra  = cursor.getInt(22)
+            val Exbibelerta = cursor.getString(23)
             val  FormaPagamentoExclusiva = cursor.getInt(26)
+
 
             clientes = Clientes(
                 "",Associativismo,Bairro,"",Cep,cnpj,
-                "",0,
+                "",codigo,
                 0,Cidade,0,"",Complemento,
                 Compra, false,
                 "","","",
@@ -231,25 +234,27 @@ class ClientesDAO (context: Context): IClientes {
                     val Cidade =   cursor.getString(8)
                     val UF =    cursor.getString(9)
                     val Cep =  cursor.getString(10)
-                    val UltimoPedido =  cursor.getString(13)
-                    val VendaDireta =  cursor.getString(14)
-                    val Associativismo =   cursor.getString(15)
-                    val Telefone = cursor.getString(16)
-                    val Email =  cursor.getString(17)
-                    val DuplicataVencida =  cursor.getInt(20)
-                    val Compra = cursor.getInt(23)
-                    val FormaPagamentoExclusiva = cursor.getInt(26)
+                    val UltimoPedido =  cursor.getString(12)
+                    val VendaDireta =  cursor.getString(13)
+                    val Associativismo =   cursor.getString(14)
+                    val Telefone = cursor.getString(15)
+                    val Email =  cursor.getString(16)
+                    val codigo = cursor.getInt(20)
+                    val DuplicataVencida =  cursor.getInt(19)
+                    val Compra  = cursor.getInt(22)
+                    val Exbibelerta = cursor.getString(23)
+                    val  FormaPagamentoExclusiva = cursor.getInt(26)
 
 
 
                     val clientes = Clientes(
                         "",Associativismo,Bairro,"",Cep,cnpj,
-                        "",0,
+                        "",codigo,
                         0,Cidade,0,"",Complemento,
                         Compra, false,
                         "","","",
                         DuplicataVencida,Email,Empresa_id,
-                        Endereco,"",
+                        Endereco,Exbibelerta,
                         Fantasia,0,
                         0,"",""
                         ,1,lojasxclienets,"",

@@ -11,6 +11,7 @@ class kitxLojaDAO (context: Context){
         try {
             val contentValues = ContentValues()
             contentValues.put("Kit_id", kitxLoja.Kit_id)
+            contentValues.put("Kit_cod", kitxLoja.KitCod)
             contentValues.put("Loja_id", kitxLoja.Loja_id)
 
             dbkitxLoja.insertOrThrow("TB_KitxLoja",null,contentValues)

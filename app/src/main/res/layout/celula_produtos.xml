@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/imgproduto"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="24dp"
@@ -39,7 +39,7 @@
                 android:fontFamily="@font/inter_medium"
                 android:textColor="#0196B4"
                 android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imgproduto"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -53,7 +53,7 @@
                 android:textColor="#2E3642"
                 android:textSize="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imgproduto"
                 app:layout_constraintTop_toBottomOf="@+id/codigoProtudo" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:textColor="#737880"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imgproduto"
                 app:layout_constraintTop_toBottomOf="@+id/NomeProtudo" />
 
 
@@ -83,7 +83,7 @@
                 android:text="11331"
                 android:textColor="#FF737880"
                 android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imgproduto"
                 app:layout_constraintTop_toBottomOf="@+id/barraProduto" />
 
             <TextView

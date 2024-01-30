@@ -19,8 +19,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +26,6 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiItemcarrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluirPedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.StartaAtividade
-import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
@@ -228,7 +225,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
         val barra = itemView.findViewById<TextView>(R.id.barraProduto)
         val nomeProtudo = itemView.findViewById<TextView>(R.id.NomeProtudo)
         val codigoProduto = itemView.findViewById<TextView>(R.id.codigoProtudo)
-        val imgProduto = itemView.findViewById<ImageView>(R.id.imageView3)
+        val imgProduto = itemView.findViewById<ImageView>(R.id.imgproduto)
         val quantidade = itemView.findViewById<TextView>(R.id.quatidadeadicionada)
         val excluiritem = itemView.findViewById<ImageView>(R.id.excluirItem)
         val linhaProtudos = itemView.findViewById<View>(R.id.linhaProtudos)

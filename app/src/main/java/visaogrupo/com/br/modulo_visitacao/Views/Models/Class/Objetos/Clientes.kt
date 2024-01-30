@@ -44,5 +44,6 @@ data class Clientes(
     val UF: String,
     val UltimoPedido: String,
     val VendaDireta: String,
-    val FormaPagamentoExclusiva : Int
+    val FormaPagamentoExclusiva : Int,
+
 )

@@ -31,6 +31,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.FormataTexto
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.ProtudoAdapter
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
@@ -142,15 +143,10 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
 
 
         // atualiza a view
-        try {
-            val cnpj = clienteSelecionado.CNPJ.substring(0,2)+"."+clienteSelecionado.CNPJ.substring(2,5)+
-                    "."+clienteSelecionado.CNPJ.substring(5,8)+"/"+clienteSelecionado.CNPJ.substring(8,12) +"-"+
-                    clienteSelecionado.CNPJ.substring(12,14);
-            binding.cnpjClienteSelecionado.text =cnpj
-        }catch (e:Exception){
-            e.printStackTrace()
-            binding.cnpjClienteSelecionado.text =clienteSelecionado.CNPJ
-        }
+
+        val cnpj = FormataTexto.formataCnpj(clienteSelecionado.CNPJ)
+        binding.cnpjClienteSelecionado.text =cnpj
+
         binding.lojasSelecionadas.text = lojaSelecionada.nome
         binding.textRazaosocialclienteSelecionado.text = clienteSelecionado.RazaoSocial
         binding.valorMinimo.text = "R$ " +lojaSelecionada.MinimoValor.toString()

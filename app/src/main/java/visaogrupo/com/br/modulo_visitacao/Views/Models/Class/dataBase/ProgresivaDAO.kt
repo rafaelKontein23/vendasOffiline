@@ -5,7 +5,7 @@ import android.content.Context
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProgressivaLista
 
-class ProgresivaDAO(context: Context):
+class  ProgresivaDAO(context: Context):
     visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.DAIInterface.IProgressiva {
     val  dbProgressiva = DataBaseHelber(context)
     override fun listarProgressiba(query: String,personalizada:Boolean): MutableList<ProgressivaLista> {

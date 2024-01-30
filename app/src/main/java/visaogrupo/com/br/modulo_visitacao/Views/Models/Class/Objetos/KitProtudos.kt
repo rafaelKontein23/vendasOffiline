@@ -7,4 +7,8 @@ data class KitProtudos(
     val fabricante: String,
     val desconto: Double,
     val quantidade: Int,
-    val imagem: String)
+    val imagem: String,
+    val valorTotal:Double,
+    val barra:String,
+    val imgBase64:String?
+)

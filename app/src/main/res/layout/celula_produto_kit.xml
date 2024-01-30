@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/imgproduto"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/padrao"
+
+        app:layout_constraintBottom_toTopOf="@+id/linhaProtudos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/codigoProtudo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="#0196B4"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/imgproduto"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/NomeProtudo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="#2E3642"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgproduto"
+            app:layout_constraintTop_toBottomOf="@+id/codigoProtudo" />
+
+        <TextView
+            android:id="@+id/barraProduto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+
+            android:fontFamily="@font/inter"
+            android:textColor="#737880"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgproduto"
+            app:layout_constraintTop_toBottomOf="@+id/NomeProtudo" />
+
+
+        <TextView
+            android:id="@+id/quantidade"
+            style="@style/textbold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textFontWeight="500"
+            android:paddingStart="4dp"
+            android:letterSpacing="0.05"
+            android:paddingEnd="4dp"
+            android:background="@drawable/bordas_quantidade_kit"
+            android:padding="2dp"
+            android:layout_marginTop="16dp"
+            android:text="11331"
+            android:textColor="#002748"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/imgproduto"
+            app:layout_constraintTop_toBottomOf="@+id/barraProduto" />
+
+    <TextView
+        android:id="@+id/valorDesconto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:fontFamily="@font/inter"
+        android:text="R$ 00,00"
+        android:textColor="#059669"
+        android:textFontWeight="700"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/quantidade"
+        app:layout_constraintStart_toEndOf="@+id/quantidade"
+        app:layout_constraintTop_toTopOf="@+id/quantidade" />
+
+
+        <View
+            android:id="@+id/linhaProtudos"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="#A4E6EDF3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/quantidade" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

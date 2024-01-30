@@ -44,7 +44,8 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
 
     override fun onBindViewHolder(holder: LojasViewHolder, position: Int) {
         holder.nomeloja.text = listaLojas[position].nome.toString()
-        holder.valorMinimo.text = "Valor mínimo " + listaLojas[position].MinimoValor.toString()
+        val valorMinimoFormatado = String.format("%.2f", listaLojas[position].MinimoValor)
+        holder.valorMinimo.text = "Valor mínimo " + valorMinimoFormatado.replace(".",",")
         val loja = listaLojas[position]
 
         holder. imgLoja.roundTopCorners(25f) // Raio desejado
@@ -65,7 +66,13 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
             ActPricipal.troca = TrocaItemSelecionado.Prodtudos
             trocarcorItem.trocacor()
             val mudarFragment = MudarFragment()
-            mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+            if (listaLojas[position].LojaTipo == 4){
+                mudarFragment.openFragmentProtudosKit(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+            }else{
+                mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+
+            }
+
         }
     }
 
