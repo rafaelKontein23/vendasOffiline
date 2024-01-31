@@ -28,5 +28,6 @@ data class CarrinhoKit(    val lojaId: Int,
                            val  RegraPrazo:Int,
                            val  LojaTipo:Int,
                            val porecentagem:Double,
-                           val listProdutoKit: MutableList<KitProtudos>
+                           var listProdutoKit: MutableList<KitProtudos>? = null,
+                           var numerPedido:Int
                   )

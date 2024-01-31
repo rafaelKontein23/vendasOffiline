@@ -3,6 +3,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase
 import android.content.ContentValues
 import android.content.Context
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.CarrinhoKit
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitProtudos
 
 class CarrinhoKitDAO(context:Context) {
     val dbCarrinhoKit = DataBaseHelber(context).writableDatabase
@@ -40,7 +41,7 @@ class CarrinhoKitDAO(context:Context) {
             valoresContentCarrinho.put("LojaTipo",carrinhoKit.LojaTipo)
             valoresContentCarrinho.put("PERCENTUALRepasse",carrinhoKit.porecentagem)
 
-            for (i in carrinhoKit.listProdutoKit){
+            for (i in carrinhoKit.listProdutoKit!!){
                 val valoresContentProdutos = ContentValues()
                 valoresContentProdutos.put("loja_id",carrinhoKit.lojaId)
                 valoresContentProdutos.put("cliente_id",carrinhoKit.clienteId)
@@ -125,7 +126,7 @@ class CarrinhoKitDAO(context:Context) {
             valoresContentCarrinho.put("LojaTipo",carrinhoKit.LojaTipo)
             valoresContentCarrinho.put("PERCENTUALRepasse",carrinhoKit.porecentagem)
 
-            for (i in carrinhoKit.listProdutoKit){
+            for (i in carrinhoKit.listProdutoKit!!){
                 val valoresContentProdutos = ContentValues()
                 valoresContentProdutos.put("loja_id",carrinhoKit.lojaId)
                 valoresContentProdutos.put("cliente_id",carrinhoKit.clienteId)
@@ -157,12 +158,91 @@ class CarrinhoKitDAO(context:Context) {
                 " AND kitCodigo = ${carrinhoKit.kitCodigo} "
         dbCarrinhoKit.execSQL(queryDelete)
 
-        for (i in carrinhoKit.listProdutoKit){
+        for (i in carrinhoKit.listProdutoKit!!){
             val queryDeleteProtudo = "DELETE FROM TB_carrinhoProdutoKit WHERE loja_id = ${carrinhoKit.lojaId} " +
                     "AND cliente_id = ${carrinhoKit.clienteId}" +
                     " AND kitCodigo = ${carrinhoKit.kitCodigo} AND produtoCodigo = '${i.produtoCodigo}'"
 
             dbCarrinhoKit.execSQL(queryDeleteProtudo)
         }
+    }
+    fun buscaCarrinhoKit(query:String):MutableList<CarrinhoKit>{
+        val listaCarrinhoKit = mutableListOf<CarrinhoKit>()
+        val cursor = dbCarrinhoKit.rawQuery(query, null)
+        var  count =0
+        while (cursor.moveToNext()){
+            count +=1
+            val lojaId = cursor.getInt(0)
+            val clienteId = cursor.getInt(1)
+            val operadorLogisgo = cursor.getString(2)
+            val userId = cursor.getInt(3)
+            val uf = cursor.getString(4)
+            val kitCodigo = cursor.getInt(8)
+            val quantidade  = cursor.getInt(9)
+            val por = cursor.getDouble(10)
+            val de = cursor.getDouble(11)
+            val desconto = cursor.getDouble(13)
+            val codPrecoSyc = cursor.getInt(14)
+            val valorTotal = cursor.getDouble(15)
+            val nomeKit = cursor.getString(16)
+            val nomeLoja = cursor.getString(17)
+            val razaoSocial = cursor.getString(18)
+            val cnpj = cursor.getString(19)
+
+            val dataPedido = cursor.getString(20)
+            val qtdMinimaOperador = cursor.getInt(22)
+            val qtdmaximaOperador = cursor.getInt(23)
+            val formaDePagamentoExclusiva = cursor.getInt(24)
+            val regraPrazo = cursor.getInt(25)
+            val lojaTipo = cursor.getInt(26)
+
+            val  carrinhoKit = CarrinhoKit(lojaId,clienteId,
+                kitCodigo,
+                operadorLogisgo,userId,uf,
+                0.0,
+                0.0,
+                0,
+                quantidade,
+                por,de,0,desconto,
+                codPrecoSyc,
+                valorTotal,
+                nomeKit,
+                nomeLoja,
+                razaoSocial,
+                cnpj,
+                dataPedido,
+                0.0,
+                formaDePagamentoExclusiva,
+                qtdMinimaOperador,
+                qtdmaximaOperador,
+                regraPrazo,
+                lojaTipo,
+                0.0, numerPedido = count)
+            listaCarrinhoKit.add(carrinhoKit)
+
+        }
+        return listaCarrinhoKit
+    }
+
+    fun buscaItensProdutoCarrinhoKit(query:String,kitId:Int):MutableList<KitProtudos>{
+        val listaKitProdutos = mutableListOf<KitProtudos>()
+        val cursor = dbCarrinhoKit.rawQuery(query,null)
+
+        while (cursor.moveToNext()){
+            val protudoCodigo = cursor.getString(3)
+            val protudoNome =   cursor.getString(4)
+            val fabricante =    cursor.getString(5)
+            val desconto =      cursor.getDouble(6)
+            val quantidade =    cursor.getInt(7)
+            val valorTotal =    cursor.getDouble(8)
+            val barra =         cursor.getString(9)
+            val imagembase64 =  cursor.getString(10)
+            val protudoCarrinhoKit = KitProtudos(kitId,protudoCodigo, protudoNome,
+                fabricante,desconto,quantidade,"", valorTotal,barra ,imagembase64 )
+            listaKitProdutos.add(protudoCarrinhoKit)
+
+
+        }
+        return listaKitProdutos
     }
 }

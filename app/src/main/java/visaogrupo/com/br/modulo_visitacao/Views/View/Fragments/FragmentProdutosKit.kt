@@ -1,6 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.kitxLojaDA
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFiltroAZ
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterTituloProdutoKit
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.ProtudoAdapter
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProdutosKitBinding
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
@@ -76,7 +78,9 @@ class FragmentProdutosKit (carrinhoVisible: carrinhoVisible) : Fragment(), Atual
         carrinhoVisible.carrinhoVisivel()
 
         binding.carrinhoProtudo.setOnClickListener {
-
+             val intent = Intent(requireContext(),ActCarrinhoKit::class.java)
+             intent.putExtra("carrinhoDetalhe",false)
+             startActivity(intent)
         }
 
 

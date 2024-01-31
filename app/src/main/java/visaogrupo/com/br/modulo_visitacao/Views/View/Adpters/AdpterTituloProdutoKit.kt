@@ -112,8 +112,8 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
                     lojaSelecionada.RegraPrazoMedio,
                     lojaSelecionada.LojaTipo,
                     0.0,
-                    itemTitulo.listaKitProdutos!!
-
+                    itemTitulo.listaKitProdutos!!,
+                    0
                 )
 
                 atualizaValorTotalKitCarrinho.atualizaValor(carrinhoKit)
@@ -176,7 +176,7 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
             lojaSelecionada.RegraPrazoMedio,
             lojaSelecionada.LojaTipo,
             0.0,
-            itemTitulo.listaKitProdutos!!
+            itemTitulo.listaKitProdutos!!,0
 
         )
         atualizaValorTotalKitCarrinho.atualizaValor(carrinhoKit)

@@ -33,4 +33,7 @@
     <color name="corlinhaorigin">#A4E6EDF3</color>
     <color name="corprodto">#38A7F3D0</color>
     <color name="transparente">#00A7F3D0</color>
+
+    <color name="Prymary">#FF004682</color>
+    <color name="prymary300">#5483AB</color>
 </resources>

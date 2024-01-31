@@ -20,7 +20,7 @@ class LerKitItens {
             val jsonItem = jsonArrayKit.optJSONObject(i)
 
             val kitid = jsonItem.getInt("Kit_id")
-            val kitNome = jsonItem.getString("kit_nome")
+            val kitNome = jsonItem.getString("kit_Nome")
             val Kit_Codigo = jsonItem.getInt("Kit_Codigo")
             val kit  = Kit(kitid,Kit_Codigo,kitNome)
             val kitDAO = KitDAO(context = context)
