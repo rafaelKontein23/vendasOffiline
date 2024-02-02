@@ -1,7 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos
 
 data class PedidoFinalizado(
-        val pedidoID: Long, // Use Long se precisar lidar com grandes números de ID
+        val pedidoID: Long,
         val lojaId: Int,
         val clienteId: Int,
         val operadorLogistico: String,
@@ -45,6 +45,11 @@ data class PedidoFinalizado(
         val justificativaANR:String,
         val TipoLoja:Int,
         val RegraPrazo:Int,
-        val quantidadeMaximaOpl:Int
+        val quantidadeMaximaOpl:Int,
+        val kitCodigo:Int,
+        val de:Double,
+        val por:Double,
+        val nomekit:String,
+        val kit:Int
 ):java.io.Serializable
 

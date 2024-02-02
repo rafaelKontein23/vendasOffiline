@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteException
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagaemnto
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitProtudos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutosFinalizados
 
@@ -99,7 +101,111 @@ class PedidosFinalizadosDAO(context: Context) {
         }
     }
     fun listarPedidos(pedidoEviado:Int) :MutableList<PedidoFinalizado>{
-        val query = "SELECT * FROM TBPedidosFinalizados  WHERE pedidoEnviado = ${pedidoEviado}"
+
+        val query ="SELECT \n" +
+                "    PedidoID,\n" +
+                "    loja_id,\n" +
+                "    cliente_id,\n" +
+                "    OperadorLogistigo,\n" +
+                "    Usuario_id,\n" +
+                "    UF,\n" +
+                "    Comissao,\n" +
+                "    ComissaoPorcentagem,\n" +
+                "    MarcasXComissoes_id,\n" +
+                "    Produto_codigo,\n" +
+                "    0 AS kitCodigo,\n" +
+                "    Barra,\n" +
+                "    Quantidade,\n" +
+                "    PF,\n" +
+                "    0.0 AS De,\n" +
+                "    0.0 AS Por,\n" +
+                "    Desconto,\n" +
+                "    DescontoOriginal,\n" +
+                "    ST,\n" +
+                "    formalizacao,\n" +
+                "    CODLISTAPRECOSYNC,\n" +
+                "    ValorTotal,\n" +
+                "    Nome,\n" +
+                "    Apontador_codigo,\n" +
+                "    '' AS NomeKit,\n" +
+                "    Valor,\n" +
+                "    ValorOriginal,\n" +
+                "    Grupo_Codigo,\n" +
+                "    nomeLoja,\n" +
+                "    razaosocial,\n" +
+                "    cnpj,\n" +
+                "    dataPedido,\n" +
+                "    valorminimoLoja,\n" +
+                "    base64,\n" +
+                "    caixapadrao,\n" +
+                "    pmc,\n" +
+                "    Qtd_Minima_Operador,\n" +
+                "    Qtd_Maxima_Operador,\n" +
+                "    ANR,\n" +
+                "    PedidoEnviado,\n" +
+                "    formaDePagemento,\n" +
+                "    NumeroPedido,\n" +
+                "    OperadoresPedidos,\n" +
+                "    FormaPagamentoExclusiva,\n" +
+                "    Chave,\n" +
+                "    justificativaANR,\n" +
+                "    TipoLoja,\n" +
+                "    RegraPrazo,\n" +
+                "    QtdMaximaOpl,\n" +
+                "   0 as Kit\n" +
+                "FROM TBPedidosFinalizados WHERE PedidoEnviado = ${pedidoEviado} UNION \n" +
+                "    SELECT PedidoID,    loja_id,\n" +
+                "    cliente_id,\n" +
+                "    OperadorLogistigo,\n" +
+                "    Usuario_id,\n" +
+                "    UF,\n" +
+                "    0 as  Comissao,\n" +
+                "    0 as    ComissaoPorcentagem,\n" +
+                "    0 as    MarcasXComissoes_id,\n" +
+                "    0 as    Produto_codigo,\n" +
+                "    kitCodigo,\n" +
+                "    '' as Barra,\n" +
+                "    Quantidade,\n" +
+                "    0.0 as PF,\n" +
+                "    De,\n" +
+                "    Por,\n" +
+                "    Desconto,\n" +
+                "    0.0 as DescontoOriginal,\n" +
+                "    '' as ST,\n" +
+                "    '' as formalizacao,\n" +
+                "    CODLISTAPRECOSYNC,\n" +
+                "    ValorTotal,\n" +
+                "    '' as Nome,\n" +
+                "    '' as Apontador_codigo,\n" +
+                "    NomeKit,\n" +
+                "    0.0 as Valor,\n" +
+                "    0.0 as ValorOriginal,\n" +
+                "     0 as Grupo_Codigo,\n" +
+                "    nomeLoja,\n" +
+                "    razaosocial,\n" +
+                "    cnpj,\n" +
+                "    dataPedido,\n" +
+                "    valorminimoLoja,\n" +
+                "    NULL AS base64,\n" +
+                "    NULL AS caixapadrao,\n" +
+                "    NULL AS pmc,\n" +
+                "    Qtd_Minima_Operador,\n" +
+                "    Qtd_Maxima_Operador,\n" +
+                "    NULL AS ANR,\n" +
+                "    PedidoEnviado,\n" +
+                "    formaDePagemento,\n" +
+                "    NumeroPedido,\n" +
+                "    OperadoresPedidos,\n" +
+                "    FormaPagamentoExclusiva,\n" +
+                "    Chave,\n" +
+                "    '' as justificativaANR,\n" +
+                "    TipoLoja,\n" +
+                "    RegraPrazo,\n" +
+                "    QtdMaximaOpl,\n" +
+                "    1 as Kit\n" +
+                "FROM TBPedidosFinalizadosKit;"
+
+
         val listPedidoFinalizado = mutableListOf<PedidoFinalizado>()
         val cursor = dbPedido.writableDatabase.rawQuery(query,null)
 
@@ -114,12 +220,12 @@ class PedidosFinalizadosDAO(context: Context) {
             val comissaoPorcentagem = cursor.getFloat(7)
             val marcasXComissoesId = cursor.getInt(8)
             val produtoCodigo = cursor.getInt(9)
-            val barra = cursor.getString(10)
-            val quantidade = cursor.getInt(11)
-            val pf = cursor.getFloat(12)
-            val valor = cursor.getDouble(13)
-            val valorOriginal = cursor.getDouble(14)
-            val grupoCodigo = cursor.getInt(15)
+            val kitCodigo = cursor.getInt(10)
+            val barra = cursor.getString(11)
+            val quantidade = cursor.getInt(12)
+            val pf = cursor.getFloat(13)
+            val de = cursor.getDouble(14)
+            val por = cursor.getDouble(15)
             val desconto = cursor.getDouble(16)
             val descontoOriginal = cursor.getDouble(17)
             val st = cursor.getFloat(18)
@@ -128,27 +234,33 @@ class PedidosFinalizadosDAO(context: Context) {
             val valorTotal = cursor.getFloat(21)
             val nome = cursor.getString(22)
             val apontadorCodigo = cursor.getString(23)
-            val nomeLoja = cursor.getString(24)
-            val razaoSocial = cursor.getString(25)
-            val cnpj = cursor.getString(26)
-            val dataPedido = cursor.getString(27)
-            val valorMinimoLoja = cursor.getFloat(28)
-            val base64 = cursor.getString(29)
-            val caixaPadrao = cursor.getInt(30)
-            val pmc = cursor.getFloat(31)
-            val qtdMinimaOperador = cursor.getInt(32)
-            val qtdMaximaOperador = cursor.getInt(33)
-            val anr = cursor.getInt(34)
-            val pedidoEnviado = cursor.getInt(35)
-            val formaDePagamento = cursor.getString(36)
-            val numeroPedido = cursor.getString(37)
-            val operadoresPedidos = cursor.getString(38)
-            val formaPagamentoExclusiva = cursor.getInt(39)
-            val chave = cursor.getString(40)
-            val  justificativaANR=  cursor.getString(41)
-            val  TipoLoja=  cursor.getInt(42)
-            val regraPrazo = cursor.getInt(43)
-            val quantidadeMaxima = cursor.getInt(44)
+            val nomeKit = cursor.getString(24)
+            val valor = cursor.getDouble(25)
+            val valorOriginal = cursor.getDouble(26)
+            val grupoCodigo = cursor.getInt(27)
+            val nomeLoja = cursor.getString(28)
+            val razaoSocial = cursor.getString(29)
+            val cnpj = cursor.getString(30)
+            val dataPedido = cursor.getString(31)
+            val valorMinimoLoja = cursor.getFloat(32)
+            val base64 = cursor.getString(33)
+            val caixaPadrao = cursor.getInt(34)
+            val pmc = cursor.getFloat(35)
+            val qtdMinimaOperador = cursor.getInt(36)
+            val qtdMaximaOperador = cursor.getInt(37)
+            val anr = cursor.getInt(38)
+            val pedidoEnviado = cursor.getInt(39)
+            val formaDePagamento = cursor.getString(40)
+            val numeroPedido = cursor.getString(41)
+            val operadoresPedidos = cursor.getString(42)
+            val formaPagamentoExclusiva = cursor.getInt(43)
+            val chave = cursor.getString(44)
+            val  justificativaANR=  cursor.getString(45)
+            val  TipoLoja=  cursor.getInt(46)
+            val regraPrazo = cursor.getInt(47)
+            val quantidadeMaxima = cursor.getInt(48)
+            val kit = cursor.getInt(49)
+
 
             val pedido = PedidoFinalizado(
                 pedidoId.toLong(),
@@ -195,7 +307,12 @@ class PedidosFinalizadosDAO(context: Context) {
                 justificativaANR,
                 TipoLoja,
                 regraPrazo,
-                quantidadeMaxima
+                quantidadeMaxima,
+                kitCodigo,
+                de,
+                por,
+                nomeKit,
+                kit
             )
             listPedidoFinalizado.add(pedido)
         }
@@ -236,6 +353,43 @@ class PedidosFinalizadosDAO(context: Context) {
         }
 
         return listaProdutosFinalizados
+    }
+    fun atualizaPedidoKit(pedidoId: Int, valorTotal:Double){
+        val queryAtualiza = "UPDATE TBPedidosFinalizadosKit SET valortotal = ${valorTotal} WHERE pedidoid = ${pedidoId};"
+        dbPedido.writableDatabase.rawQuery(queryAtualiza,null)
+    }
+    fun listaPedidoKit(pedidoId:Int):MutableList<KitTituloPreco>{
+        val kitTituloPrecolista = mutableListOf<KitTituloPreco>()
+        val listaKitProdutos = mutableListOf<KitProtudos>()
+        val query = "SELECT NomeKit, kitCodigo,De, Por, Quantidade FROM TBPedidosFinalizadosKit WHERE pedidoid = ${pedidoId}"
+        val cursor = dbPedido.writableDatabase.rawQuery(query,null)
+        while (cursor.moveToNext()){
+              val nomeKit =    cursor.getString(0)
+              val kitCodigo =  cursor.getInt(1)
+              val de =         cursor.getDouble(2)
+              val  por =       cursor.getDouble(3)
+              val quantidade = cursor.getInt(4)
+              val  kitTituloPreco = KitTituloPreco(nomeKit,kitCodigo,de,por, estaNoCarrinho = 0, quantidade = quantidade)
+              kitTituloPrecolista!!.add(kitTituloPreco)
+        }
+        val  queryProtudosKit = "SELECT * FROM TB_ProdutosKit_Pedidos_Finalizado Kit_Pedidos_Finalizado \n" +
+                "LEFT JOIN TB_Imagens imagens On imagens.barra = Kit_Pedidos_Finalizado.barra\n" +
+                "WHERE pedidoid = ${pedidoId} "
+        val cursorProtudoKit = dbPedido.writableDatabase.rawQuery(queryProtudosKit,null)
+
+        while (cursorProtudoKit.moveToNext()){
+               val  barra = cursorProtudoKit.getString(1)
+               val  Produto_codigo = cursorProtudoKit.getString(2)
+               val  Desconto = cursorProtudoKit.getDouble(3)
+               val  PF = cursorProtudoKit.getDouble(4)
+               val  Quantidade = cursorProtudoKit.getInt(5)
+               val  NomeProduto = cursorProtudoKit.getString(6)
+               val base64 = cursorProtudoKit.getString(7)
+               val kitProdutos = KitProtudos(kitTituloPrecolista!![0].kitId,Produto_codigo,NomeProduto,"", Desconto , Quantidade,"",PF,barra,base64)
+               listaKitProdutos.add(kitProdutos)
+        }
+        kitTituloPrecolista!![0].listaKitProdutos = listaKitProdutos
+        return kitTituloPrecolista!!
     }
      fun  adicionaItemNoPedido(pedidoID:Int,carrinh:Carrinho){
 

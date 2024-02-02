@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    131 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
+    132 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -285,7 +285,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "cliente_id INTEGER NOT NULL," +
                 "OperadorLogistigo VARCHAR(255) NOT NULL," +
                 "Usuario_id INTEGER NOT NULL,"+
-                "UF INTEGER NOT NULL,"+
+                "UF TEXT NOT NULL,"+
                 "Comissao REAL, " +
                 "ComissaoPorcentagem REAL, " +
                 "MarcasXComissoes_id INTEGER, " +
@@ -327,6 +327,39 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "QtdMaximaOpl INT"+
                 ")"
 
+        val sqlPedidoKit = "CREATE TABLE IF NOT EXISTS TBPedidosFinalizadosKit(" +
+                "PedidoID INTEGER PRIMARY KEY AUTOINCREMENT," + // Definindo PedidoID como PRIMARY KEY
+                "loja_id INTEGER NOT NULL," +
+                "cliente_id INTEGER NOT NULL," +
+                "OperadorLogistigo VARCHAR(255) NOT NULL," +
+                "Usuario_id INTEGER NOT NULL,"+
+                "UF TEXT NOT NULL,"+
+                "kitCodigo INTEGER, " +
+                "Quantidade INTEGER, " +
+                "De REAL NOT NULL, " +
+                "Por REAL NOT NULL, " +
+                "Desconto REAL NOT NULL, " +
+                "CODLISTAPRECOSYNC INTEGER, " +
+                "ValorTotal REAL, " +
+                "NomeKit TEXT, " +
+                "nomeLoja TEXT,"+
+                "razaosocial TEXT,"+
+                "cnpj TEXT,"+
+                "dataPedido TEXT,"+
+                "valorminimoLoja REAL,"+
+                "Qtd_Minima_Operador INT," +
+                "Qtd_Maxima_Operador INT," +
+                "PedidoEnviado INTEGER," +
+                "formaDePagemento VARCHAR," +
+                "NumeroPedido VARCHAR(255),"+
+                "OperadoresPedidos VARCHAR(100)," +
+                "FormaPagamentoExclusiva INTEGER,"+
+                "Chave VARCHAR(255),"+
+                "TipoLoja INT,"+
+                "RegraPrazo INT,"+
+                "QtdMaximaOpl INT"+
+                ")"
+
 
         val sqlProdutoItemFinalizadoPedido = "CREATE TABLE IF NOT EXISTS TB_Produtos_Pedidos_Finalizado(" +
                 "PedidoID INTEGER NOT NULL," +
@@ -340,6 +373,17 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "ValorRepasse REAL,"+
                 "ST VARCHAR(30),"+
                 "Valor REAL,"+
+                "NomeProduto VARCHAR(255),"+
+                "FOREIGN KEY (PedidoID) REFERENCES TBPedidosFinalizados(PedidoID));"
+
+
+        val sqlProdutoItemFinalizadoPedidoKit = "CREATE TABLE IF NOT EXISTS TB_ProdutosKit_Pedidos_Finalizado(" +
+                "PedidoID INTEGER NOT NULL," +
+                "Barra  VARCHAR(30) NOT NULL," +
+                "Produto_codigo INTEGER,"+
+                "Desconto REAL,"+
+                "PF REAL,"+
+                "Quantidade INTEGER,"+
                 "NomeProduto VARCHAR(255),"+
                 "FOREIGN KEY (PedidoID) REFERENCES TBPedidosFinalizados(PedidoID));"
 
@@ -465,6 +509,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlkitxloja)
             db?.execSQL(sqlCarrinhoKit)
             db?.execSQL(sqlProtudoCarrinhoKit)
+            db?.execSQL(sqlPedidoKit)
+            db?.execSQL(sqlProdutoItemFinalizadoPedidoKit)
 
         }catch (e:Exception) {
             e.printStackTrace()

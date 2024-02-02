@@ -44,6 +44,7 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaosocial
         holder.unidades.text=  listaPedido[position].qtd_Total.toString() + "Uni."
+
         holder.excluirItem.setOnClickListener {
             val carrinhoDAO = CarrinhoDAO(context)
             carrinhoDAO.excluirItemCarrinho(listaPedido[position].cliente_id,listaPedido[position].loja_id)
@@ -79,6 +80,7 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context) : RecyclerView.
         val unidades = itemView.findViewById<TextView>(R.id.unidades)
         val img = itemView.findViewById<ImageView>(R.id.excluirItem)
         val celula = itemView.findViewById<ConstraintLayout>(R.id.iempedido)
+
 
         val excluirItem = itemView.findViewById<ImageView>(R.id.excluirItem)
 

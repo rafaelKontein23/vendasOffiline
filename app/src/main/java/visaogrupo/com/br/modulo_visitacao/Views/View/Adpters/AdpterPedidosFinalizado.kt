@@ -23,6 +23,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.MostraLoad
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.FormataTexto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.FormaDePagamentoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
@@ -57,9 +58,8 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolderPedidoFinalizado, position: Int) {
-        val valorPedidoTotalDAO = PedidosFinalizadosDAO(context)
-        val valorTotalPedido = valorPedidoTotalDAO.somarTotalPedido(listaPedido[position].pedidoID)
-        val valorTot = String.format("%.2f",valorTotalPedido)
+
+        val valorTot = String.format("%.2f",listaPedido[position].valorTotal)
         val formaPag = FormaDePagamentoDAO(context)
         val codForm = listaPedido[position].formaDePagamento
         var nomeFormaPag = ""
@@ -69,11 +69,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         }
 
 
-        val cnpj = listaPedido[position].cnpj?.substring(0,2)+"."+
-                listaPedido[position].cnpj?.substring(2,5)+"."+
-                listaPedido[position].cnpj?.substring(5,8)+"/"+
-                listaPedido[position].cnpj?.substring(8,12) +"-"+
-                listaPedido[position].cnpj?.substring(12,14)
+        val cnpj = FormataTexto.formataCnpj(listaPedido[position].cnpj!!)
 
         val PedidoFinalizado = listaPedido[position]
 
@@ -83,6 +79,8 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
 
         holder.data.text  = listaPedido[position].dataPedido+ " | ${nomeFormaPag}"
 
+        holder.nomeloja.text = listaPedido[position].nomeLoja
+
         holder.celula.setOnClickListener(object :OnClickListener{
             override fun onClick(v: View?) {
                 if (envioPedido == 1){
@@ -91,6 +89,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
                     intent.putExtra("PedidoClicado", pedido as Serializable)
                     context.startActivity(intent)
                 }else {
+
                     val pedido = listaPedido[position]
                     val intent = Intent(context, ActDetalhePedidoSalvo::class.java)
                     intent.putExtra("PedidoClicado", pedido as Serializable)
@@ -172,6 +171,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         val celula = itemView.findViewById<ConstraintLayout>(R.id.iempedido)
         val  enviarPedido = itemView.findViewById<ImageView>(R.id.enviarPedido)
         val  excluirItem = itemView.findViewById<ImageView>(R.id.excluirItem)
+        val nomeloja = itemView.findViewById<TextView>(R.id.nomeloja)
 
     }
 }

@@ -50,7 +50,7 @@ class ActCarrinhoKit : AppCompatActivity() {
              val listaKitProdutos = carrinhoKitDAO.buscaItensProdutoCarrinhoKit(queryItemCarrinhoKit,itemProtudo.kitCodigo)
              itemProtudo.listProdutoKit = listaKitProdutos
          }
-        val adapterCarrinhoKIt = AdapterCarrinhoKit(listaCarrinhoKit)
+        val adapterCarrinhoKIt = AdapterCarrinhoKit(listaCarrinhoKit, this)
         val linearLayoutManager = LinearLayoutManager(this)
         binding.recyKit.adapter = adapterCarrinhoKIt
         binding.recyKit.layoutManager = linearLayoutManager

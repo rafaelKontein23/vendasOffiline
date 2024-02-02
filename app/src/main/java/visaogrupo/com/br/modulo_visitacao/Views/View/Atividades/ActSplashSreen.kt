@@ -15,6 +15,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.ExcluirPrefuser
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
 
 class ActSplashSreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,8 @@ class ActSplashSreen : AppCompatActivity() {
                val dataUltimoLogin = sharedPreferences?.getString("dataLogin", null)
                val userObject = sharedPreferences?.getString("UserLogin", null)
               val handler = Handler()
+            PushNativo.showNotificationPedido(this,"TESTE1","Seja Bem Vindo!","Tudo farma está em execução")
+
 
                val dataAtual = DataAtual()
                if (dataUltimoLogin != null) {

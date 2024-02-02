@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/inter"
         android:text="-"
@@ -58,6 +58,17 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nomeloja" />
+
+    <TextView
+        android:id="@+id/nomeloja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="-"
+        android:textColor="#6D737880"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@+id/razaoSocial"
         app:layout_constraintTop_toBottomOf="@+id/razaoSocial" />
 
     <TextView

@@ -116,7 +116,7 @@ class CarrinhoKitDAO(context:Context) {
             valoresContentCarrinho.put("NomeKIT",carrinhoKit.nomeKit)
             valoresContentCarrinho.put("nomeLoja",carrinhoKit.nomeLoja)
             valoresContentCarrinho.put("razaosocial",carrinhoKit.razaoSolcial)
-            valoresContentCarrinho.put("cnpj",carrinhoKit.razaoSolcial)
+            valoresContentCarrinho.put("cnpj",carrinhoKit.cnpj)
             valoresContentCarrinho.put("dataPedido",carrinhoKit.data)
             valoresContentCarrinho.put("valorminimoLoja",carrinhoKit.valorMinimoLoja)
             valoresContentCarrinho.put("Qtd_Minima_Operador",carrinhoKit.QtdMinima_Operador)

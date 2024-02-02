@@ -29,10 +29,14 @@ class AdapterProdutoskit (listaProdutos:List<KitProtudos>): Adapter<AdapterProdu
           holder.barraProduto.text = itemProdtudo.barra
           val valorProdutoFormat = String.format("%.2f",itemProdtudo.valorTotal)
           holder.valorDesconto.text = "R$ " + valorProdutoFormat.replace(".",",")
-          if (!itemProdtudo.imgBase64!!.isEmpty()){
-              val imageBytes = Base64.decode(itemProdtudo.imgBase64, Base64.DEFAULT)
-              val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-              holder.imgproduto.setImageBitmap(bitmap)
+          if ( itemProdtudo.imgBase64 != null){
+              if (!itemProdtudo.imgBase64!!.isEmpty() ){
+                  val imageBytes = Base64.decode(itemProdtudo.imgBase64, Base64.DEFAULT)
+                  val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                  holder.imgproduto.setImageBitmap(bitmap)
+
+              }
+
           }
 
 

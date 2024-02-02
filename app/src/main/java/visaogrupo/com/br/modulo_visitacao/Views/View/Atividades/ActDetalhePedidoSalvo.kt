@@ -3,20 +3,20 @@ package visaogrupo.com.br.modulo_visitacao.Views.View.Atividades
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_act_pedido.buscaPedido
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.CustomSpinerFormDePag
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagaemnto
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.OperadorLogistico
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutosFinalizados
@@ -24,11 +24,10 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.FormaDePag
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.OperadorLogisticaDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterFormDePagSpiner
+import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdapterTituloKitPedido
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterProdutosPedidos
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.OperadorAdpter
-import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.infoFormaDePagamento
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActDetalhePedidoSalvoBinding
-import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActProtudoDetalheBinding
 import java.io.Serializable
 
 class ActDetalhePedidoSalvo : AppCompatActivity() {
@@ -113,7 +112,6 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
 
              }
         }
-
     }
 
     fun BuscaInfos(){
@@ -138,8 +136,6 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                 for (i in 0 until listaFormaDePagemento.size){
                     listaFormPag.add(CustomSpinerFormDePag(listaFormaDePagemento[i].FormaPgto,listaFormaDePagemento[i].exlusiva))
                 }
-
-
             }
             buscaOpl.join()
             buscaFormaDePag.join()
@@ -155,17 +151,42 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                 binding.formaDepagamentospiner.adapter = adapterForm
                 val pedidosFinalizadosDAO = PedidosFinalizadosDAO(applicationContext)
                 var listaProdutos  = mutableListOf<ProdutosFinalizados>()
-                val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
-                if (pedido != null) {
-                    listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido!!.pedidoID)
+                var kitTituloLista = mutableListOf<KitTituloPreco>()
+
+
+                if (pedido!!.kit == 1){
+                    kitTituloLista = pedidosFinalizadosDAO.listaPedidoKit(pedido!!.pedidoID.toInt())
+                    val linearlayout = LinearLayoutManager(baseContext)
+                    val adapterTituloKitPedido = AdapterTituloKitPedido(kitTituloLista,baseContext, pedido!!)
+                    binding.recyKIt.layoutManager = linearlayout
+                    binding. recyKIt.adapter = adapterTituloKitPedido
+
+                    val valorTot = String.format("%.2f",pedido!!.valorTotal)
+                    binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
+                    binding.recyProdutos.isVisible = false
+                    binding.recyKIt.isVisible = true
+                    binding.descontoMedio.isVisible= false
+                    binding.atualizarItensCarrinho.isVisible = false
+
+                    val params = binding.textView35.layoutParams as ConstraintLayout.LayoutParams
+                    params.topToBottom = binding.recyKIt.id
+                    binding.textView35.layoutParams = params
+                }else{
+                    val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
+                    if (pedido != null) {
+                        listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido!!.pedidoID)
+                    }
+                    val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,context)
+                    val linearLayout = LinearLayoutManager(context)
+                    binding.recyProdutos.layoutManager = linearLayout
+                    binding. recyProdutos.adapter = adpterProdutosPedidos
+                    binding.descontoMedio.text = pedido!!.desconto.toString() + "% méd."
+                    val valorTot = String.format("%.2f",valorTotalPedido)
+                    binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
+                    binding.recyProdutos.isVisible = true
+                    binding.recyKIt.isVisible = false
                 }
-                val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,context)
-                val linearLayout = LinearLayoutManager(context)
-                binding.recyProdutos.layoutManager = linearLayout
-                binding. recyProdutos.adapter = adpterProdutosPedidos
-                binding.descontoMedio.text = pedido!!.desconto.toString() + "% méd."
-                val valorTot = String.format("%.2f",valorTotalPedido)
-                binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
+
             }
         }
     }

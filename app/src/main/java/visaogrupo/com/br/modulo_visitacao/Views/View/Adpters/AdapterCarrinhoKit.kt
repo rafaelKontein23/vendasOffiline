@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Adpters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +19,14 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPr
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoKitDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogOperadorLogistico
 
-class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<AdapterCarrinhoKit.ViewHolderCarrinhhoKit>() {
+class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrinhoKit) : Adapter<AdapterCarrinhoKit.ViewHolderCarrinhhoKit>() {
     val  listCarrinhoKit = CarrinhoKit
     var toast: Toast? = null
+    val  context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCarrinhhoKit {
        val view  = LayoutInflater.from(parent.context).inflate(R.layout.celula_carrinhokit_tiulo, parent,false)
@@ -30,6 +34,7 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<Adapter
        return ViewHolderCarrinhhoKit(view)
     }
     override fun onBindViewHolder(holder: ViewHolderCarrinhhoKit, position: Int) {
+
         val itemCarrinhoKit = listCarrinhoKit[position]
         val vlaorTotalFormat = String.format("%.2f",itemCarrinhoKit.valortotal)
         holder.pedidoText.text = "Pedido #"+ itemCarrinhoKit.numerPedido.toString()
@@ -40,6 +45,18 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<Adapter
         val adpterProdutoKit = AdapterProdutoskit(itemCarrinhoKit.listProdutoKit!!)
         holder.recyclerViewProdutoKItCarrinho.adapter = adpterProdutoKit
         holder.recyclerViewProdutoKItCarrinho.layoutManager = linearLayoutManager
+
+
+        holder.continuarCarrinhoKit.setOnClickListener {
+            var  quantidade = holder.edtQuantidade.text.toString().toInt()
+            val  valorTotalKit = itemCarrinhoKit.por
+            val  soma = valorTotalKit * quantidade
+
+            val dialogOperadorLogistico = DialogOperadorLogistico(context)
+            dialogOperadorLogistico.dialogSalvarPedidoKIT(context,itemCarrinhoKit,soma)
+
+        }
+
         holder.btnMais.setOnClickListener {
             somar(holder,itemCarrinhoKit)
         }
@@ -61,8 +78,9 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<Adapter
                     carrinhoKitDAO.excluirItem(itemCarrinhoKit)
                     listCarrinhoKit.removeAt(position)
                     notifyItemRemoved(position)
-
-
+                    if (listCarrinhoKit.isEmpty()){
+                        context.finish()
+                    }
 
                 }
             }else {
@@ -71,6 +89,10 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<Adapter
 
                 holder.edtQuantidade.setText(somaQuantidade.toString())
                 holder.valorTotalKit.text = "R$ "+ valorTotalFormat.replace(".",",")
+                val carrinhoKitDAO = CarrinhoKitDAO(holder.btnmenos.context)
+                itemCarrinhoKit.quantidade = quantidade
+                itemCarrinhoKit.valortotal = soma
+                carrinhoKitDAO.atualizaKit(itemCarrinhoKit)
 
             }
         }
@@ -113,6 +135,11 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>) : Adapter<Adapter
 
         holder.edtQuantidade.setText(somaQuantidade.toString())
         holder.valorTotalKit.text = "R$ "+ valorTotalFormat.replace(".",",")
+        item.quantidade = quantidade
+        item.valortotal = soma
+        val carrinhoKitDAO = CarrinhoKitDAO(holder.btnmenos.context)
+
+        carrinhoKitDAO.atualizaKit(item)
 
     }
 }
