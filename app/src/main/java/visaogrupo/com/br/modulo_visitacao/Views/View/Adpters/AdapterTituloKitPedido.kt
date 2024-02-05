@@ -13,21 +13,26 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaValorPedidoKitPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiPedidoKit
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.CarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Pedido
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 
 class AdapterTituloKitPedido(
-    listaProdutos:MutableList<KitTituloPreco>,context: Context, pedido: PedidoFinalizado
+    listaProdutos:MutableList<KitTituloPreco>,context: Context, pedido: PedidoFinalizado,atualizaValorPedidoKitPedido: AtualizaValorPedidoKitPedido,excluiPedidoKit: ExcluiPedidoKit
 ): Adapter<AdapterTituloKitPedido.viewHolderAdpterPedido>() {
 
     val listakitTitulo = listaProdutos
     val context =context
     var toast: Toast? = null
     val pedido = pedido
+    val  atualizaValorPedidoKitPedido =atualizaValorPedidoKitPedido
+    val excluiPedidoKit = excluiPedidoKit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): viewHolderAdpterPedido {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.celula_titula_kit,parent,false)
@@ -66,14 +71,21 @@ class AdapterTituloKitPedido(
             val  valorTotalKitDe = holder.De.text.toString().replace("De R$ ","").replace(",",".").toDouble()
             val data = DataAtual()
             val somaQuantidade = quantidade - 1
-            if (somaQuantidade < 0){
-                toast?.cancel()
-                toast =   Toast.makeText(context,"Quantidade não pode ser menor que zero", Toast.LENGTH_SHORT)
-                toast?.show()
+            if (somaQuantidade == 0){
+                val dialogErro = DialogErro()
+                dialogErro.Dialog(holder.De.context,"Atenção","essa ação excluira o Pedido, tem certeza que deseja continuar","Sim","Não", cancel = true){
+                    val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                    pedidosFinalizadosDAO.excluirItemPedio(pedido.pedidoID.toInt())
+                    excluiPedidoKit.excluiPedidoKit()
+
+                }
 
             }else {
                 val  soma = somaQuantidade * valorTotalKit
                 val  valorTotalFormat = String.format("%.2f",soma)
+                val pedidoFinalizadosDAO = PedidosFinalizadosDAO(context)
+
+                pedidoFinalizadosDAO.atualizaPedidoKit(pedido.pedidoID.toInt(),soma,somaQuantidade)
 
                 holder.edtQuantidade.setText(somaQuantidade.toString())
                 holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
@@ -106,7 +118,10 @@ class AdapterTituloKitPedido(
         holder.edtQuantidade.setText(somaQuantidade.toString())
         holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
         val pedidoFinalizadosDAO = PedidosFinalizadosDAO(context)
-        pedidoFinalizadosDAO.atualizaPedidoKit(pedido.pedidoID.toInt(),soma)
+        pedidoFinalizadosDAO.atualizaPedidoKit(pedido.pedidoID.toInt(),soma, somaQuantidade)
+
+        atualizaValorPedidoKitPedido.atualizaValorPedidoKitPedido(soma)
+
 
     }
 

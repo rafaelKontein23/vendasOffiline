@@ -72,10 +72,9 @@ class PedidosFinalizadosDAO(context: Context) {
 
         }
 
+
+
         val pedidoID: Long =  dbPedido.writableDatabase.insertOrThrow("TBPedidosFinalizados",null,valoresPedidos)
-
-
-
 
 
         for (i in listaProdutduos){
@@ -354,9 +353,16 @@ class PedidosFinalizadosDAO(context: Context) {
 
         return listaProdutosFinalizados
     }
-    fun atualizaPedidoKit(pedidoId: Int, valorTotal:Double){
-        val queryAtualiza = "UPDATE TBPedidosFinalizadosKit SET valortotal = ${valorTotal} WHERE pedidoid = ${pedidoId};"
-        dbPedido.writableDatabase.rawQuery(queryAtualiza,null)
+    fun atualizaPedidoKit(pedidoId: Int, valorTotal:Double, quantidade:Int){
+        val queryAtualiza = "UPDATE TBPedidosFinalizadosKit SET ValorTotal = ${valorTotal}, Quantidade = ${quantidade}  WHERE PedidoID = ${pedidoId};"
+        dbPedido.writableDatabase.execSQL(queryAtualiza)
+    }
+
+    fun excluirItemPedio(pedidoId: Int){
+        val whereClause = "PedidoID = ${pedidoId}"
+
+        dbPedido.writableDatabase.delete("TBPedidosFinalizadosKit", whereClause,null)
+
     }
     fun listaPedidoKit(pedidoId:Int):MutableList<KitTituloPreco>{
         val kitTituloPrecolista = mutableListOf<KitTituloPreco>()

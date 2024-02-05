@@ -14,6 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaValorPedidoKitPedido
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.ExcluiPedidoKit
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.CustomSpinerFormDePag
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.FormaDePagaemnto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
@@ -30,11 +32,12 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.OperadorAdpter
 import visaogrupo.com.br.modulo_visitacao.databinding.ActivityActDetalhePedidoSalvoBinding
 import java.io.Serializable
 
-class ActDetalhePedidoSalvo : AppCompatActivity() {
+class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido,ExcluiPedidoKit{
     private  lateinit var  binding: ActivityActDetalhePedidoSalvoBinding
     val context = this
     var oplId = mutableListOf<String>()
     var pedido: PedidoFinalizado? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding =  ActivityActDetalhePedidoSalvoBinding.inflate(layoutInflater)
@@ -157,7 +160,7 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
                 if (pedido!!.kit == 1){
                     kitTituloLista = pedidosFinalizadosDAO.listaPedidoKit(pedido!!.pedidoID.toInt())
                     val linearlayout = LinearLayoutManager(baseContext)
-                    val adapterTituloKitPedido = AdapterTituloKitPedido(kitTituloLista,baseContext, pedido!!)
+                    val adapterTituloKitPedido = AdapterTituloKitPedido(kitTituloLista,baseContext, pedido!!, context, context)
                     binding.recyKIt.layoutManager = linearlayout
                     binding. recyKIt.adapter = adapterTituloKitPedido
 
@@ -205,5 +208,18 @@ class ActDetalhePedidoSalvo : AppCompatActivity() {
         }
 
         return formaDePagaemnto
+    }
+
+    override fun atualizaValorPedidoKitPedido(valorTotal: Double) {
+        val  valorFormat = String.format("%.2f",valorTotal)
+        binding.totalPedido.text = "R$ " + valorFormat
+    }
+
+    override fun excluiPedidoKit() {
+        val  intent = Intent()
+        intent.putExtra("excluirPedido",true)
+        setResult(Activity.RESULT_OK, intent)
+
+        finish()
     }
 }
