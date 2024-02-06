@@ -49,8 +49,8 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         }
 
         binding.voltarCarrinho.setOnClickListener{
-             finish()
-        }
+            setResult(Activity.RESULT_OK)
+            finish()        }
 
         atualizarInterface()
     }

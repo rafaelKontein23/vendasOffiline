@@ -82,6 +82,11 @@ class FragmentProdutosKit (carrinhoVisible: carrinhoVisible) : Fragment(), Atual
              intent.putExtra("carrinhoDetalhe",false)
              startActivity(intent)
         }
+        binding.TotalCarrinho.setOnClickListener {
+            val intent = Intent(requireContext(),ActCarrinhoKit::class.java)
+            intent.putExtra("carrinhoDetalhe",false)
+            startActivity(intent)
+        }
 
 
         return view

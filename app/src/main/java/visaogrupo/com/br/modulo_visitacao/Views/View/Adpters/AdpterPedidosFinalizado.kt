@@ -104,8 +104,24 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         holder.excluirItem.setOnClickListener {
             val dialogErro = DialogErro()
             dialogErro.Dialog(context,"Atenção","essa ação excluira o Pedido, tem certeza que deseja continuar","Sim","Não", cancel = true){
-                val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
-                pedidosFinalizadosDAO.excluirItemPedido(listaPedido[position].pedidoID,envioPedido)
+                if (listaPedido[position].kit == 1){
+                    val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+
+                    pedidosFinalizadosDAO.excluirItemPedidoKit(listaPedido[position].pedidoID,envioPedido)
+                    val listaProdutoPedido = pedidosFinalizadosDAO.listarPedidosProdutos(listaPedido[position].pedidoID)
+                    for (i in listaProdutoPedido){
+                        pedidosFinalizadosDAO.excluirItemPedidoProdutoKit(listaPedido[position].pedidoID,i.produtoCodigo!!.toInt())
+                    }
+                }else{
+                    val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+
+                    pedidosFinalizadosDAO.excluirItemPedido(listaPedido[position].pedidoID,envioPedido)
+                    val listaProdutoPedido = pedidosFinalizadosDAO.listarPedidosProdutos(listaPedido[position].pedidoID)
+                    for (i in listaProdutoPedido){
+                        pedidosFinalizadosDAO.excluirItemPedidoProduto(listaPedido[position].pedidoID,i.produtoCodigo!!.toInt())
+                    }
+
+                }
                 Toast.makeText(context,"Item Excluido com sucesso!",Toast.LENGTH_SHORT).show()
                 listaPedido.removeAt(position)
                 notifyDataSetChanged()

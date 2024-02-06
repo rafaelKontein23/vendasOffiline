@@ -508,6 +508,17 @@ class PedidosFinalizadosDAO(context: Context) {
 
         dbPedido.writableDatabase.execSQL(queryCarrinho)
     }
+
+    fun excluirItemPedidoKit(pedidoID:Long, pedidoEnviado:Int){
+        val queryCarrinho = "DELETE from TBPedidosFinalizadosKit WHERE PedidoID = ${pedidoID} AND PedidoEnviado = ${pedidoEnviado}"
+
+        dbPedido.writableDatabase.execSQL(queryCarrinho)
+    }
+    fun excluirItemPedidoProdutoKit(pedidoID:Long, produtosCodigo:Int){
+        val queryCarrinho = "DELETE from TB_ProdutosKit_Pedidos_Finalizado WHERE PedidoID = ${pedidoID} AND Produto_codigo = ${produtosCodigo}"
+
+        dbPedido.writableDatabase.execSQL(queryCarrinho)
+    }
     fun atualizarItem(pedidoId:Int,operadorLogistigo:String, formaDePagaemtocap:String, formaDePagaemto: FormaDePagaemnto){
         val conteudos=  ContentValues()
         if (!operadorLogistigo.isEmpty()){
