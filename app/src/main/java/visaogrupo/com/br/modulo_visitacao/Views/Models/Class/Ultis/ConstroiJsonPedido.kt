@@ -3,9 +3,12 @@ package visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis
 import android.content.Context
 import com.google.gson.Gson
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitProtudos
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutosFinalizados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActLogin
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -37,36 +40,72 @@ class ConstroiJsonPedido {
             idsOpl +=  "\"OperadorLogistico${i+1}\": \"${OPL[i]}\",\n"
         }
         var finalJosn = ""
-        for (i in 0 until  listaProtudos.size){
-            if (i +1 == listaProtudos.size){
-                finalJosn = "}"
-            }else{
-                finalJosn = "},"
+        if (pedidoFinalizado.kit == 1){
+            var kitTituloLista = mutableListOf<KitProtudos>()
+
+
+                val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                kitTituloLista = pedidosFinalizadosDAO.listaProdutosPedidokit(pedidoFinalizado.pedidoID.toInt(), pedidoFinalizado.kitCodigo)
+                for (i in 0 until  kitTituloLista.size){
+                    if (i +1 == kitTituloLista.size){
+                        finalJosn = "}"
+                    }else{
+                        finalJosn = "},"
+                    }
+                    jsonListaProdutos += "{\n"+
+                            "\"Barra\": \"${kitTituloLista[i].barra}\",\n" +
+                            "\"Produto_codigo\": ${kitTituloLista[i].produtoCodigo},\n" +
+                            "\"Desconto\": ${kitTituloLista[i].desconto},\n" +
+                            "\"DescontoOriginal\": 0,\n" +
+                            "\"formalizacao\": \"s/n\",\n" +
+                            "\"PF\": ${kitTituloLista[i].valorTotal},\n" +
+                            "\"Quantidade\": ${kitTituloLista[i].quantidade},\n" +
+                            "\"ValorRepasse\": 0.0,\n" +
+                            "\"ST\": ,\n" +
+                            "\"Valor\": ${kitTituloLista[i].valorTotal}\n" +
+                            "${finalJosn}"
+                }
+        }else{
+            for (i in 0 until  listaProtudos.size){
+                if (i +1 == listaProtudos.size){
+                    finalJosn = "}"
+                }else{
+                    finalJosn = "},"
+                }
+                jsonListaProdutos += "{\n"+
+                        "\"Barra\": \"${listaProtudos[i].barra}\",\n" +
+                        "\"Produto_codigo\": ${listaProtudos[i].produtoCodigo},\n" +
+                        "\"Desconto\": ${listaProtudos[i].desconto},\n" +
+                        "\"DescontoOriginal\": ${listaProtudos[i].descontoOriginal},\n" +
+                        "\"formalizacao\": \"${listaProtudos[i].formalizacao}\",\n" +
+                        "\"PF\": ${listaProtudos[i].pf},\n" +
+                        "\"Quantidade\": ${listaProtudos[i].quantidade},\n" +
+                        "\"ValorRepasse\": ${listaProtudos[i].valorRepasse},\n" +
+                        "\"ST\": ${listaProtudos[i].st},\n" +
+                        "\"Valor\": ${listaProtudos[i].valor}\n" +
+                        "${finalJosn}"
             }
-            jsonListaProdutos += "{\n"+
-                "\"Barra\": \"${listaProtudos[i].barra}\",\n" +
-                "\"Produto_codigo\": ${listaProtudos[i].produtoCodigo},\n" +
-                "\"Desconto\": ${listaProtudos[i].desconto},\n" +
-                "\"DescontoOriginal\": ${listaProtudos[i].descontoOriginal},\n" +
-                "\"formalizacao\": \"${listaProtudos[i].formalizacao}\",\n" +
-                "\"PF\": ${listaProtudos[i].pf},\n" +
-                "\"Quantidade\": ${listaProtudos[i].quantidade},\n" +
-                "\"ValorRepasse\": ${listaProtudos[i].valorRepasse},\n" +
-                "\"ST\": ${listaProtudos[i].st},\n" +
-                "\"Valor\": ${listaProtudos[i].valor}\n" +
-                "${finalJosn}"
-            }
+        }
+
         val data = RecuperaDataAtual.dataAtual()
         val chavekey=  login.Usuario_id + pedidoFinalizado?.clienteId +data
         var chave = login.Usuario_id + pedidoFinalizado?.clienteId +data
         chave = chave.replace(":","").replace("/","").replace(" ","")
 
+
+        var quantidadeKit =0
+        var pedidoCodigoKit = 0
+        if (pedidoFinalizado.kit == 1){
+             quantidadeKit = pedidoFinalizado.quantidade!!
+             pedidoCodigoKit = pedidoFinalizado.kitCodigo
+
+        }
         val json = "{\n" +
                 "\"Pedidos\": {"+
                     "\"TipoCadastro\": ${login.TipoCadastro_id},\n"+
                     "\"Usuario_id\": ${login.Usuario_id},\n"+
-                    "\"CodigoKit\": 0,\n"+
-                    "\"QuantidadeKit\": 0,\n"+
+                    "\"CodigoKit\": ${pedidoCodigoKit},\n"+
+                    "\"QuantidadeKit\": ${quantidadeKit},\n"+
                     "\"EmpresaId\": ${pedidoFinalizado?.clienteId},\n" +
                     "\"LojaId\": ${pedidoFinalizado?.lojaId},\n" +
                     "\"CotacaoId\": 0,\n"+
@@ -85,11 +124,11 @@ class ConstroiJsonPedido {
                     "\"OrigemTracking\": \"app\",\n" +
                     "\"JustificativaANR\": \"${pedidoFinalizado.justificativaANR}\",\n" +
                     "\"NumeroBonificacao\": \"\",\n" +
-                    "\"OrigemTudoFarma\": \"false\",\n" +
+                    "\"OrigemTudoFarma\": \"true\",\n" +
                     "\"PrimeiraCompra\": \"false\",\n" +
                     "\"OrigemBonificacao\": \"false\",\n" +
                     "\"Bonificacao\": \"false\",\n" +
-                    "\"AprovacaoPrazo\": \"false\",\n" +
+                    "\"AprovacaoPrazo\": \"${pedidoFinalizado.RegraPrazo}\",\n" +
                     "\"ANR\": \"${pedidoFinalizado.anr}\",\n" +
                    "\"TipoLoja\": ${pedidoFinalizado?.TipoLoja},\n"+
                     idsOpl+

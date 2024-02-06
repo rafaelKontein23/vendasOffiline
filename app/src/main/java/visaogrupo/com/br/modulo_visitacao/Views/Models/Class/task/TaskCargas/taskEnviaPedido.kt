@@ -39,6 +39,7 @@ class taskEnviaPedido {
 
            val listaOpls= stringSeparada.split(",")
 
+
           var ( json,chave ) = constroiJsonPedido.envairPedidoJson(listaProdutos, context,listaOpls,pedidoFinalizado)
            chave = chave.replace("/","").replace(":","")
            val path = java.lang.String.format("%s\\%s",pedidoFinalizado.cnpj, login.Usuario_id)
@@ -69,7 +70,6 @@ class taskEnviaPedido {
                   .addHeader("Autorizacao", "J0#o14:*6")
                   .addHeader("Usuario", heraderVersion)
                   .addHeader("Content-Type", "application/json")
-
                   .build()
               try {
                   val response = client.newCall(request).execute()

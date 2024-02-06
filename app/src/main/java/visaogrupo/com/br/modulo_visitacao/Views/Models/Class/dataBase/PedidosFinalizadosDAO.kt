@@ -416,6 +416,28 @@ class PedidosFinalizadosDAO(context: Context) {
         kitTituloPrecolista!![0].listaKitProdutos = listaKitProdutos
         return kitTituloPrecolista!!
     }
+
+    fun listaProdutosPedidokit(pedidoId:Int,kitCodigo:Int):MutableList<KitProtudos>{
+        val  queryProtudosKit = "SELECT * FROM TB_ProdutosKit_Pedidos_Finalizado Kit_Pedidos_Finalizado \n" +
+                "LEFT JOIN TB_Imagens imagens On imagens.barra = Kit_Pedidos_Finalizado.barra\n" +
+                "WHERE pedidoid = ${pedidoId} "
+        val cursorProtudoKit = dbPedido.writableDatabase.rawQuery(queryProtudosKit,null)
+        val listaKitProdutos = mutableListOf<KitProtudos>()
+
+
+        while (cursorProtudoKit.moveToNext()){
+            val  barra = cursorProtudoKit.getString(1)
+            val  Produto_codigo = cursorProtudoKit.getString(2)
+            val  Desconto = cursorProtudoKit.getDouble(3)
+            val  PF = cursorProtudoKit.getDouble(4)
+            val  Quantidade = cursorProtudoKit.getInt(5)
+            val  NomeProduto = cursorProtudoKit.getString(6)
+            val base64 = cursorProtudoKit.getString(7)
+            val kitProdutos = KitProtudos(kitCodigo,Produto_codigo,NomeProduto,"", Desconto , Quantidade,"",PF,barra,base64)
+            listaKitProdutos.add(kitProdutos)
+        }
+        return listaKitProdutos
+    }
      fun  adicionaItemNoPedido(pedidoID:Int,carrinh:Carrinho){
 
              val valoresProdutosPedidos = ContentValues()
