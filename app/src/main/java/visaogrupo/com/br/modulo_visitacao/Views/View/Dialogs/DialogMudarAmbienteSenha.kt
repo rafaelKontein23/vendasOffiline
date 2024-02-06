@@ -34,6 +34,7 @@ class DialogMudarAmbienteSenha {
             val capSenha= edisenha.text.toString()
 
             if(capSenha.equals("catarinense1234")){
+                dialog.dismiss()
                 Trocar_Ambiente(context,dialog)
             }else{
                 Toast.makeText(context,"Senha incorreta",Toast.LENGTH_SHORT).show()

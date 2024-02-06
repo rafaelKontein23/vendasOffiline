@@ -311,13 +311,13 @@ class ActPricipal : AppCompatActivity(),
                             "\"email\": \"" + login.Email + "\"," +
                             "\"senha\": \"" + login.Senha + "\"," +
                             "\"origem\":" + "\"app\"," +
-                            "\"versaoapp\":" + "\"" + "1.0.0" + "\"" +
+                            "\"versaoapp\":" + "\"" + "1.0.5" + "\"" +
                             "}"
 
                     // Encode para Base64
                     val encodedString = Base64.encodeToString(json.toByteArray(), Base64.DEFAULT)
 
-                    val url = "${URLs.urlportal}${encodedString}"
+                    val url = "${URLs.urlportal}mobile/${encodedString}"
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
                 }else if(selectedItem.contains("Adm")){
