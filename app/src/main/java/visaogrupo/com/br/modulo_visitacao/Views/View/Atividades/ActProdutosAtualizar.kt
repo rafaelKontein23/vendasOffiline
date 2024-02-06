@@ -45,6 +45,8 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
 
     val contextThis = this
     val context = this
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityActProdutosAtualizarBinding.inflate(layoutInflater)
@@ -99,13 +101,19 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
         })
 
         CoroutineScope(Dispatchers.IO).launch{
-            MainScope().launch {
-                binding.carregandoProduto.isVisible = true
 
+            try {
+                MainScope().launch {
+                    binding.carregandoProduto.isVisible = true
+
+                }
+                protudosIniciais()
+                atualizaProgressBar()
+                quatidadeinCarrinho()
+            }catch (e:Exception){
+                e.printStackTrace()
             }
-            protudosIniciais()
-            atualizaProgressBar()
-            quatidadeinCarrinho()
+
 
         }
 
@@ -157,10 +165,9 @@ class ActProdutosAtualizar : AppCompatActivity() , StartaAtividade,
                 val soma = listasomacarrinho[i].valorTotal
                 valorSomado = valorSomado + soma
             }
-            // notificaça a theared de interface
             MainScope().launch {
                 val valorFormatado = String.format("%.2f", valorSomado)
-                binding.TotalCarrinho.text ="R$ " + valorFormatado.replace(".",",")
+                binding.TotalCarrinho.setText("R$ " + valorFormatado.replace(".",","))
                 binding.progressBarValorminimo.max =pedido?.valorMinimoLoja!!.toInt()
                 binding.progressBarValorminimo.progress = valorSomado.toInt()
 

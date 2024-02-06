@@ -29,6 +29,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ValoresProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ProdutosDAO
@@ -42,7 +43,9 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                      pedidoId:Int = 0,
                      pedido :Boolean = false,
                      excluirPedido
-                     :ExcluirPedido? = null, pedidoEsta: PedidoFinalizado? = null, uf:String
+                     :ExcluirPedido? = null, pedidoEsta: PedidoFinalizado? = null,
+                     uf:String,
+
 ): Adapter<ProtudoAdapter.ProdutoViewHolder>() {
     var listaProtudos = list
     val  context = context
@@ -84,8 +87,17 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                 holder.nomeProtudo.background = ContextCompat.getDrawable(context,R.color.transparente)
                 holder.valor.paintFlags = holder.valor.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 if (listaProtudos[position].estaNoCarrinho  == 1){
-                    val carrinhoDAO = CarrinhoDAO(context)
-                    val valores = carrinhoDAO.buscaProgressivavalor(listaProtudos[position].ProdutoCodigo, loja_id)
+
+
+                    var valores: ValoresProgressiva? = null
+
+                    if (!pedido){
+                        val carrinhoDAO = CarrinhoDAO(context)
+                         valores = carrinhoDAO.buscaProgressivavalor(listaProtudos[position].ProdutoCodigo, loja_id)
+                    }else{
+                        val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                        valores =  pedidosFinalizadosDAO.buscaPedidoValores(listaProtudos[position].ProdutoCodigo, pedidoEsta?.pedidoID!!.toInt())
+                    }
                     holder.quantidade.isVisible = true
                     holder.excluiritem.isVisible = true
                     holder.containerItens.isVisible = true

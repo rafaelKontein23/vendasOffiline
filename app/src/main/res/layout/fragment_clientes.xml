@@ -158,7 +158,7 @@
                     android:id="@+id/limparfiltro"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/filtro_duplicadas"
                     app:layout_constraintStart_toEndOf="@+id/filtro_duplicadas"
                     app:layout_constraintTop_toTopOf="@+id/filtro_duplicadas"
@@ -170,20 +170,21 @@
 
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/quatidadeClienetes"
         android:layout_width="116dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
         android:layout_marginBottom="24dp"
         android:background="@drawable/quatidadeclientes"
         android:backgroundTint="#55B9CD"
         android:elevation="10dp"
-        android:gravity="center"
 
+        android:gravity="center"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
-        android:layout_gravity="bottom|center"
-        android:text="214 clientes"
+        android:text="Buscando..."
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

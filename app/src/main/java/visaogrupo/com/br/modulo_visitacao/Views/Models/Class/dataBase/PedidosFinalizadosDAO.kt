@@ -9,6 +9,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitProtudos
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutosFinalizados
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ValoresProgressiva
 
 class PedidosFinalizadosDAO(context: Context) {
     val dbPedido = DataBaseHelber(context)
@@ -363,6 +364,24 @@ class PedidosFinalizadosDAO(context: Context) {
 
         dbPedido.writableDatabase.delete("TBPedidosFinalizadosKit", whereClause,null)
 
+    }
+
+    fun buscaPedidoValores(produtoCodigo:Int, pedioId: Int ):ValoresProgressiva?{
+        var valoresProgressiva: ValoresProgressiva? = null
+        val  query = "SELECT PF, desconto,valor  FROM TB_Produtos_Pedidos_Finalizado Pedidos_Finalizado WHERE Pedidos_Finalizado.Produto_codigo = ${produtoCodigo} AND Pedidos_Finalizado.PedidoID  = ${pedioId}"
+        val  cursor = dbPedido.writableDatabase.rawQuery(query,null)
+
+        while (cursor.moveToNext()){
+            val valorProgressiva = cursor.getDouble(0)
+            val desconto = cursor.getDouble(1)
+            val valorTotal = cursor.getString(2)
+            valoresProgressiva = ValoresProgressiva(desconto.toString(),valorTotal,valorProgressiva.toString())
+
+            break
+        }
+        cursor.close()
+
+        return valoresProgressiva
     }
     fun listaPedidoKit(pedidoId:Int):MutableList<KitTituloPreco>{
         val kitTituloPrecolista = mutableListOf<KitTituloPreco>()

@@ -206,8 +206,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="Atualizar Itens"
-                android:textColor="@color/corazultext"
+                android:text="Continuar comprando"
+                android:padding="5dp"
+                android:background="@drawable/botaovender"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:textSize="12sp"
+
+                android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/descontoMedio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/totalPedido" />

@@ -1,5 +1,12 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,7 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnScrollChangedListener
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +38,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Imagem
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.LojaXCliente
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.ClientesDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.DataBaseHelber
@@ -67,16 +77,32 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
         val listaFiltroVazia =listaclientesFiltroButton != null
 
         binding.limparfiltro.setOnClickListener {
-            carregaInfos()
+            if (listaclientes.isEmpty()){
+                listaclientes.addAll(adapterCliente.listaClientes)
+
+            }
+            binding.progressBar.isVisible = false
+            adapterCliente.listaClientes = listaclientes
+            adapterCliente.carregando = false
+            filtrolista = false
+            adapterCliente.notifyDataSetChanged()
+            Toast.makeText(context,"Filtro limpos",Toast.LENGTH_SHORT).show()
+        }
+        if (!listaclientes.isEmpty()){
+             listaclientes.clear()
         }
 
         carregaInfos()
 
+
         view.filtro_positivo.setOnClickListener{
             if (listaFiltroVazia){
                 var listaClientesFiltro:MutableList<Clientes> = mutableListOf()
+                if (listaclientes.isEmpty()){
+                    listaclientes.addAll(adapterCliente.listaClientes)
 
-                for ( i in listaclientesFiltroButton){
+                }
+                for ( i in listaclientes){
                     if (i.Compra == 1){
                         listaClientesFiltro.add(i)
                     }
@@ -86,7 +112,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
 
                     Toast.makeText(context,"Não existem clientes para o filtro selecionado",Toast.LENGTH_SHORT).show()
-                    adapterCliente.listaClientes = listaclientesFiltroButton
+                    adapterCliente.listaClientes = listaclientes
                     adapterCliente.carregando = false
                     filtrolista = true
                     adapterCliente.notifyDataSetChanged()
@@ -107,8 +133,11 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
         view.filtro_naopositivados.setOnClickListener{
             if (listaFiltroVazia){
                 listaClientesFiltro.clear()
+                if (listaclientes.isEmpty()){
+                    listaclientes.addAll(adapterCliente.listaClientes)
 
-                for ( i in listaclientesFiltroButton){
+                }
+                for ( i in listaclientes){
                     if (i.Compra == 0){
                         listaClientesFiltro.add(i)
                         Log.d("tamho lista ",listaClientesFiltro.size.toString())
@@ -119,7 +148,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
                 if (listaClientesFiltro.isEmpty()){
                     Toast.makeText(context,"Não existem clientes para o filtro selecionado",Toast.LENGTH_SHORT).show()
-                    adapterCliente.listaClientes = listaclientesFiltroButton
+                    adapterCliente.listaClientes = listaclientes
                     adapterCliente.carregando = false
                     filtrolista = false
                     adapterCliente.notifyDataSetChanged()
@@ -138,9 +167,12 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
        view.filtro_doc_vencidos.setOnClickListener {
            if (listaFiltroVazia){
                listaClientesFiltro.clear()
+               if (listaclientes.isEmpty()){
+                   listaclientes.addAll(adapterCliente.listaClientes)
 
+               }
 
-               for ( i in listaclientesFiltroButton){
+               for ( i in listaclientes){
                    if (i.ExibeAlerta.equals("true")){
                        listaClientesFiltro.add(i)
                        Log.d("tamho lista ",listaClientesFiltro.size.toString())
@@ -151,7 +183,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
                if (listaClientesFiltro.isEmpty()){
                    Toast.makeText(context,"Não existem clientes para o filtro selecionado",Toast.LENGTH_SHORT).show()
-                   adapterCliente.listaClientes = listaclientesFiltroButton
+                   adapterCliente.listaClientes = listaclientes
                    adapterCliente.carregando = false
                    filtrolista = false
                    adapterCliente.notifyDataSetChanged()
@@ -169,10 +201,13 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
 
         view.filtro_duplicadas.setOnClickListener{
             if (listaFiltroVazia){
+                if (listaclientes.isEmpty()){
+                    listaclientes.addAll(adapterCliente.listaClientes)
 
+                }
                listaClientesFiltro.clear()
 
-                for (i in listaclientesFiltroButton){
+                for (i in listaclientes){
                     if (i.DuplicataVencida == 1){
                         listaClientesFiltro.add(i)
                     }
@@ -180,7 +215,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
                 }
                 if (listaClientesFiltro.isEmpty()){
                     Toast.makeText(context,"Não existem clientes para o filtro selecionado",Toast.LENGTH_SHORT).show()
-                    adapterCliente.listaClientes = listaclientesFiltroButton
+                    adapterCliente.listaClientes = listaclientes
                     adapterCliente.carregando = false
                     filtrolista = false
                     adapterCliente.notifyDataSetChanged()
@@ -258,6 +293,7 @@ class FragmentClientes (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoV
                 val clientesDAO = ClientesDAO(requireContext())
                 clientesDAO.listar(requireContext(), "SELECT * FROM TB_clientes")
             }
+
             binding.quatidadeClienetes.text = initialClientes.size.toString() + " Clientes"
             adapterCliente.listaClientes = initialClientes
             adapterCliente.carregando = false
