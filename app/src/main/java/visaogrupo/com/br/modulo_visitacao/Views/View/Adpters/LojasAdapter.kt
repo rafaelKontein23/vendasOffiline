@@ -61,7 +61,7 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
             val editor = sharedPreferences.edit()
             editor.putString("LojaSelecionada", objetoSerializado)
             editor.apply()
-
+             ActPricipal.lojaTipo = listaLojas[position].LojaTipo
             //inicia produtos
             ActPricipal.troca = TrocaItemSelecionado.Prodtudos
             trocarcorItem.trocacor()

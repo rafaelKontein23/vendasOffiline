@@ -60,6 +60,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentCargas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProdutosKit
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
 class ActPricipal : AppCompatActivity(),
@@ -74,6 +75,7 @@ class ActPricipal : AppCompatActivity(),
     val fragmentCargas =   FragmentCargas()
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
+    val fragmentProtudosKit = FragmentProdutosKit(this)
     val fragementPedido = FragmentPedidos(this, this)
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
@@ -89,6 +91,7 @@ class ActPricipal : AppCompatActivity(),
         var cliente_id = 0
         var loja_id    =0
         var lojavalorMinimo =0.0
+        var lojaTipo = 0
     }
 
 
@@ -269,10 +272,18 @@ class ActPricipal : AppCompatActivity(),
                 Deseleciona_itens(text_home,text_pedidos,text_clientes,text_lojas,view_home,
                     view_prdidos,view_clientes,view_lojas,icon_home,icon_pedidos,icon_clientes,icon_lojas)
                 itensInvisible()
-                if(!fragmentProtudos.isVisible){
-                    val mudarFragment = MudarFragment()
-                    mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+                if(lojaTipo === 4){
+                    if(!fragmentProtudosKit.isVisible){
+                        val mudarFragment = MudarFragment()
+                        mudarFragment.openFragmentProtudosKit(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+                    }
+                }else{
+                    if(!fragmentProtudos.isVisible){
+                        val mudarFragment = MudarFragment()
+                        mudarFragment.openFragmentProtudos(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
+                    }
                 }
+
             }
         }
 
