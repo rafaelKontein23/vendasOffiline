@@ -2,9 +2,66 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/contanerProduto"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:rotationY="-1">
+
+    <ImageView
+        android:id="@+id/excluirItem"
+        android:layout_width="71dp"
+        android:layout_height="0dp"
+        android:background="#EF4444"
+        android:padding="4dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:src="@drawable/lixeira"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/containerItens"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerItens"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/verdenutoon"
+        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout"
+        tools:layout_editor_absoluteX="-202dp">
+
+        <TextView
+            android:id="@+id/quatidadeadicionada"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center|start"
+
+            android:text="x 12"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/valorTotal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/valorTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center"
+            android:text="R$ 12.23"
+
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
@@ -13,9 +70,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/imgproduto"
                 android:layout_width="80dp"
@@ -26,8 +85,7 @@
 
                 app:layout_constraintBottom_toBottomOf="@+id/PrudutoValor"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                 />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/codigoProtudo"
@@ -48,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
                 android:background="#DDDDDD"
                 android:fontFamily="@font/inter_medium"
                 android:textColor="#2E3642"
@@ -62,8 +121,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="2dp"
-                android:background="#DDDDDD"
+                android:layout_marginEnd="16dp"
 
+                android:background="#DDDDDD"
                 android:fontFamily="@font/inter"
                 android:textColor="#737880"
                 android:textSize="12sp"
@@ -108,17 +168,6 @@
                 app:layout_constraintStart_toEndOf="@+id/PrudutoValor"
                 app:layout_constraintTop_toTopOf="@+id/PrudutoValor" />
 
-            <View
-                android:id="@+id/linhaProtudos"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="12dp"
-                android:background="#A4E6EDF3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PrudutoValor" />
-
             <TextView
                 android:id="@+id/progressivaSelecionada"
                 android:layout_width="wrap_content"
@@ -132,67 +181,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <View
+                android:id="@+id/linhaProtudos"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="#A4E6EDF3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PrudutoValor" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/containerItens"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/verdenutoon"
-        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout"
-        tools:layout_editor_absoluteX="-202dp">
-
-        <TextView
-            android:id="@+id/quatidadeadicionada"
-            android:layout_width="0dp"
-            android:layout_height="28dp"
-
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/inter_bold"
-            android:gravity="center"
-
-            android:text="x 12"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/valorTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_bold"
-            android:gravity="center"
-            android:text="R$ 12.23"
-
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <ImageView
-        android:id="@+id/excluirItem"
-        android:layout_width="71dp"
-        android:layout_height="0dp"
-        android:background="#EF4444"
-        android:padding="4dp"
-        android:visibility="gone"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:src="@drawable/lixeira"
-        app:layout_constraintBottom_toBottomOf="@+id/containerItens"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

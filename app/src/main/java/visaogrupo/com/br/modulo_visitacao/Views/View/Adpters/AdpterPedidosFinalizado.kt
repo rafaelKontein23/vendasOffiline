@@ -102,11 +102,16 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
          holder.enviarPedido.isVisible =mostrarEnvio
 
         holder.excluirItem.setOnClickListener {
-              val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
-              pedidosFinalizadosDAO.excluirItemPedido(listaPedido[position].pedidoID,envioPedido)
-              Toast.makeText(context,"Item Excluido com sucesso!",Toast.LENGTH_SHORT).show()
-              listaPedido.removeAt(position)
-              notifyDataSetChanged()
+            val dialogErro = DialogErro()
+            dialogErro.Dialog(context,"Atenção","essa ação excluira o Pedido, tem certeza que deseja continuar","Sim","Não", cancel = true){
+                val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
+                pedidosFinalizadosDAO.excluirItemPedido(listaPedido[position].pedidoID,envioPedido)
+                Toast.makeText(context,"Item Excluido com sucesso!",Toast.LENGTH_SHORT).show()
+                listaPedido.removeAt(position)
+                notifyDataSetChanged()
+
+            }
+
         }
          holder.enviarPedido.setOnClickListener{
              val  verificaInternet = Verifica_Internet()

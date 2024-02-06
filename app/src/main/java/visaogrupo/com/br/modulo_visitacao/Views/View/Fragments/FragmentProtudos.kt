@@ -163,8 +163,8 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
     // Atualza os protudos que foram adiconado pela Tela ActProtudoDetalhe
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-         atualizaItemDaView()
+        if ((requestCode == 1 || requestCode == 6 ) && resultCode == Activity.RESULT_OK) {
+           atualizaItemDaView()
         }
     }
 
@@ -396,7 +396,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             ActPricipal.loja_id =lojaSelecionada.loja_id
             val intent  = Intent(requireContext(), ActCarrinhoDetalhe::class.java)
             intent.putExtra("CarrinhoDetalhe",false)
-            startActivity(intent)
+            startActivityForResult(intent, 6)
         }
     }
 }

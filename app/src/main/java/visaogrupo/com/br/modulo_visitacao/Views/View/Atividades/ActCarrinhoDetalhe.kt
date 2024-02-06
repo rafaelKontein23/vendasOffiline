@@ -55,6 +55,12 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
         atualizarInterface()
     }
 
+    override fun onBackPressed() {
+
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
     override fun detalhes(
         lista: MutableList<Carrinho>,
         atualiza: Boolean,

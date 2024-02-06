@@ -1,6 +1,7 @@
 package visaogrupo.com.br.modulo_visitacao.Views.View.Atividades
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -214,7 +215,7 @@ class ActPricipal : AppCompatActivity(),
         }
 
         viewcarrinho.setOnClickListener {
-            startActivity(Intent(this,ActPedido::class.java))
+            startActivityForResult(Intent(this,ActPedido::class.java),3)
         }
 
         icon_clientes.setOnClickListener(clickListenerclientes)
@@ -352,6 +353,15 @@ class ActPricipal : AppCompatActivity(),
 
 
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
+                atualizaQtdCarrinho()
+           }
+        }
     }
 
 
