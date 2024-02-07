@@ -7,27 +7,16 @@
     android:layout_height="wrap_content"
     android:rotationY="-1">
 
-    <ImageView
-        android:id="@+id/excluirItem"
-        android:layout_width="71dp"
-        android:layout_height="0dp"
-        android:background="#EF4444"
-        android:padding="4dp"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:src="@drawable/lixeira"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/containerItens"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/containerItens"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/verdenutoon"
-        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout"
-        tools:layout_editor_absoluteX="-202dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout">
 
         <TextView
             android:id="@+id/quatidadeadicionada"
@@ -60,6 +49,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/excluirItem"
+            android:layout_width="71dp"
+            android:layout_height="0dp"
+            android:background="#EF4444"
+            android:padding="4dp"
+            android:visibility="gone"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:src="@drawable/lixeira"
+            app:layout_constraintBottom_toBottomOf="@+id/containerItens"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
