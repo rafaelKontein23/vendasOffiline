@@ -33,6 +33,8 @@ class ExcluiDados(context: Context) {
         listaNomeTabela.add("Tb_GrupoAB")
         listaNomeTabela.add("TB_grupoAB_Produtos")
 
+        listaNomeTabela.add("TB_Grupo_Progressiva")
+
 
         for (nomes in listaNomeTabela){
             try {

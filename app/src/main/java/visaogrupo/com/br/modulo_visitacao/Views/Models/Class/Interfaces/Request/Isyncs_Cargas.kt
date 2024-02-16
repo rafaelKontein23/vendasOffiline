@@ -28,4 +28,7 @@ interface Isyncs_Cargas {
 
     @GET ("docs/tablet/carga/Progressivas/Grupos_{lojaID}_{UF}_{codSync}.json")
     fun grupolojaAb(@Path("lojaID") lojaid:String,@Path("UF") uf :String,@Path("codSync") codSync:String):Call<ResponseBody>
+
+    @GET ("docs/tablet/carga/Progressivas/GrupoProgressiva_{lojaId}.json")
+    fun grupoProgressiva(@Path("lojaId") lojaId:Int):Call<ResponseBody>
 }

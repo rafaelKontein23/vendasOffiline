@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    132 // aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
+    140// aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -482,13 +482,14 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
 
 
         val sqlGrupoAB =  "CREATE TABLE IF NOT EXISTS Tb_GrupoAB(" +
-                "Grupo_codigo INTEGER PRIMARY KEY," +
+                "Grupo_codigo INTEGER," +
                 "Nome_grupo VARCHAR(255)," +
                 "Prioridade INTEGER," +
                 "Loja_id INTEGER," +
                 "Grupo VARCHAR(255)," +
                 "Porc REAL," +
-                "Codigo_PRECO_SYNC INTEGER" +
+                "Codigo_PRECO_SYNC INTEGER," +
+                "PRIMARY KEY (Grupo_codigo,Loja_id)"+
                 ")"
 
         val  sqlGrupoABProduto = "CREATE TABLE IF NOT EXISTS TB_grupoAB_Produtos(" +
@@ -500,8 +501,24 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "PrincipioAtivo VARCHAR(255)," +
                 "ListaICMS VARCHAR(255)," +
                 "CaixaPadrao INTEGER," +
-                "Barra VARCHAR(255),"+
-                "PRIMARY KEY (Produto_codigo,Grupo_codigo)"+
+                "Barra VARCHAR(255)"+
+                ")"
+
+
+        val  sqlGrupoProgressiva = "CREATE TABLE IF NOT EXISTS TB_Grupo_Progressiva(" +
+                "Loja_id INTEER," +
+                "CODLISTAPRECOSYNC INTEGER," +
+                "Grupo_Codigo INTEGER," +
+                "Prod_cod INTEGER," +
+                "Quantidade INTEGER," +
+                "Desconto INTEGER," +
+                "PF REAL," +
+                "PMC REAL," +
+                "UF VARCHAR(30)," +
+                "QtdMin INTEGER," +
+                "QtdMax INTEGER," +
+                "PORC INTEGER," +
+                "formalizacao INTEGER" +
                 ")"
         try {
             db?.execSQL(sqlFiltro)
@@ -537,7 +554,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlProdutoItemFinalizadoPedidoKit)
             db?.execSQL(sqlGrupoAB)
             db?.execSQL(sqlGrupoABProduto)
-
+            db?.execSQL(sqlGrupoProgressiva)
         }catch (e:Exception) {
             e.printStackTrace()
             Log.d("Info_dp","Erro ao cria tabela")

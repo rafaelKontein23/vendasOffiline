@@ -27,6 +27,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.Tas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroPrincipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroProduto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFormaDePagamentoExclusiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskGrupoProgressiva
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskGruposAB
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRegraPrazoMedio
@@ -70,6 +71,7 @@ class CargaDiaria {
                 var jsonkitCliente = ""
                 var jsonKitxLoja = ""
                 var jsonArrayLojaAB : MutableList<JSONArray>? = mutableListOf()
+                var jsonArrayLojaABProgressiva : MutableList<JSONArray>? = mutableListOf()
                 try {
 
 
@@ -346,13 +348,44 @@ class CargaDiaria {
                           }
 
                            val lendoGrupoProgressiva = launch {
-                               val querylojaID =  "SELECT * FROM TB_lojas WHERE lojatipo = 13"
-                               
+                               val dblistaGrupoProgressiva = DataBaseHelber(context).writableDatabase
+                               val coroutines = mutableListOf<Deferred<Unit>>()
+
+                               val querylojaTipo =  "SELECT loja_id FROM TB_lojas WHERE lojatipo = 13"
+                               val cursor  =   dblistaGrupoProgressiva.rawQuery(querylojaTipo,null)
+                               while (cursor.moveToNext()){
+                                    val lojaId = cursor.getInt(0)
+                                   val asyncGrupoProgressiva = async {
+                                       val taskGrupoProgressiva = TaskGrupoProgressiva()
+                                       taskGrupoProgressiva.taskGrupoProgressiva(lojaId, jsonArrayLojaABProgressiva!!)
+                                   }
+
+                                   coroutines.add(asyncGrupoProgressiva)
+                                   runBlocking {
+                                       coroutines.awaitAll()
+                                   }
+                               }
                            }
                           lendoAb.join()
+                          lendoGrupoProgressiva.join()
 
-                          Log.d("jsonLojaAb",jsonArrayLojaAB?.size.toString())
+                          val inserindoGrupoAb = launch {
+                              val gruppolojaAbDAO = GrupoLojaAbDAO(context)
+                              for (i in jsonArrayLojaAB!!){
+                                  gruppolojaAbDAO.insertGrupoEProduto(i)
+                              }
 
+                          }
+
+                          val  inserirGrupoProgressiva = launch {
+                              for (i in jsonArrayLojaABProgressiva!!){
+                                  val gruppolojaAbDAO = GrupoLojaAbDAO(context)
+                                  gruppolojaAbDAO.inserirGrupoProgressiva(i)
+                              }
+
+                          }
+                          inserindoGrupoAb.join()
+                          inserirGrupoProgressiva.join()
                           // lendo estoque
                           val lendoEstoque = launch {
                               val dblistaProgre = DataBaseHelber(context)
