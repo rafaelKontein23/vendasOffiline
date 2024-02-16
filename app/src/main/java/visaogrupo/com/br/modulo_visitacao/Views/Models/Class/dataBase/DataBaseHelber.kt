@@ -479,6 +479,30 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "Kit_cod INTEGER," +
                 "Loja_id INTEGER " +
                 ")"
+
+
+        val sqlGrupoAB =  "CREATE TABLE IF NOT EXISTS Tb_GrupoAB(" +
+                "Grupo_codigo INTEGER PRIMARY KEY," +
+                "Nome_grupo VARCHAR(255)," +
+                "Prioridade INTEGER," +
+                "Loja_id INTEGER," +
+                "Grupo VARCHAR(255)," +
+                "Porc REAL," +
+                "Codigo_PRECO_SYNC INTEGER" +
+                ")"
+
+        val  sqlGrupoABProduto = "CREATE TABLE IF NOT EXISTS TB_grupoAB_Produtos(" +
+                "Grupo_codigo INTEGER," +
+                "Produto_codigo INTEGER," +
+                "Nome VARCHAR(255)," +
+                "Referencia VARCHAR(255)," +
+                "APRESENTACAO VARCHAR(255)," +
+                "PrincipioAtivo VARCHAR(255)," +
+                "ListaICMS VARCHAR(255)," +
+                "CaixaPadrao INTEGER," +
+                "Barra VARCHAR(255),"+
+                "PRIMARY KEY (Produto_codigo,Grupo_codigo)"+
+                ")"
         try {
             db?.execSQL(sqlFiltro)
             db?.execSQL(sqlFiltroProduto)
@@ -511,6 +535,8 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlProtudoCarrinhoKit)
             db?.execSQL(sqlPedidoKit)
             db?.execSQL(sqlProdutoItemFinalizadoPedidoKit)
+            db?.execSQL(sqlGrupoAB)
+            db?.execSQL(sqlGrupoABProduto)
 
         }catch (e:Exception) {
             e.printStackTrace()

@@ -27,6 +27,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.Tas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroPrincipal
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFiltroProduto
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskFormaDePagamentoExclusiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskGruposAB
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskProgressivas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRegraPrazoMedio
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.TaskCargas.TaskRepasse
@@ -68,6 +69,7 @@ class CargaDiaria {
                 var jsonKitxPreco = ""
                 var jsonkitCliente = ""
                 var jsonKitxLoja = ""
+                var jsonArrayLojaAB : MutableList<JSONArray>? = mutableListOf()
                 try {
 
 
@@ -217,14 +219,14 @@ class CargaDiaria {
                               val dblistaProgre = DataBaseHelber(context)
 
                               Log.d("Começou o Progressiva","")
-                              val lojasOP = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf, Clientes.codigo" +
+                              val queryProgrssiva = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf, Clientes.codigo" +
                                       " FROM TB_lojas lojasPorCliente" +
                                       " inner join TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
                                       " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
                                       " order by 1"
 
 
-                              val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
+                              val curso = dblistaProgre.writableDatabase.rawQuery(queryProgrssiva,null)
                               var count =0
                               val jsonarayProgressiva: MutableList<JSONArray>? = mutableListOf()
                               val coroutines = mutableListOf<Deferred<Unit>>()
@@ -254,11 +256,11 @@ class CargaDiaria {
                                   coroutines.awaitAll()
                               }
 
-                              Log.d("Terminou Alou", jsonarayProgressiva?.size.toString())
+                              Log.d("Qtd PRogrssiva p json", jsonarayProgressiva?.size.toString())
                               Log.d("Terminou","Progressiva")
 
                               FragmentCargas.progresspush += 1
-                         PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando progressivas...")
+                              PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando progressivas...")
 
                               val db_Progreesivas = DataBaseHelber(context).writableDatabase
                               db_Progreesivas.beginTransaction()
@@ -313,7 +315,43 @@ class CargaDiaria {
                           FragmentCargas.progresspush += 1
                           PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando estoque...")
 
+                          val lendoAb = launch {
+                              val dblistaGrupo = DataBaseHelber(context)
+                              val coroutines = mutableListOf<Deferred<Unit>>()
 
+                              Log.d("Começou o Progressiva","")
+                              val query = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf, Clientes.codigo" +
+                                      " FROM TB_lojas lojasPorCliente" +
+                                      " inner join TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
+                                      " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
+                                      " order by 1"
+                             val cursor = dblistaGrupo.writableDatabase.rawQuery(query,null)
+                              while (cursor.moveToNext()){
+                                  val  uf = cursor.getString(1)
+                                  val lojaID = cursor.getString(0)
+                                  val  codigoSync = cursor.getString(2)
+
+                                  val async = async {
+                                      val taskGruposAB = TaskGruposAB()
+                                      taskGruposAB.taskbuscagrupo(lojaID,uf,codigoSync,jsonArrayLojaAB!!)
+
+
+                                  }
+                                  coroutines.add(async)
+
+                                  runBlocking {
+                                      coroutines.awaitAll()
+                                  }
+                              }
+                          }
+
+                           val lendoGrupoProgressiva = launch {
+                               val querylojaID =  "SELECT * FROM TB_lojas WHERE lojatipo = 13"
+                               
+                           }
+                          lendoAb.join()
+
+                          Log.d("jsonLojaAb",jsonArrayLojaAB?.size.toString())
 
                           // lendo estoque
                           val lendoEstoque = launch {
@@ -381,8 +419,6 @@ class CargaDiaria {
                           }
 
 
-                    Log.d("Deley","Deley")
-                    delay(10000)
                     val  lendorepasse = launch{
                         val queryrespasse =  "SELECT DISTINCT CodEstoque, uf FROM TB_clientes"
                         val dbCliente = DataBaseHelber(context)

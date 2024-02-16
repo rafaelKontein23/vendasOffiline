@@ -25,4 +25,7 @@ interface Isyncs_Cargas {
 
     @GET ("FormaPagamentoXCNPJ/{uf}/{cnpj}.json")
     fun FormaDePagExclus(@Path("uf") uf:String, @Path("cnpj") cnpj:String):Call<ResponseBody>
+
+    @GET ("docs/tablet/carga/Progressivas/Grupos_{lojaID}_{UF}_{codSync}.json")
+    fun grupolojaAb(@Path("lojaID") lojaid:String,@Path("UF") uf :String,@Path("codSync") codSync:String):Call<ResponseBody>
 }

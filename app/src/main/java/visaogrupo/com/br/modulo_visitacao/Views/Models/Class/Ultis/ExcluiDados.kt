@@ -30,6 +30,8 @@ class ExcluiDados(context: Context) {
         listaNomeTabela.add("TB_KItXcliente")
         listaNomeTabela.add("TB_KitxLoja")
 
+        listaNomeTabela.add("Tb_GrupoAB")
+        listaNomeTabela.add("TB_grupoAB_Produtos")
 
 
         for (nomes in listaNomeTabela){
