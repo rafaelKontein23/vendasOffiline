@@ -19,7 +19,19 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:letterSpacing">.02</item>
     </style>
+    <style name="ProgressA" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_a</item>
+    </style>
 
+    <style name="ProgressB" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_b</item>
+    </style>
+    <style name="ProgressCerto" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progresscorreto</item>
+    </style>
     <style name="Edit_text_Padrap">
 
         <item name="android:background">@drawable/edit_text_padrao</item>

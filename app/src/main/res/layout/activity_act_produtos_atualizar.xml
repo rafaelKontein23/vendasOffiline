@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/view9"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -31,38 +31,49 @@
         android:background="@color/corviewicon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lojasSelecionadas" />
+        app:layout_constraintTop_toBottomOf="@+id/lojasSelecionadas" >
+        <TextView
+            android:id="@+id/cnpjClienteSelecionado"
+            style="@style/textbold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="24dp"
+            android:text="-"
+            android:textColor="@color/corazultext"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view9" />
 
-    <TextView
-        android:id="@+id/cnpjClienteSelecionado"
-        style="@style/textbold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="24dp"
-        android:text="-"
-        android:textColor="@color/corazultext"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view9" />
+        <TextView
+            android:id="@+id/textRazaosocialclienteSelecionado"
+            style="@style/text_sub_titulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="-"
+            android:textColor="@color/corazultext"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cnpjClienteSelecionado" />
 
-    <TextView
-        android:id="@+id/textRazaosocialclienteSelecionado"
-        style="@style/text_sub_titulo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:text="-"
-        android:textColor="@color/corazultext"
-        android:textSize="13dp"
-        app:layout_constraintBottom_toBottomOf="@+id/view9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cnpjClienteSelecionado" />
+        <ImageView
+            android:id="@+id/fecharInfo"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cnpjClienteSelecionado"
+            app:srcCompat="@drawable/xprogressiva" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
     <EditText
@@ -284,4 +295,5 @@
         app:layout_constraintEnd_toStartOf="@+id/filtros"
         app:layout_constraintTop_toTopOf="@+id/filtros"
         app:srcCompat="@drawable/certoicon" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

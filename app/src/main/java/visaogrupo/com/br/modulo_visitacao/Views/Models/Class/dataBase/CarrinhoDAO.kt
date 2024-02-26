@@ -61,6 +61,10 @@ class CarrinhoDAO (context:Context) {
         val  where = "loja_id = ${loja_id} AND cliente_id = ${cliente_id} AND produto_codigo = ${produto_codigo} "
         dbCarrinho.delete("TB_Carrinho",where,null)
     }
+    fun excluirItemAB(loja_id :Int,cliente_id:Int){
+        val  where = "loja_id = ${loja_id} AND cliente_id = ${cliente_id} "
+        dbCarrinho.delete("TB_Carrinho",where,null)
+    }
     fun atualizaItemCarrinho( carrinho: Carrinho){
         val  daataformat = DataAtual()
         val  data = daataformat.recuperaData()

@@ -223,8 +223,6 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "RegraPrazo  INT," +
                 "LojaTipo  INT," +
                 "PERCENTUALRepasse REAL," +
-
-
                 "PRIMARY KEY (cliente_id,loja_id,Produto_codigo)"+
                 ")"
 

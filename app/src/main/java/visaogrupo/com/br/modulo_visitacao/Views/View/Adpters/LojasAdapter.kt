@@ -68,6 +68,9 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
             val mudarFragment = MudarFragment()
             if (listaLojas[position].LojaTipo == 4){
                 mudarFragment.openFragmentProtudosKit(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+            }else if(listaLojas[position].LojaTipo == 13){
+                mudarFragment.openFragmentProtudosAB(supportFragmentManager,carrinhoVisible)
+
             }else{
                 mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
 

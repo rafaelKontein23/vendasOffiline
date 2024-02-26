@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import org.json.JSONArray
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.GrupoLojaAb
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.GrupoProgressiva
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoAB
 
 class GrupoLojaAbDAO(context: Context) {
     val dbGrupoProduto = DataBaseHelber(context)
@@ -29,7 +30,7 @@ class GrupoLojaAbDAO(context: Context) {
                 insert.put("Codigo_PRECO_SYNC",gsonGrupo.CODLISTAPRECOSYNC)
                 dbGrupoProduto.writableDatabase.insertOrThrow("Tb_GrupoAB", null, insert)
 
-                for (i in gsonGrupo.GrupoFilho){
+                for (i in gsonGrupo.GrupoFilho!!){
                     val insertProdutoGrupo = ContentValues()
                     insertProdutoGrupo.put("Grupo_codigo", gsonGrupo.Grupo_Codigo)
                     insertProdutoGrupo.put("Produto_codigo",i.Produto_codigo)
@@ -79,5 +80,74 @@ class GrupoLojaAbDAO(context: Context) {
 
 
         }
+    }
+
+    fun listarLoja(lojaId :Int, codiPreco:Int) : MutableList<GrupoLojaAb> {
+         val query  =  "SELECT * FROM Tb_GrupoAB WHERE  loja_id = ${lojaId} GROUP by 1"
+         val cursor = dbGrupoProduto.writableDatabase.rawQuery(query,null)
+
+        val listaGrupoAB = mutableListOf<GrupoLojaAb>()
+         while (cursor.moveToNext()){
+             val grupoCodigo = cursor.getInt(0)
+             val nomeGrupo= cursor.getString(1)
+             val prioridade = cursor.getInt(2)
+             val lojaID = cursor.getInt(3)
+             val grupo = cursor.getString(4)
+             val porc = cursor.getDouble(5)
+             val codPrecoSync = cursor.getInt(6)
+
+             val grupoLojaAb = GrupoLojaAb(codPrecoSync, grupo,
+                 Grupo_Codigo = grupoCodigo, Loja_id = lojaID, NomeGrupo = nomeGrupo, Porc = porc, Prioridade = prioridade)
+             listaGrupoAB.add(grupoLojaAb)
+
+         }
+        for (i in listaGrupoAB){
+            val queryProdutosLojaAb = "SELECT DISTINCT grupoAB_Produtos.*, Grupo_Progressiva.*, img.imagembase64 FROM TB_grupoAB_Produtos as grupoAB_Produtos\n" +
+                    "INNER JOIN TB_Grupo_Progressiva Grupo_Progressiva  ON grupoAB_Produtos.Grupo_codigo = Grupo_Progressiva.Grupo_Codigo and Grupo_Progressiva.Prod_cod = grupoAB_Produtos.Produto_codigo\n" +
+                    "LEFT JOIN TB_Imagens img ON img.barra = grupoAB_Produtos.Barra\n" +
+                    "WHERE grupoAB_Produtos.Grupo_codigo =${i.Grupo_Codigo} AND  Grupo_Progressiva.Loja_id = ${i.Loja_id} AND Grupo_Progressiva.CODLISTAPRECOSYNC =12"
+
+            val cursorProduto = dbGrupoProduto.writableDatabase.rawQuery(queryProdutosLojaAb,null)
+            val listaprodutoAB = mutableListOf<ProdutoAB>()
+            while (cursorProduto.moveToNext()){
+                 val grupoCodigo = cursorProduto.getInt(0)
+                 val produtoCodigo = cursorProduto.getInt(1)
+                 val nome = cursorProduto.getString(2)
+                 val refrencia = cursorProduto.getString(3)
+                 val apresentacao = cursorProduto.getString(4)
+                 val principioAtivo = cursorProduto.getString(5)
+                 val listIcms = cursorProduto.getString(6)
+                 val caixapadrao = cursorProduto.getInt(7)
+                 val barra =      cursorProduto.getString(8)
+                 val lojaId =   cursorProduto.getInt(9)
+                 val codSync = cursorProduto.getInt(10)
+                 val GrupoCodigo = cursorProduto.getInt(11)
+                 val produtoCod = cursorProduto.getInt(12)
+                 val quantidade = cursorProduto.getInt(13)
+                 val desconto = cursorProduto.getDouble(14)
+                 val pf       = cursorProduto.getDouble(15)
+                 val pmc      = cursorProduto.getDouble(16)
+                 val uf =       cursorProduto.getString(17)
+                 val QtdMin = cursorProduto.getInt(18)
+                 val QtdMax = cursorProduto.getInt(19)
+                 val porc   = cursorProduto.getInt(20)
+                 val form =   cursorProduto.getInt(21)
+                 var imagem = ""
+                if (!cursorProduto.getString(22).isNullOrEmpty()){
+                    imagem =cursorProduto.getString(22)
+                }
+
+                 val  produtoAB = ProdutoAB(apresentacao,barra,caixapadrao,imagem,listIcms,nome,principioAtivo,
+                    produtoCodigo,refrencia,codSync,desconto,grupoCodigo,lojaId,pf,pmc,porc,
+                    produtoCod,QtdMax,QtdMin,quantidade,uf,GrupoCodigo)
+                listaprodutoAB.add(produtoAB)
+
+
+
+            }
+            i.listaProduto = listaprodutoAB
+
+        }
+        return listaGrupoAB
     }
 }

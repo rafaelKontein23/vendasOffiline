@@ -8,6 +8,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProdutosKit
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProdutosLojaAB
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
 class MudarFragment {
@@ -43,6 +44,16 @@ class MudarFragment {
             fragmentManager.beginTransaction()
 
         fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentProtudos, "h")
+        fragmentTransaction.addToBackStack("h")
+        fragmentTransaction.commit()
+    }
+
+    fun openFragmentProtudosAB(fragmentManager: FragmentManager, carrinhoVisible: carrinhoVisible) {
+        val fragmentProtudosAB = FragmentProdutosLojaAB(carrinhoVisible)
+        val fragmentManager: FragmentManager = fragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.replace(R.id.fragmentContainerViewPrincipal, fragmentProtudosAB, "h")
         fragmentTransaction.addToBackStack("h")
         fragmentTransaction.commit()
     }
