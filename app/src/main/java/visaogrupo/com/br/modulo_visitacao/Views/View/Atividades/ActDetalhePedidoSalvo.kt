@@ -46,6 +46,9 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
 
         BuscaInfos()
 
+        binding.atualizarItensCarrinho.isVisible = pedido?.TipoLoja != 13
+
+
         binding.atualizarItensCarrinho.setOnClickListener {
             val intent = Intent(context,ActProdutosAtualizar::class.java)
             intent.putExtra("PedidoClicado", pedido as Serializable)

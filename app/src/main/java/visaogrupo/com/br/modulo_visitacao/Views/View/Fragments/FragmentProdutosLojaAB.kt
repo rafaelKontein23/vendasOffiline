@@ -2,6 +2,7 @@ package visaogrupo.com.br.modulo_visitacao.Views.View.Fragments
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.os.Bundle
@@ -19,10 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.celula_loja_grupo_ab.nomeGrupo
+import kotlinx.android.synthetic.main.celula_opl.quantidade
 import kotlinx.android.synthetic.main.fragment_produtos_loja_a_b.lojaSelecionada
 import kotlinx.android.synthetic.main.fragment_produtos_loja_a_b.porcentagemB
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaProgress
@@ -37,7 +40,10 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.GrupoLojaAbDAO
 import visaogrupo.com.br.modulo_visitacao.Views.View.Adpters.AdpterGrupoABProdutos
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActCarrinhoDetalhe
+import visaogrupo.com.br.modulo_visitacao.Views.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.Alertas
+import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProdutosLojaABBinding
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentProtudosBinding
 
@@ -49,6 +55,8 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
     var listaValorTotalA = mutableListOf<ProdutoValorAB>()
     var listaValorTotalB = mutableListOf<ProdutoValorAB>()
     var listaCarrinho = mutableListOf<ProdutoAB>()
+    var listaCarrinhoValida = mutableListOf<ProdutoAB>()
+
     lateinit var clienteSelecionado: Clientes
     var porcentagemBglobal =0.0
     var nomeGrupo =""
@@ -83,11 +91,6 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
         val gsonuserid = Gson()
         val objetoSerializadoLogin = sharedPreferences?.getString("UserLogin", null)
         login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
-        binding.carrinhoProtudoAb.setOnClickListener {
-
-
-        }
-
 
         val listaProtudos = grupoLojaAbDAO.listarLoja(lojaSelecionada.loja_id, clienteSelecionado.CODLISTAPRECOSYNC)
         binding.lojaSelecionada.text = lojaSelecionada.nome
@@ -97,19 +100,60 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
         val linearLayoutManager = LinearLayoutManager(requireContext())
         binding.recyLojaAb.layoutManager = linearLayoutManager
         binding.recyLojaAb.adapter = adapterGrupoLoja
+
         var porcentagemA =  listaProtudos[0].Porc /100
         var porcentagemB =listaProtudos[1].Porc /100
+
         binding.porcentagemA.text = listaProtudos[0].Porc.toString() + "%"
         binding.porcentagemB.text = listaProtudos[1].Porc.toString() + "%"
+
         porcentagemBglobal = listaProtudos[1].Porc
         nomeGrupo  =   listaProtudos[1].Grupo
+
         val layoutParamsA = binding.contrainGrupoA.layoutParams as LinearLayout.LayoutParams
         val layoutParamsB = binding.contrainGrupoA.layoutParams as LinearLayout.LayoutParams
-
         layoutParamsA.weight = porcentagemA.toFloat()
         layoutParamsB.weight = porcentagemB.toFloat()
 
         formatarDescricao(listaProtudos[1].Porc.toString(), listaProtudos[1].Grupo)
+        for (i in listaProtudos){
+            for (k in i.listaProduto!!){
+                if (k.estaNoCarrinho == 1){
+                    binding.recyLojaAb.smoothScrollToPosition(1)
+                    listaCarrinho.add(k)
+
+                }
+            }
+        }
+
+
+        binding.progresB.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.recyLojaAb.smoothScrollToPosition(1)
+            }
+        }
+
+        binding.progressA.setOnClickListener {
+            binding.recyLojaAb.smoothScrollToPosition(0)
+
+        }
+
+        binding.carrinhoProtudoAb.setOnClickListener {
+              if (listaCarrinhoValida.isEmpty()){
+               val dialogErro = DialogErro()
+               dialogErro.Dialog(requireContext(),"Atenção","Adicione pelo menos ${porcentagemBglobal.toString().replace(".0","")}% do ${nomeGrupo} para continuar","Ok",""){
+
+               }
+              }else{
+                  ActPricipal.lojavalorMinimo = lojaSelecionada.MinimoValor
+                  ActPricipal.clienteUF = clienteSelecionado.UF
+                  ActPricipal.cliente_id = clienteSelecionado.Empresa_id
+                  ActPricipal.loja_id =lojaSelecionada.loja_id
+                  val intent  = Intent(requireContext(), ActCarrinhoDetalhe::class.java)
+                  intent.putExtra("CarrinhoDetalhe",false)
+                  startActivityForResult(intent, 7)
+              }
+        }
         binding.xFechamensagem.setOnClickListener {
              binding.visualizarCodicoes.isVisible = true
              binding.viewFechado.isVisible = false
@@ -117,6 +161,7 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
             layoutParams.topMargin = 24
             binding.recyLojaAb.layoutParams = layoutParams
         }
+
         binding.visualizarCodicoes.setOnClickListener {
             binding.visualizarCodicoes.isVisible = false
             binding.viewFechado.isVisible = true
@@ -124,15 +169,16 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
             layoutParams.topMargin = 0
             binding.recyLojaAb.layoutParams = layoutParams
         }
+
         return  view;
     }
 
 
     fun formatarDescricao(porcentagemB:String, nomeGrupo:String){
         val grupoB = "${nomeGrupo}"
-        val textoNegrito30 = "${porcentagemB}%"
+        val textoNegrito30 = "${porcentagemB.toString().replace(".0","")}%"
 
-        val textoCompleto = "Faça seu pedido com pelo menos ${porcentagemB}% de valor em R$ nos produtos do ${nomeGrupo} para aproveitar descontos."
+        val textoCompleto = "Faça seu pedido com pelo menos ${porcentagemB.toString().replace(".0","")}% de valor em R$ nos produtos do ${nomeGrupo} para aproveitar descontos."
         val startIndexGrupoB = textoCompleto.indexOf(grupoB)
         val endIndexGrupoB = startIndexGrupoB + grupoB.length
         val startIndex30 = textoCompleto.indexOf(textoNegrito30)
@@ -154,6 +200,7 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
                                   getQuantidade:Int,
                                   temNaLista:Boolean,
                                   valorTotal:Double) {
+
             var  valorTotalGrupoA = 0.0
             var  valorTotalGrupoB = 0.0
             var  temNaLista = false
@@ -165,6 +212,7 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
                  for ( (i,valor) in listaCarrinho.withIndex()){
                      if (valor.Produto_codigo == itemProdutoAB.Produto_codigo ){
                          listaCarrinho[i].valorTotal = valorTotal
+                         listaCarrinho[i].Quantidade =getQuantidade
                          temNaLista = true
                          break
                      }else{
@@ -188,9 +236,7 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
 
             }
 
-
             val valorTotalDosGrupos = valorTotalGrupoA +valorTotalGrupoB
-
             val  porcentagemProgressA = (valorTotalGrupoA / valorTotalDosGrupos) * 100
             val valorFomatocentagemA = String.format("%.2f",porcentagemProgressA)
             val valorFomatTotalA = String.format("%.2f",valorTotalGrupoA)
@@ -202,16 +248,11 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
             animator.duration = animationDuration
             animator.start()
 
-
-
             val  porcentagemProgressB = (valorTotalGrupoB / valorTotalDosGrupos) * 100
             val valorFomatocentagemB = String.format("%.2f",porcentagemProgressB)
             val valorFomatTotalB = String.format("%.2f",valorTotalGrupoB)
 
-
             binding.imgcerto.isVisible = porcentagemProgressB >= porcentagemBglobal
-
-
             binding.porcentagemB.text = valorFomatocentagemB + "%"
             binding.valorTotalB.text = "R$ " + valorFomatTotalB
 
@@ -220,14 +261,17 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
 
                 if (!apareceAlerta){
                     val alertas = Alertas()
-                    alertas.alerta(requireActivity().supportFragmentManager,"Você atingiu ${porcentagemBglobal} do ${nomeGrupo}, aproveite os x% de desconto","#FF018786",
+                    alertas.alerta(requireActivity().supportFragmentManager,"Você atingiu ${porcentagemBglobal.toString().replace(".0","")} do ${nomeGrupo}, aproveite os x% de desconto","#FF018786",
                         R.drawable.icone_certo_verde,R.drawable.bordas_verde_alert)
                         apareceAlerta = true
 
                 }
                 for (i in listaCarrinho){
-                    insertProdutoBanco(mais, i, getQuantidade, temNaLista, i.valorTotal,insert)
+                    binding.quatidadeItens.text = listaCarrinho.size.toString()
+                    insertProdutoBanco(mais, i, i.Quantidade, temNaLista, i.valorTotal,insert)
                 }
+                listaCarrinhoValida.clear()
+                listaCarrinhoValida.addAll(listaCarrinho)
                 val color = ContextCompat.getColor(requireContext(), R.color.verdenutoon)
                 binding.progresB.progressTintList =  ColorStateList.valueOf(color)
                 val animationDurationB = 600L
@@ -238,6 +282,9 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
 
 
             } else {
+                listaCarrinhoValida.clear()
+                binding.quatidadeItens.text = "-"
+
                 insert = true
                 val carrinhoDAO = CarrinhoDAO(requireContext())
 
@@ -286,6 +333,7 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
             clienteSelecionado.CNPJ,data,lojaSelecionada.MinimoValor,itemProdutoAB.Imagem,
             0.0,clienteSelecionado.FormaPagamentoExclusiva,itemProdutoAB.CaixaPadrao,lojaSelecionada.Qtd_Minima_Operador,
             lojaSelecionada.Qtd_Maxima_Operador,0,lojaSelecionada.RegraPrazoMedio,lojaSelecionada.LojaTipo,0,itemProdutoAB.Desconto)
+
         val carrinhoDAO = CarrinhoDAO(requireContext())
          if (insert){
              carrinhoDAO.insertCarrinho(carrinho)
@@ -298,6 +346,5 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
                  carrinhoDAO.insertCarrinho(carrinho)
              }
          }
-
     }
 }

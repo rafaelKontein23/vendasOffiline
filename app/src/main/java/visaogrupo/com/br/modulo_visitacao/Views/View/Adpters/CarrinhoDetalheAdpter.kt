@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -48,6 +49,9 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
         val nomeRemedio = listaProdutoCarrinho[position].nomeProduto
         holder.nomedoRemedio.text = nomeRemedio
 
+        holder.exluir.isVisible = listaProdutoCarrinho[position].LojaTipo !=13
+        holder.rever.isVisible = listaProdutoCarrinho[position].LojaTipo !=13
+        holder.containerDetalhe.isEnabled = listaProdutoCarrinho[position].LojaTipo !=13
 
         holder.exluir.setOnClickListener {
             val item =listaProdutoCarrinho[position]
@@ -118,6 +122,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
         val containerDetalhe = itemView.findViewById<ConstraintLayout>(R.id.containerDetalhe)
         val codigo = itemView.findViewById<TextView>(R.id.codproduto)
         val desconto = itemView.findViewById<TextView>(R.id.desconto)
+        val rever =  itemView.findViewById<ImageView>(R.id.rever)
 
 
     }

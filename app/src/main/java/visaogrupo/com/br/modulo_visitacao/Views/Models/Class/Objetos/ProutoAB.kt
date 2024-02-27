@@ -20,8 +20,10 @@ data class ProdutoAB(
     val Prod_cod: Int,
     val QtdMax: Int,
     val QtdMin: Int,
-    val Quantidade: Int,
+    var Quantidade: Int,
     val UF: String,
     val grupoCodigo:Int,
-    var valorTotal:Double = 0.0
+    var valorTotal:Double = 0.0,
+    var estaNoCarrinho:Int,
+    var quantidadeCarrinho:Int
 )

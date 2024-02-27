@@ -24,6 +24,7 @@ import visaogrupo.com.br.modulo_visitacao.R
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.AtualizaProgress
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Clientes
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.GrupoLojaAb
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.ProdutoAB
@@ -34,9 +35,8 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.dataBase.CarrinhoDA
 
 class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, context: Context,
                             valorTotalA:MutableList<ProdutoValorAB>, valorTotalB:
-                            MutableList<ProdutoValorAB>, AtualizaProgress: AtualizaProgress,
-
-): Adapter<AdpterProdutoGrupoAB.ViewHolderProdutoGrupoAB>() {
+                            MutableList<ProdutoValorAB>, AtualizaProgress: AtualizaProgress, listaItem:  MutableList<GrupoLojaAb>
+                            ): Adapter<AdpterProdutoGrupoAB.ViewHolderProdutoGrupoAB>() {
     val listaAb = list
     val prioridade = prioridade
     val context = context
@@ -44,6 +44,8 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
     var valorTotalA = valorTotalA
     val AtualizaProgress = AtualizaProgress
     var toast: Toast? = null
+    var listaItem = listaItem
+    var atualizacarrinho = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderProdutoGrupoAB {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.celula_grupo_produto_ab,parent,false)
         return ViewHolderProdutoGrupoAB(view)
@@ -64,10 +66,21 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
         val valorpfFormat = String.format("%.2f", itemListaAbProdutos.PF)
         val valorFormatComDesconto = String.format("%.2f", valorTotalComDesconto)
 
+
+
         holder.valorProgressiva.text = valorFormatComDesconto
-        holder.valorToral.text = "R$ " +valorFormatComDesconto
         holder.pf.text ="${valorpfFormat}"
-        holder.edtQuantidade.setText("0")
+
+        if (itemListaAbProdutos.estaNoCarrinho == 1){
+            holder.edtQuantidade.setText(itemListaAbProdutos.quantidadeCarrinho.toString())
+            somaItem(holder,valorTotalComDesconto, false,itemListaAbProdutos)
+
+        }else {
+            holder.edtQuantidade.setText("0")
+            holder.valorToral.text = "R$ " +valorFormatComDesconto
+
+
+        }
 
         if (!itemListaAbProdutos.Imagem.isEmpty()){
             val imageBytes = Base64.decode(itemListaAbProdutos.Imagem, Base64.DEFAULT)
@@ -104,9 +117,7 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
                 somaItem(holder,valorTotalComDesconto,false,itemListaAbProdutos)
 
             }
-
         }
-
     }
 
 
@@ -131,10 +142,10 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
 
     }
     fun somaItem(holder:ViewHolderProdutoGrupoAB, valorComDesconto:Double,mais:Boolean,itemProdutoAB:ProdutoAB){
+        var getQuantidade =0
 
+        getQuantidade = holder.edtQuantidade.text.toString().toInt()
 
-
-        val getQuantidade = holder.edtQuantidade.text.toString().toInt()
 
         var valorQuantidade = 0
         if (mais){
@@ -168,20 +179,13 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
                 if (!temNaLista){
                     valorTotalA.add(produtoValorAB)
                 }
-
-
             }
-
-
-
         }else{
 
             if (valorTotalB.isEmpty()){
                 valorTotalB.add(produtoValorAB)
 
-
             }else{
-
                 for ( (i,valor) in valorTotalB.withIndex()){
                     if (valor.codigoProduto == produtoValorAB.codigoProduto ){
                         valorTotalB[i].valortotalProduto = valorTotal
@@ -195,19 +199,14 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
                 if (!temNaLista){
                     valorTotalB.add(produtoValorAB)
                 }
-
-
             }
-
         }
 
         if (prioridade == 1){
-
-            AtualizaProgress.atualizaprogress(valorTotalA,valorTotalB,true,mais, itemProdutoAB, getQuantidade, temNaLista, valorTotal)
+            AtualizaProgress.atualizaprogress(valorTotalA,valorTotalB,true,mais, itemProdutoAB, valorQuantidade, temNaLista, valorTotal)
 
         }else{
-            AtualizaProgress.atualizaprogress(valorTotalA,valorTotalB,false,mais, itemProdutoAB, getQuantidade, temNaLista, valorTotal)
+            AtualizaProgress.atualizaprogress(valorTotalA,valorTotalB,false,mais, itemProdutoAB, valorQuantidade, temNaLista, valorTotal)
         }
     }
-
 }

@@ -50,7 +50,8 @@ class ActCarrinhoDetalhe:  AppCompatActivity(),
 
         binding.voltarCarrinho.setOnClickListener{
             setResult(Activity.RESULT_OK)
-            finish()        }
+            finish()
+        }
 
         atualizarInterface()
     }

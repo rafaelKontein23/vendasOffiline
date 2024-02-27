@@ -102,9 +102,10 @@ class GrupoLojaAbDAO(context: Context) {
 
          }
         for (i in listaGrupoAB){
-            val queryProdutosLojaAb = "SELECT DISTINCT grupoAB_Produtos.*, Grupo_Progressiva.*, img.imagembase64 FROM TB_grupoAB_Produtos as grupoAB_Produtos\n" +
+            val queryProdutosLojaAb = "SELECT DISTINCT grupoAB_Produtos.*, Grupo_Progressiva.*, img.imagembase64,CASE WHEN IFNULL(carrinho.Produto_codigo,0 )>0 THEN 1 ELSE 0 END estaNoCaarinho,carrinho.Quantidade FROM TB_grupoAB_Produtos as grupoAB_Produtos\n" +
                     "INNER JOIN TB_Grupo_Progressiva Grupo_Progressiva  ON grupoAB_Produtos.Grupo_codigo = Grupo_Progressiva.Grupo_Codigo and Grupo_Progressiva.Prod_cod = grupoAB_Produtos.Produto_codigo\n" +
                     "LEFT JOIN TB_Imagens img ON img.barra = grupoAB_Produtos.Barra\n" +
+                    "LEFT JOIN TB_Carrinho carrinho  ON carrinho.loja_id = ${i.Loja_id} AND carrinho.Produto_codigo = grupoAB_Produtos.Produto_codigo\n"+
                     "WHERE grupoAB_Produtos.Grupo_codigo =${i.Grupo_Codigo} AND  Grupo_Progressiva.Loja_id = ${i.Loja_id} AND Grupo_Progressiva.CODLISTAPRECOSYNC =12"
 
             val cursorProduto = dbGrupoProduto.writableDatabase.rawQuery(queryProdutosLojaAb,null)
@@ -136,10 +137,15 @@ class GrupoLojaAbDAO(context: Context) {
                 if (!cursorProduto.getString(22).isNullOrEmpty()){
                     imagem =cursorProduto.getString(22)
                 }
+                var estaNoCarrinho = cursorProduto.getInt(23)
+                var quantidadeProduto = 0
+                 if (cursorProduto.getInt(24) != null){
+                     quantidadeProduto = cursorProduto.getInt(24)
+                 }
 
                  val  produtoAB = ProdutoAB(apresentacao,barra,caixapadrao,imagem,listIcms,nome,principioAtivo,
                     produtoCodigo,refrencia,codSync,desconto,grupoCodigo,lojaId,pf,pmc,porc,
-                    produtoCod,QtdMax,QtdMin,quantidade,uf,GrupoCodigo)
+                    produtoCod,QtdMax,QtdMin,quantidade,uf,GrupoCodigo,estaNoCarrinho = estaNoCarrinho, quantidadeCarrinho = quantidadeProduto)
                 listaprodutoAB.add(produtoAB)
 
 

@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_cargas.view.*
 import visaogrupo.com.br.modulo_visitacao.R
+import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.CargaDiaria
 import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Ultis.PushNativo
@@ -41,7 +42,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Dialogs.DialogMudarAmbiente
 import visaogrupo.com.br.modulo_visitacao.databinding.FragmentCargasBinding
 
 class FragmentCargas () : Fragment() ,
-    visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga {
+    TerminouCarga {
 
     lateinit var  login: Login
     var callback: MyCallback? = null
@@ -51,8 +52,6 @@ class FragmentCargas () : Fragment() ,
         var alertvisible = false
         var progresspush = 0
         var context = this
-
-
 
     }
 
@@ -93,7 +92,7 @@ class FragmentCargas () : Fragment() ,
         binding.trocaAmbiente.setOnClickListener {
             trocaAmbienteCount +=1
             if (trocaAmbienteCount ==5){
-                trocaAmbienteCount =0
+                trocaAmbienteCount = 0
                 val  dialog = DialogMudarAmbienteSenha()
                 dialog.dialogSenha(requireContext())
             }
@@ -152,13 +151,22 @@ class FragmentCargas () : Fragment() ,
         }
         binding.caragDiaria.setOnClickListener {
             if (verificaInternet.isOnline(requireContext())){
+
                 creadordepush(requireContext())
                 PushNativo.showNotification(requireContext(),"TESTE1","Carga","carga")
                 binding.caragDiaria.isEnabled =false
                 val animatdor = animandoCarregando(view.carregandocargadiaria)
                 atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)
-                val cargadiaria = CargaDiaria()
-                cargadiaria.fazCargaDiaria(requireContext(),login.Usuario_id.toString(),view.caragDiaria,view.textcargaDiaria,view.infoTextCargDiaria,view.imgcargadiaria,animatdor,this)
+                try {
+                    val cargadiaria = CargaDiaria()
+                    cargadiaria.fazCargaDiaria(requireContext(),login.Usuario_id.toString(),view.caragDiaria,view.textcargaDiaria,view.infoTextCargDiaria,view.imgcargadiaria,animatdor,this)
+                }catch (e:Exception){
+                    val  dialogErro = DialogErro()
+                    dialogErro.Dialog(requireContext(),"Atenção", "No momento algo deu errado, tente novamente mais tarde", "Ok",""){
+
+                    }
+                }
+
 
             }else {
                 val  dialogErro = DialogErro()

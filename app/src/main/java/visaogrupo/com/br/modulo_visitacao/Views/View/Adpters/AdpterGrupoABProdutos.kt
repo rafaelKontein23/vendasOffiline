@@ -44,7 +44,8 @@ class AdpterGrupoABProdutos (list:  MutableList<GrupoLojaAb>,
          holder.nomeGrupo.text = itemlohaGrupoAB.NomeGrupo
          val linearLayout = LinearLayoutManager(context)
          val adapter = AdpterProdutoGrupoAB(itemlohaGrupoAB.listaProduto!!,
-             itemlohaGrupoAB.Prioridade, context, valorTotalA,valorTotalB,AtualizaProgress)
+             itemlohaGrupoAB.Prioridade, context, valorTotalA,valorTotalB,AtualizaProgress, listalojaAb)
+
          holder.recyProduto.layoutManager = linearLayout
          holder.recyProduto.adapter =adapter
          holder.nomeGrupo.text = itemlohaGrupoAB.Grupo
