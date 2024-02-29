@@ -8,7 +8,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Reque
 
 class TaskGrupoProgressiva {
 
-    fun taskGrupoProgressiva(lojaId:Int, jsonArray: MutableList<JSONArray>){
+    fun taskGrupoProgressiva(lojaId:Int, jsonArray: MutableList<JSONArray>, listaErro:MutableList<String>){
 
         val async = Retrofit_Carga.createService(Isyncs_Cargas::class.java)
 
@@ -19,6 +19,11 @@ class TaskGrupoProgressiva {
         if (response.isSuccessful){
             val responseGrupoProgrssiva = response.body()?.string()
             jsonArray.add(JSONObject(responseGrupoProgrssiva).getJSONArray("PROGRESSIVAS"))
+        }else{
+            if (!listaErro.contains("Grupo Progressiva AB")){
+                listaErro.add("Grupo Progressiva AB")
+
+            }
         }
     }
 }

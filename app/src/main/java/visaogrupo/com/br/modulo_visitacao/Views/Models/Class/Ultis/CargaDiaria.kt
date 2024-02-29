@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteException
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,6 +41,7 @@ import java.util.*
 
 class CargaDiaria {
 
+    val listaErrosCriticos = mutableListOf<String>()
     val listaErros = mutableListOf<String>()
 
     fun fazCargaDiaria(context: Context,
@@ -49,14 +51,13 @@ class CargaDiaria {
                        subtitulocarga: TextView,
                        icon:ImageView, animador:
                        ObjectAnimator,terminouCarga: TerminouCarga){
-
-        CoroutineScope(Dispatchers.IO).launch {
-            //Faz request de Zip
-            try {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
                 val patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
 
                 FragmentCargas.progresspush += 1
                 PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","procurando Zip...")
+                listaErrosCriticos.clear()
 
                 Log.d("Caminho Zip","${patch}")
                 if(!patch.isEmpty()){
@@ -79,12 +80,13 @@ class CargaDiaria {
                     var jsonKitxLoja = ""
                     var jsonArrayLojaAB : MutableList<JSONArray>? = mutableListOf()
                     var jsonArrayLojaABProgressiva : MutableList<JSONArray>? = mutableListOf()
-                    var jsonArrayFiltroPrincipal: JSONArray? = null
-                    var jsonArrayFiltro:JSONArray? = null
-                    var jsonArrayFiltroProduto:JSONArray? = null
-                    try {
+                    var jsonArrayFiltroPrincipal: JSONArray? = JSONArray()
+                    var jsonArrayFiltro:JSONArray? = JSONArray()
+                    var jsonArrayFiltroProduto:JSONArray?  = JSONArray()
 
-                        val lendoLojas =launch {
+
+                    val lendoLojas =launch {
+                        try {
                             //Lendo Arquivo de Loja
                             jsonLojas = lerZip.readTextFileFromZip(patch,"Lojas.json","Lojas").toString()
                             val jsonObjectLojas: JSONObject = JSONObject(jsonLojas)
@@ -96,10 +98,15 @@ class CargaDiaria {
                                 FragmentCargas.progresspush += 1
                                 PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando lojas...")
                             }
-
+                        }catch (e:Exception) {
+                            e.printStackTrace()
+                            listaErrosCriticos.add("loja")
                         }
 
-                        val lendoClientes = launch {
+
+                    }
+                    val lendoClientes = launch {
+                        try {
                             jsonClienets = lerZip.readTextFileFromZip(patch,"Clientes.json","Clientes").toString()
                             val jsonObjectClientes = JSONObject(jsonClienets)
                             val jsonObjectClientesUser = JSONObject(jsonObjectClientes.getString("USUARIO"))
@@ -110,16 +117,30 @@ class CargaDiaria {
                                 PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando clientes...")
                                 Log.d("Terminou Clientes","")
                             }
+                        }catch (e:Exception) {
+                            e.printStackTrace()
+                            listaErrosCriticos.add("cliente")
                         }
 
-                        val lendoPrazoMedio = launch {
+                    }
+
+
+                    val lendoPrazoMedio = launch {
+                        try {
                             val taskRegraPrazoMedio = TaskRegraPrazoMedio()
                             val listaRetorna  = taskRegraPrazoMedio.tasKRegra()
                             val regraPrazoMedio = RegraPrazoDAO(context)
                             regraPrazoMedio.insertRegraProgressiva(listaRetorna)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            listaErrosCriticos.add("PrazoMedio")
+
                         }
 
-                        val  lendoProdutos = launch {
+                    }
+
+                    val  lendoProdutos = launch {
+                        try {
                             jsonProtudos = lerZip.readTextFileFromZip(patch,"Produtos.json","Protudos").toString()
                             val jsonObjectProtudos = JSONObject(jsonProtudos)
                             val jsonArrayProtudos = JSONArray(jsonObjectProtudos.getString("PRODUTOS"))
@@ -129,14 +150,26 @@ class CargaDiaria {
                                 PushNativo.showNotification(context,"2","Titulo1","")
                                 Log.d("Terminou Protudos","")
                             }
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            listaErrosCriticos.add("produtos")
                         }
-                        lendoLojas.join()
-                        lendoClientes.join()
-                        lendoProdutos.join()
-                        lendoPrazoMedio.join()
 
-                        Log.d("Iniciou Segunda Parte","")
-                        val LendoFormaDePagamentoExclusiva = launch {
+                    }
+                    lendoLojas.join()
+                    lendoClientes.join()
+                    lendoProdutos.join()
+                    lendoPrazoMedio.join()
+
+                    if(!listaErrosCriticos.isEmpty()){
+
+                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        return@launch
+                    }
+
+                    Log.d("Iniciou Segunda Parte","")
+                    val LendoFormaDePagamentoExclusiva = launch {
+                        try {
                             var listaCnpj = mutableListOf<Clientes>()
                             val queryCnpjs = "SELECT * FROM TB_clientes WHERE formapagamentoexclusiva = 1"
                             val clientesDAO = ClientesDAO(context)
@@ -147,10 +180,16 @@ class CargaDiaria {
                                 val formaDePagamentoExcluisiv = FormaDePagamentoExclusivaDAO(context)
                                 formaDePagamentoExcluisiv.insert(listFormaDePagamentoExclusiva)
                             }
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            listaErrosCriticos.add("forma de pagemnto exlusiva")
+
                         }
 
-                        val lendoFormasDePagamento = launch {
+                    }
 
+                    val lendoFormasDePagamento = launch {
+                        try {
                             val dblista = DataBaseHelber(context)
                             val LojasPOrClientesList  = "SELECT distinct lojasPorCliente.loja_id " +
                                     "FROM TB_lojas lojasPorCliente" +
@@ -159,7 +198,7 @@ class CargaDiaria {
 
                             while (curso.moveToNext()){
                                 try {
-                                    val lojaID =  curso.getInt(0)
+                                    val lojaID =  curso.getInt(21)
                                     jsonFormaDePagamento = lerZip.readTextFileFromZip(patch, "FormaPagamento_${lojaID}.json", "FormaDePAgamento").toString()
                                     val jsosonform = JSONObject(jsonFormaDePagamento)
                                     val jsonArrayFormaDePag = JSONArray(jsosonform.getString("FORMAS"))
@@ -173,11 +212,16 @@ class CargaDiaria {
                             FragmentCargas.progresspush += 1
                             PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Formas de pagamentos...")
                             Log.d("Terminou"," FormaDePagamento")
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            listaErrosCriticos.add("forma de pagamento")
                         }
 
-                        val lendoOperadorLogistico = launch {
-                            val dblistaOP = DataBaseHelber(context)
+                    }
 
+                    val lendoOperadorLogistico = launch {
+                        val dblistaOP = DataBaseHelber(context)
+                        try {
                             Log.d("Começou o OPL","")
                             val LojasOP = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf" +
                                     " FROM TB_lojas lojasPorCliente" +
@@ -203,16 +247,27 @@ class CargaDiaria {
                             PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando opls...")
 
                             Log.d("Terminou"," OPL")
-
+                        }catch (e:Exception){
+                            e.printStackTrace()
                         }
 
-                        lendoFormasDePagamento.join()
-                        lendoOperadorLogistico.join()
-                        LendoFormaDePagamentoExclusiva.join()
 
-                        Log.d("Começou "," Terceira parte")
+                    }
 
-                        val  lendoProgressiva = launch {
+                    lendoFormasDePagamento.join()
+                    lendoOperadorLogistico.join()
+                    LendoFormaDePagamentoExclusiva.join()
+
+                    if(!listaErrosCriticos.isEmpty()){
+
+                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        return@launch
+                    }
+
+                    Log.d("Começou "," Terceira parte")
+
+                    val  lendoProgressiva = launch {
+                        try {
                             val dblistaProgre = DataBaseHelber(context)
 
                             Log.d("Começou o Progressiva","")
@@ -296,348 +351,381 @@ class CargaDiaria {
                             }finally {
                                 db_Progreesivas.endTransaction()
                             }
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            if (!listaErros.contains("Progressiva")){
+                                listaErros.add("Progressiva")
+
+                            }
                         }
 
-                        lendoProgressiva.join()
-                        FragmentCargas.progresspush += 1
-                        PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando estoque...")
+                    }
 
-                        val lendoAb = launch {
+                    lendoProgressiva.join()
+
+                    if(!listaErrosCriticos.isEmpty()){
+                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        return@launch
+                    }
+
+                    FragmentCargas.progresspush += 1
+                    PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando estoque...")
+
+                    val lendoAb = launch {
+                        try {
                             val dblistaGrupo = DataBaseHelber(context)
                             val coroutines = mutableListOf<Deferred<Unit>>()
 
-                            Log.d("Começou o Progressiva","")
                             val query = "SELECT distinct lojasPorCliente.loja_id, Clientes.uf, Clientes.codigo" +
                                     " FROM TB_lojas lojasPorCliente" +
                                     " inner join TB_lojaporcliente ClienteFazOL on lojasPorCliente.loja_id = ClienteFazOL.loja_id" +
                                     " INNER JOIN TB_clientes Clientes on Clientes.empresa_id = ClienteFazOL.empresa_id" +
+                                    " WHERE lojasPorCliente.LojaTipo = 13 "+
                                     " order by 1"
                             val cursor = dblistaGrupo.writableDatabase.rawQuery(query,null)
                             while (cursor.moveToNext()){
-                                val  uf = cursor.getString(1)
-                                val lojaID = cursor.getString(0)
-                                val  codigoSync = cursor.getString(2)
+                                    val  uf = cursor.getString(1)
+                                    val lojaID = cursor.getString(0)
+                                    val  codigoSync = cursor.getString(2)
 
-                                val async = async {
-                                    val taskGruposAB = TaskGruposAB()
-                                    taskGruposAB.taskbuscagrupo(lojaID,uf,codigoSync,jsonArrayLojaAB!!)
+                                    val async = async {
+                                        val taskGruposAB = TaskGruposAB()
+                                        taskGruposAB.taskbuscagrupo(lojaID,uf,codigoSync,jsonArrayLojaAB!!, listaErros)
 
-                                }
-                                coroutines.add(async)
+                                    }
+                                    coroutines.add(async)
 
-                                runBlocking {
-                                    coroutines.awaitAll()
-                                }
+                                    runBlocking {
+                                        coroutines.awaitAll()
+                                    }
                             }
+                        }catch (e:Exception){
+                            e.printStackTrace()
                         }
 
-                        val lendoGrupoProgressiva = launch {
-                            val dblistaGrupoProgressiva = DataBaseHelber(context).writableDatabase
-                            val coroutines = mutableListOf<Deferred<Unit>>()
+                    }
 
-                            val querylojaTipo =  "SELECT loja_id FROM TB_lojas WHERE lojatipo = 13"
-                            val cursor  =   dblistaGrupoProgressiva.rawQuery(querylojaTipo,null)
-                            while (cursor.moveToNext()){
-                                val lojaId = cursor.getInt(0)
-                                val asyncGrupoProgressiva = async {
-                                    val taskGrupoProgressiva = TaskGrupoProgressiva()
-                                    taskGrupoProgressiva.taskGrupoProgressiva(lojaId, jsonArrayLojaABProgressiva!!)
-                                }
+                    val lendoGrupoProgressiva = launch {
+                        val dblistaGrupoProgressiva = DataBaseHelber(context).writableDatabase
+                        val coroutines = mutableListOf<Deferred<Unit>>()
 
-                                coroutines.add(asyncGrupoProgressiva)
-                                runBlocking {
-                                    coroutines.awaitAll()
-                                }
+                        val querylojaTipo =  "SELECT loja_id FROM TB_lojas WHERE lojatipo = 13"
+                        val cursor  =   dblistaGrupoProgressiva.rawQuery(querylojaTipo,null)
+                        while (cursor.moveToNext()){
+                            val lojaId = cursor.getInt(0)
+                            val asyncGrupoProgressiva = async {
+                                val taskGrupoProgressiva = TaskGrupoProgressiva()
+                                taskGrupoProgressiva.taskGrupoProgressiva(lojaId, jsonArrayLojaABProgressiva!!, listaErros)
+                            }
+
+                            coroutines.add(asyncGrupoProgressiva)
+                            runBlocking {
+                                coroutines.awaitAll()
                             }
                         }
-                        lendoAb.join()
-                        lendoGrupoProgressiva.join()
+                    }
+                    lendoAb.join()
+                    lendoGrupoProgressiva.join()
 
-                        val inserindoGrupoAb = launch {
+                    val inserindoGrupoAb = launch {
+                        val gruppolojaAbDAO = GrupoLojaAbDAO(context)
+                        for (i in jsonArrayLojaAB!!){
+                            gruppolojaAbDAO.insertGrupoEProduto(i)
+                        }
+                    }
+
+                    val  inserirGrupoProgressiva = launch {
+                        for (i in jsonArrayLojaABProgressiva!!){
                             val gruppolojaAbDAO = GrupoLojaAbDAO(context)
-                            for (i in jsonArrayLojaAB!!){
-                                gruppolojaAbDAO.insertGrupoEProduto(i)
+                            gruppolojaAbDAO.inserirGrupoProgressiva(i)
+                        }
+                    }
+
+                    inserindoGrupoAb.join()
+                    inserirGrupoProgressiva.join()
+
+                    val lendoEstoque = launch {
+                        val dblistaProgre = DataBaseHelber(context)
+
+                        Log.d("Começou o Estoque","")
+                        val lojasOP = "SELECT DISTINCT CodEstoque FROM TB_clientes"
+
+                        val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
+                        var count =0
+                        val jsonarayEstoque: MutableList<JSONArray>? = mutableListOf()
+                        val coroutines = mutableListOf<Deferred<Unit>>()
+                        while (curso.moveToNext()){
+                            val codigoEstoque = curso.getInt(0)
+                            count = count +1
+
+                            Log.d("Quantidade list estoque",count.toString())
+                            val lendEstoque =   async{
+                                val taskProgressivas = TaskEstoque()
+                                val jsonArray =taskProgressivas.recuperaEstoque(codigoEstoque)
+                                if (jsonArray != null) {
+                                    jsonarayEstoque?.add(jsonArray)
+                                }
                             }
+                            coroutines.add(lendEstoque)
                         }
 
-                        val  inserirGrupoProgressiva = launch {
-                            for (i in jsonArrayLojaABProgressiva!!){
-                                val gruppolojaAbDAO = GrupoLojaAbDAO(context)
-                                gruppolojaAbDAO.inserirGrupoProgressiva(i)
-                            }
+                        runBlocking {
+                            coroutines.awaitAll()
                         }
 
-                        inserindoGrupoAb.join()
-                        inserirGrupoProgressiva.join()
+                        Log.d("Quantidadede estoque", jsonarayEstoque?.size.toString())
 
-                        val lendoEstoque = launch {
-                            val dblistaProgre = DataBaseHelber(context)
+                        val db_Estoque= DataBaseHelber(context).writableDatabase
+                        db_Estoque.beginTransaction()
+                        try {
+                            for ( i in 0 until  jsonarayEstoque!!.size){
+                                val valoresEstoque = ContentValues()
+                                val jsonArrayAtual = jsonarayEstoque[i]
 
-                            Log.d("Começou o Estoque","")
-                            val lojasOP = "SELECT DISTINCT CodEstoque FROM TB_clientes"
+                                for ( j in 0 until  jsonArrayAtual.length()){
+                                    val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
 
-                            val curso = dblistaProgre.writableDatabase.rawQuery(lojasOP,null)
-                            var count =0
-                            val jsonarayEstoque: MutableList<JSONArray>? = mutableListOf()
-                            val coroutines = mutableListOf<Deferred<Unit>>()
-                            while (curso.moveToNext()){
-                                val codigoEstoque = curso.getInt(0)
-                                count = count +1
-
-                                Log.d("Quantidade list estoque",count.toString())
-                                val lendEstoque =   async{
-                                    val taskProgressivas = TaskEstoque()
-                                    val jsonArray =taskProgressivas.recuperaEstoque(codigoEstoque)
-                                    if (jsonArray != null) {
-                                        jsonarayEstoque?.add(jsonArray)
-                                    }
-                                }
-                                coroutines.add(lendEstoque)
-                            }
-
-                            runBlocking {
-                                coroutines.awaitAll()
-                            }
-
-                            Log.d("Quantidadede estoque", jsonarayEstoque?.size.toString())
-
-                            val db_Estoque= DataBaseHelber(context).writableDatabase
-                            db_Estoque.beginTransaction()
-                            try {
-                                for ( i in 0 until  jsonarayEstoque!!.size){
-                                    val valoresEstoque = ContentValues()
-                                    val jsonArrayAtual = jsonarayEstoque[i]
-
-                                    for ( j in 0 until  jsonArrayAtual.length()){
-                                        val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
-
-                                        valoresEstoque.put("EAN", jsonClientesPorLojasRetorno.optString("EAN"))
-                                        valoresEstoque.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
-                                        valoresEstoque.put("Centro", jsonClientesPorLojasRetorno.optInt("Centro"))
-                                        db_Estoque.insert("TB_Estoque",null,valoresEstoque)
-
-                                    }
+                                    valoresEstoque.put("EAN", jsonClientesPorLojasRetorno.optString("EAN"))
+                                    valoresEstoque.put("Quantidade", jsonClientesPorLojasRetorno.optInt("Quantidade"))
+                                    valoresEstoque.put("Centro", jsonClientesPorLojasRetorno.optInt("Centro"))
+                                    db_Estoque.insert("TB_Estoque",null,valoresEstoque)
 
                                 }
-                                db_Estoque.setTransactionSuccessful()
-                            }catch (e:Exception){
-                                e.printStackTrace()
-                            }finally {
-                                db_Estoque.endTransaction()
+
                             }
-                            FragmentCargas.progresspush += 3
-                            PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Filtros...")
+                            db_Estoque.setTransactionSuccessful()
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }finally {
+                            db_Estoque.endTransaction()
+                        }
+                        FragmentCargas.progresspush += 3
+                        PushNativo.showNotification(context,"TESTE1","Carga Tudo Farma","Atualizando Filtros...")
+                    }
+
+
+                    val  lendorepasse = launch{
+                        val queryrespasse =  "SELECT DISTINCT CodEstoque, uf FROM TB_clientes"
+                        val dbCliente = DataBaseHelber(context)
+
+                        val curso = dbCliente.writableDatabase.rawQuery(queryrespasse,null)
+                        var count =0
+                        val jsonarayRepasse: MutableList<JSONArray>? = mutableListOf()
+                        val coroutines = mutableListOf<Deferred<Unit>>()
+                        while (curso.moveToNext()){
+
+                            val codigoEstoque = curso.getInt(0)
+                            val uf = curso.getString(1)
+
+                            val lendoRepasse =   async{
+                                val taskRepasse = TaskRepasse()
+                                val jsonArray =taskRepasse.requestrepase(uf,codigoEstoque, listaErrosCriticos)
+                                if (jsonArray != null) {
+                                    jsonarayRepasse?.add(jsonArray)
+                                }
+                            }
+                            coroutines.add(lendoRepasse)
+
+                        }
+                        runBlocking {
+                            coroutines.awaitAll()
                         }
 
+                        try {
+                            for ( i in 0 until  jsonarayRepasse!!.size){
+                                val jsonArrayAtual = jsonarayRepasse[i]
+                                val repasseDAO = RepasseDAO(context)
+                                for ( j in 0 until  jsonArrayAtual.length()){
+                                    val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
 
-                        val  lendorepasse = launch{
-                            val queryrespasse =  "SELECT DISTINCT CodEstoque, uf FROM TB_clientes"
-                            val dbCliente = DataBaseHelber(context)
-
-                            val curso = dbCliente.writableDatabase.rawQuery(queryrespasse,null)
-                            var count =0
-                            val jsonarayRepasse: MutableList<JSONArray>? = mutableListOf()
-                            val coroutines = mutableListOf<Deferred<Unit>>()
-                            while (curso.moveToNext()){
-
-                                val codigoEstoque = curso.getInt(0)
-                                val uf = curso.getString(1)
-
-                                val lendoRepasse =   async{
-                                    val taskRepasse = TaskRepasse()
-                                    val jsonArray =taskRepasse.requestrepase(uf,codigoEstoque)
-                                    if (jsonArray != null) {
-                                        jsonarayRepasse?.add(jsonArray)
-                                    }
-                                }
-                                coroutines.add(lendoRepasse)
-
-                            }
-                            runBlocking {
-                                coroutines.awaitAll()
-                            }
-
-                            try {
-                                for ( i in 0 until  jsonarayRepasse!!.size){
-                                    val jsonArrayAtual = jsonarayRepasse[i]
-                                    val repasseDAO = RepasseDAO(context)
-                                    for ( j in 0 until  jsonArrayAtual.length()){
-                                        val jsonClientesPorLojasRetorno = jsonArrayAtual.optJSONObject(j)
-
-                                        val repasse = Repasse(jsonClientesPorLojasRetorno.optInt("MATERIAL",0),
-                                            jsonClientesPorLojasRetorno.optDouble("PERCENTUAL",0.0),
-                                            jsonClientesPorLojasRetorno.optString("UF",""),
-                                            jsonClientesPorLojasRetorno.optInt("CENTRO",0)  )
+                                    val repasse = Repasse(jsonClientesPorLojasRetorno.optInt("MATERIAL",0),
+                                        jsonClientesPorLojasRetorno.optDouble("PERCENTUAL",0.0),
+                                        jsonClientesPorLojasRetorno.optString("UF",""),
+                                        jsonClientesPorLojasRetorno.optInt("CENTRO",0))
                                         repasseDAO.insert(repasse)
-
-
-                                    }
                                 }
-                            }catch (e:Exception) {
-                                e.printStackTrace()
+                            }
+                        }catch (e:Exception) {
+                            e.printStackTrace()
+                            if(listaErrosCriticos.contains("Repasse")){
+                                listaErrosCriticos.add("Repasse")
                             }
 
                         }
-                        lendorepasse.join()
-                        lendoEstoque.join()
+
+                    }
+                    lendorepasse.join()
+                    lendoEstoque.join()
+
+                    if(!listaErrosCriticos.isEmpty()){
+                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        return@launch
+                    }
 
 
-                        val lendoFiltroPrincipal = launch {
-                            val  taskFiltroPrincipal = TaskFiltroPrincipal()
-                            jsonArrayFiltroPrincipal =taskFiltroPrincipal.requestFiltroPrincipal()
+
+
+                    val lendoFiltroPrincipal = launch {
+                        val  taskFiltroPrincipal = TaskFiltroPrincipal()
+                        jsonArrayFiltroPrincipal =taskFiltroPrincipal.requestFiltroPrincipal()
+
+                        if (jsonArrayFiltroPrincipal?.length() == 0){
+                            listaErros.add("filtro principal")
                         }
-                        val lendoFiltros= launch {
-                            val taskFiltro = TaskFiltro()
-                            jsonArrayFiltro = taskFiltro.requestFiltro()
+                    }
+                    val lendoFiltros= launch {
+                        val taskFiltro = TaskFiltro()
+                        jsonArrayFiltro = taskFiltro.requestFiltro()
+                        if (jsonArrayFiltro?.length() == 0){
+                            listaErros.add("filtro")
                         }
-                        val lendoFiltroProduto = launch {
-                            val taskFiltroProduto = TaskFiltroProduto()
-                            jsonArrayFiltroProduto = taskFiltroProduto.requestFiltroProduto()
+                    }
+                    val lendoFiltroProduto = launch {
+                        val taskFiltroProduto = TaskFiltroProduto()
+                        jsonArrayFiltroProduto = taskFiltroProduto.requestFiltroProduto()
+                        if (jsonArrayFiltroProduto?.length() == 0){
+                            listaErros.add("Filtro Produto")
                         }
-                        lendoFiltroPrincipal.join()
-                        lendoFiltros.join()
-                        lendoFiltroProduto.join()
+                    }
+                    lendoFiltroPrincipal.join()
+                    lendoFiltros.join()
+                    lendoFiltroProduto.join()
 
 
-                        val gravandoFiltroPrincipal = launch {
-                            for ( i in  0 until jsonArrayFiltroPrincipal!!.length()){
-                                val jsonObjectFiltroPrincipalIndices = jsonArrayFiltroPrincipal!!.getJSONObject(i)
-                                val filtroCatecoriaID = jsonObjectFiltroPrincipalIndices.getInt("FiltroCategoria_id")
-                                val descricao = jsonObjectFiltroPrincipalIndices.getString("Descricao")
-                                val filtroPrincipal = FiltroPrincipal(descricao,filtroCatecoriaID)
-                                val filtroPrincipalDAO = FiltroPrincipalDAO(context)
-                                filtroPrincipalDAO.insert(filtroPrincipal)
+                    val gravandoFiltroPrincipal = launch {
+                        for ( i in  0 until jsonArrayFiltroPrincipal!!.length()){
+                            val jsonObjectFiltroPrincipalIndices = jsonArrayFiltroPrincipal!!.getJSONObject(i)
+                            val filtroCatecoriaID = jsonObjectFiltroPrincipalIndices.getInt("FiltroCategoria_id")
+                            val descricao = jsonObjectFiltroPrincipalIndices.getString("Descricao")
+                            val filtroPrincipal = FiltroPrincipal(descricao,filtroCatecoriaID)
+                            val filtroPrincipalDAO = FiltroPrincipalDAO(context)
+                            filtroPrincipalDAO.insert(filtroPrincipal)
 
-                            }
                         }
-                        val gravandoFiltro = launch {
-                            for (i in 0 until  jsonArrayFiltro!!.length()){
-                                val jsonFiltroIndce = jsonArrayFiltro!!.getJSONObject(i)
-                                val filtroID = jsonFiltroIndce.getInt("Filtro_id")
-                                val Pares = jsonFiltroIndce.getString("Pares")
-                                val FiltroCategoria_id = jsonFiltroIndce.getInt("FiltroCategoria_id")
-                                val Descricao = jsonFiltroIndce.getString("Descricao")
-                                val Qtd = jsonFiltroIndce.getInt("Qtd")
-                                val filtro = Filtros(Descricao,FiltroCategoria_id,filtroID,Pares,Qtd)
-                                val filtroDAO = FiltroDAO(context)
-                                filtroDAO.insert(filtro)
+                    }
+                    val gravandoFiltro = launch {
+                        for (i in 0 until  jsonArrayFiltro!!.length()){
+                            val jsonFiltroIndce = jsonArrayFiltro!!.getJSONObject(i)
+                            val filtroID = jsonFiltroIndce.getInt("Filtro_id")
+                            val Pares = jsonFiltroIndce.getString("Pares")
+                            val FiltroCategoria_id = jsonFiltroIndce.getInt("FiltroCategoria_id")
+                            val Descricao = jsonFiltroIndce.getString("Descricao")
+                            val Qtd = jsonFiltroIndce.getInt("Qtd")
+                            val filtro = Filtros(Descricao,FiltroCategoria_id,filtroID,Pares,Qtd)
+                            val filtroDAO = FiltroDAO(context)
+                            filtroDAO.insert(filtro)
 
-                            }
+                        }
+                    }
+
+                    val  gravandoFiltroProduto = launch {
+                        for (i in 0 until  jsonArrayFiltroProduto!!.length()){
+                            val jsonFiltroProdutoIndice = jsonArrayFiltroProduto!!.getJSONObject(i)
+                            val pares = jsonFiltroProdutoIndice.getString("Pares")
+                            val Produto_codigo = jsonFiltroProdutoIndice.getString("Produto_codigo")
+                            val Barra = jsonFiltroProdutoIndice.getString("Barra")
+                            val FiltroCategoria_id = jsonFiltroProdutoIndice.getInt("FiltroCategoria_id")
+                            val Filtro_id = jsonFiltroProdutoIndice.getInt("Filtro_id")
+                            val Loja_id = jsonFiltroProdutoIndice.getInt("Loja_id")
+
+                            val filtroProduto = FiltroProduto(Barra,FiltroCategoria_id,Filtro_id,Loja_id,pares,Produto_codigo)
+                            val filtroProdutoDAO = FiltroProdutoDAO(context)
+                            filtroProdutoDAO.insert(filtroProduto)
+
+                        }
+                    }
+
+                    gravandoFiltroPrincipal.join()
+                    gravandoFiltro.join()
+                    gravandoFiltroProduto.join()
+
+                    val lerkit = launch {
+                        try {
+                            jsonKit = lerZip.readTextFileFromZip(patch,"Kit.json","Kit").toString()
+                            val jsonObjectKit = JSONObject(jsonKit)
+                            val jsonArray = JSONArray(jsonObjectKit.getString("KITS"))
+                            val lerKits = LerKitItens()
+                            lerKits.lerJsonKit(jsonArray,context)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            listaErros.add("kit")
                         }
 
-                        val  gravandoFiltroProduto = launch {
-                            for (i in 0 until  jsonArrayFiltroProduto!!.length()){
-                                val jsonFiltroProdutoIndice = jsonArrayFiltroProduto!!.getJSONObject(i)
-                                val pares = jsonFiltroProdutoIndice.getString("Pares")
-                                val Produto_codigo = jsonFiltroProdutoIndice.getString("Produto_codigo")
-                                val Barra = jsonFiltroProdutoIndice.getString("Barra")
-                                val FiltroCategoria_id = jsonFiltroProdutoIndice.getInt("FiltroCategoria_id")
-                                val Filtro_id = jsonFiltroProdutoIndice.getInt("Filtro_id")
-                                val Loja_id = jsonFiltroProdutoIndice.getInt("Loja_id")
 
-                                val filtroProduto = FiltroProduto(Barra,FiltroCategoria_id,Filtro_id,Loja_id,pares,Produto_codigo)
-                                val filtroProdutoDAO = FiltroProdutoDAO(context)
-                                filtroProdutoDAO.insert(filtroProduto)
 
-                            }
-                        }
-
-                        gravandoFiltroPrincipal.join()
-                        gravandoFiltro.join()
-                        gravandoFiltroProduto.join()
-
-                        val lerkit = launch {
-                            try {
-                                jsonKit = lerZip.readTextFileFromZip(patch,"Kit.json","Kit").toString()
-                                val jsonObjectKit = JSONObject(jsonKit)
-                                val jsonArray = JSONArray(jsonObjectKit.getString("KITS"))
-                                val lerKits = LerKitItens()
-                                lerKits.lerJsonKit(jsonArray,context)
-                            }catch (e:Exception){
-                                e.printStackTrace()
+                    }
+                    val  lerKitxPreco = launch {
+                        try {
+                            jsonKitxPreco = lerZip.readTextFileFromZip(patch,"KitxPreco.json","KitPreco").toString()
+                            val jsonObjectKit = JSONObject(jsonKitxPreco)
+                            val jsonArray = JSONArray(jsonObjectKit.getString("KITSxPRECO"))
+                            val lerkits = LerKitItens()
+                            lerkits.lerJsonKitxPreco(jsonArray,context)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            if(!listaErros.contains("kit")){
                                 listaErros.add("kit")
                             }
-
-
-
-                        }
-                        val  lerKitxPreco = launch {
-                            try {
-                                jsonKitxPreco = lerZip.readTextFileFromZip(patch,"KitxPreco.json","KitPreco").toString()
-                                val jsonObjectKit = JSONObject(jsonKitxPreco)
-                                val jsonArray = JSONArray(jsonObjectKit.getString("KITSxPRECO"))
-                                val lerkits = LerKitItens()
-                                lerkits.lerJsonKitxPreco(jsonArray,context)
-                            }catch (e:Exception){
-                                e.printStackTrace()
-                                if(!listaErros.contains("kit")){
-                                    listaErros.add("kit")
-                                }
-                            }
-
                         }
 
-                        val  lerKitXCliente = launch {
+                    }
+
+                    val  lerKitXCliente = launch {
+                        jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
+                        val jsonObjectKit = JSONObject(jsonkitCliente)
+                        val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
+                        val lerkits = LerKitItens()
+                        lerkits.lerJsonkitCliente(jsonArray,context)
+                        try {
                             jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
                             val jsonObjectKit = JSONObject(jsonkitCliente)
                             val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
                             val lerkits = LerKitItens()
                             lerkits.lerJsonkitCliente(jsonArray,context)
-                            try {
-                                jsonkitCliente = lerZip.readTextFileFromZip(patch,"KitxCliente.json","KitPreco").toString()
-                                val jsonObjectKit = JSONObject(jsonkitCliente)
-                                val jsonArray = JSONArray(jsonObjectKit.getString("KITSxCLIENTES"))
-                                val lerkits = LerKitItens()
-                                lerkits.lerJsonkitCliente(jsonArray,context)
-                            }catch (e:Exception){
-                                e.printStackTrace()
-                                if(!listaErros.contains("kit")){
-                                    listaErros.add("kit")
-                                }
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            if(!listaErros.contains("kit")){
+                                listaErros.add("kit")
                             }
                         }
-
-                        val lerkitxLoja = launch {
-                            try {
-                                jsonKitxLoja = lerZip.readTextFileFromZip(patch,"KitxLoja.json","KitPreco").toString()
-                                val jsonObjectKit = JSONObject(jsonKitxLoja)
-                                val jsonArray = JSONArray(jsonObjectKit.getString("KITSxLOJA"))
-                                val lerkits = LerKitItens()
-                                lerkits.lerJsonkitxLoja(jsonArray,context)
-                            }catch (e:Exception){
-                                e.printStackTrace()
-                                if(!listaErros.contains("kit")){
-                                    listaErros.add("kit")
-                                }
-                            }
-                        }
-
-                        lerkit.join()
-                        lerKitxPreco.join()
-                        lerKitXCliente.join()
-                        lerkitxLoja.join()
-
-                        Log.d("Terminou carga","")
-                        PushNativo.showNotification(context,"TESTE1","Carga Atualizada","Tudo Pronto, Boas vendas!")
-                        cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
-
-                    }catch (e:Exception){
-                        e.printStackTrace()
                     }
+
+                    val lerkitxLoja = launch {
+                        try {
+                            jsonKitxLoja = lerZip.readTextFileFromZip(patch,"KitxLoja.json","KitPreco").toString()
+                            val jsonObjectKit = JSONObject(jsonKitxLoja)
+                            val jsonArray = JSONArray(jsonObjectKit.getString("KITSxLOJA"))
+                            val lerkits = LerKitItens()
+                            lerkits.lerJsonkitxLoja(jsonArray,context)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                            if(!listaErros.contains("kit")){
+                                listaErros.add("kit")
+                            }
+                        }
+                    }
+
+                    lerkit.join()
+                    lerKitxPreco.join()
+                    lerKitXCliente.join()
+                    lerkitxLoja.join()
+
+                    Log.d("Terminou carga","")
+                    PushNativo.showNotification(context,"TESTE1","Carga Atualizada","Tudo Pronto, Boas vendas!")
+                    cargaTerminada(constrain,texttitulocarga,subtitulocarga,context,icon,animador,terminouCarga)
+
                 }else{
                     val  dialogErro = DialogErro()
                     dialogErro.Dialog(context,"Atenção", "No momento algo deu errado, tente novamente mais tarde", "Ok",""){
 
                     }
                 }
-            }catch (e:Exception){
-                e.printStackTrace()
-                val  dialogErro = DialogErro()
-                dialogErro.Dialog(context,"Atenção", "No momento algo deu errado, tente novamente mais tarde", "Ok",""){
 
-                }
             }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
     }
 
     suspend fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, context: Context, icon:ImageView, animador: ObjectAnimator, terminouCarga: visaogrupo.com.br.modulo_visitacao.Views.Models.Class.Interfaces.Ondimiss.TerminouCarga){
@@ -645,6 +733,11 @@ class CargaDiaria {
         val drawable = icon.drawable
 
         CoroutineScope(Dispatchers.Main).launch {
+            if(!listaErros.isEmpty()){
+                erroNaCargaLoja(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                return@launch
+            }
+
 
             constrain.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
             texttitulocarga.setTextColor(Color.parseColor("#64BC26"))
@@ -681,6 +774,69 @@ class CargaDiaria {
             )
             subtitulocarga.text ="atualizado em: ${currentDate} ${HoraAtual.horaAtual()}"
 
+        }
+    }
+
+    fun trocaCoritensCargaFeita(img:ImageView, texttitulo:TextView, descricao:TextView,
+                                context: Context, animador: ObjectAnimator, constrain:ConstraintLayout
+    ){
+        CoroutineScope(Dispatchers.Main).launch {
+            img.background = ContextCompat.getDrawable(context,R.drawable.bordasimagenscargas)
+            constrain.background = ContextCompat.getDrawable(context, R.drawable.bordascargas)
+            trocarCorItem(img,img.drawable,"#336B9B")
+            texttitulo.setTextColor(Color.parseColor("#2A313C"))
+            descricao.setTextColor(Color.parseColor("#2A313C"))
+            descricao.text = "Tente novamente..."
+            animador.end()
+
+        }
+
+    }
+    fun erroNaCargaLoja(img:ImageView, texttitulo:TextView, descricao:TextView,
+                    context: Context, animador: ObjectAnimator, constrain:ConstraintLayout){
+        var errolista = ""
+        trocaCoritensCargaFeita(img,texttitulo,descricao,context, animador,constrain)
+        val  dialogErro = DialogErro()
+        for ((i,valor) in listaErros.withIndex()){
+            if (listaErros.size == 1 ){
+                errolista += valor
+            }else if( i +1 == listaErros.size){
+                errolista += valor +". "
+            }else{
+                errolista += valor +", "
+            }
+
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            dialogErro.Dialog(context,"Atenção", "Os seguintes recursos não estará disponivel no momento: ${errolista} \nTente Novamente mais tarde! Sua carga ", "Ok",""){
+
+            }
+        }
+    }
+    private fun trocarCorItem(icon:ImageView, drawable: Drawable, cor:String){
+        val wrappedDrawable = DrawableCompat.wrap(drawable.mutate())
+        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(cor))
+        icon.setImageDrawable(wrappedDrawable)
+    }
+    fun erroNaCarga(img:ImageView, texttitulo:TextView, descricao:TextView,
+                    context: Context, animador: ObjectAnimator, constrain:ConstraintLayout){
+        var errolista = ""
+        trocaCoritensCargaFeita(img,texttitulo,descricao,context, animador,constrain)
+        val  dialogErro = DialogErro()
+        for ((i,valor) in listaErrosCriticos.withIndex()){
+            if (listaErrosCriticos.size == 1 ){
+                errolista += valor
+            }else if( i +1 == listaErrosCriticos.size){
+                errolista += valor +". "
+            }else{
+                errolista += valor +", "
+            }
+
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            dialogErro.Dialog(context,"Atenção", "Não conseguimos encontrar as seguintes informações: ${errolista} \nTente realizar a cargar novamente em instantes ", "Ok",""){
+
+            }
         }
     }
 }

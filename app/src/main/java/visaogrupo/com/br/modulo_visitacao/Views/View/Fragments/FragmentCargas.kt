@@ -166,8 +166,6 @@ class FragmentCargas () : Fragment() ,
 
                     }
                 }
-
-
             }else {
                 val  dialogErro = DialogErro()
                 dialogErro.Dialog(requireContext(),"Sem conexão", "Tente novamente mais tarde", "Ok",""){

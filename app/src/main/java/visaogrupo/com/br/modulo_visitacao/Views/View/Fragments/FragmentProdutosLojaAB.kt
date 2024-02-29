@@ -242,11 +242,11 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
             val valorFomatTotalA = String.format("%.2f",valorTotalGrupoA)
             binding.porcentagemA.text = valorFomatocentagemA+ "%"
             binding.valorTotalA.text = "R$ " + valorFomatTotalA
-            val animationDuration = 200L
+          /*  val animationDuration = 200L
             val finalProgress = porcentagemProgressA.toInt()
             val animator = ObjectAnimator.ofInt(binding.progressA, "progress", finalProgress)
             animator.duration = animationDuration
-            animator.start()
+            animator.start()*/
 
             val  porcentagemProgressB = (valorTotalGrupoB / valorTotalDosGrupos) * 100
             val valorFomatocentagemB = String.format("%.2f",porcentagemProgressB)

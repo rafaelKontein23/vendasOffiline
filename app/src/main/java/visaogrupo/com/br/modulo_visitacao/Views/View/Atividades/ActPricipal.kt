@@ -61,6 +61,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentClientes
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentLojas
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentPedidos
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProdutosKit
+import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProdutosLojaAB
 import visaogrupo.com.br.modulo_visitacao.Views.View.Fragments.FragmentProtudos
 
 class ActPricipal : AppCompatActivity(),
@@ -76,6 +77,7 @@ class ActPricipal : AppCompatActivity(),
     val fragmentClientes = FragmentClientes(this,this, this)
     val fragmentProtudos = FragmentProtudos(this,this)
     val fragmentProtudosKit = FragmentProdutosKit(this)
+    val fragmentProdutoAB= FragmentProdutosLojaAB(this)
     val fragementPedido = FragmentPedidos(this, this)
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
@@ -277,6 +279,9 @@ class ActPricipal : AppCompatActivity(),
                         val mudarFragment = MudarFragment()
                         mudarFragment.openFragmentProtudosKit(supportFragmentManager,R.id.fragmentContainerViewPrincipal,this, this)
                     }
+                }else if (lojaTipo === 13){
+                    val mudarFragment = MudarFragment()
+                    mudarFragment.openFragmentProtudosAB(supportFragmentManager,this)
                 }else{
                     if(!fragmentProtudos.isVisible){
                         val mudarFragment = MudarFragment()

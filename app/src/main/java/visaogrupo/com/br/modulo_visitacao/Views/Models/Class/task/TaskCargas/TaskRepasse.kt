@@ -8,7 +8,7 @@ import visaogrupo.com.br.modulo_visitacao.Views.Models.Class.task.Retrofit_Reque
 
 class TaskRepasse {
 
-    fun requestrepase(uf:String,codigo:Int): JSONArray {
+    fun requestrepase(uf:String,codigo:Int, listaErr:MutableList<String>): JSONArray {
         var jsonPrincipalArray = JSONArray()
         val client =  OkHttpClient().newBuilder()
             .build();
@@ -16,21 +16,24 @@ class TaskRepasse {
             .url("${URLs.urlCarga}Repasse\\00${codigo}_${uf}.json")
             .method("GET", null)
             .build();
+
         val response = client.newCall(request).execute();
-        if (response.code() == 404){
+        if (response.code() != 200){
             return jsonPrincipalArray
+            if(listaErr.contains("Repasse")){
+                listaErr.add("Repasse")
+
+            }
         }else{
             val  retornoFiltroPrincipal =  response.body()?.string()
             val jsonObject = JSONObject(retornoFiltroPrincipal)
             jsonPrincipalArray = jsonObject.getJSONArray("Repasse")
             for (i in 0 until jsonPrincipalArray.length()) {
                 val objeto = jsonPrincipalArray.getJSONObject(i)
-
                 objeto.put("UF", uf)
                 objeto.put("CENTRO", codigo)
+
             }
-
-
             return  jsonPrincipalArray
         }
 

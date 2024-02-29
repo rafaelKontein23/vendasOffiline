@@ -84,7 +84,7 @@
                     style="@style/ProgressA"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:progress="0"
+                    android:progress="100"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
