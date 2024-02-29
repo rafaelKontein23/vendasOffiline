@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'visaogrupo.com.br.modulo_visitacao'
+    namespace 'visaogrupo.com.br.TudoFarmaOffiline'
     compileSdk 33
 
     defaultConfig {
-        applicationId "visaogrupo.com.br.modulo_visitacao"
+        applicationId "visaogrupo.com.br.TudoFarmaOffiline"
         minSdk 21
         targetSdk 33
         versionCode 1
