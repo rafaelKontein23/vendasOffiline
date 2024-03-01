@@ -38,8 +38,10 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActC
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.FiltroDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProdutosDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdapterFiltroAZ
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogFiltro
 
 class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: AtualizaCarrinho) : Fragment(),
@@ -85,8 +87,18 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         binding.recyProtudo.layoutManager = layoutManager
 
         binding.filtros.setOnClickListener {
-            val dialogFiltro = DialogFiltro()
-            dialogFiltro.dialogFiltro(context,this,limparFiltro,this, lojaSelecionada.loja_id)
+            val filtroDao = FiltroDAO(requireContext())
+            val existeItens = filtroDao.confereSeExisteItens()
+            if (!existeItens){
+                val dialog = DialogErro()
+                dialog.Dialog(context,"Atenção","No momento o filtro não está disponivél, tente fazer carga novamente","Ok",""){
+
+                }
+            }else{
+                val dialogFiltro = DialogFiltro()
+                dialogFiltro.dialogFiltro(context,this,limparFiltro,this, lojaSelecionada.loja_id)
+            }
+
         }
 
         binding.totalCarrinho.setOnClickListener {

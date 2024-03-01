@@ -18,57 +18,57 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31" >
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActCarrinhoAB"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoAB"
             android:exported="false" />
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActCarrinhoKit"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoKit"
             android:exported="false" />
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActProdutosAtualizar"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActProdutosAtualizar"
             android:exported="false" />
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActDetalhePedidoSalvo"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActDetalhePedidoSalvo"
             android:exported="false" />
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActPedidoEnviado"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPedidoEnviado"
             android:exported="false" />
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActPedido"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPedido"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActCarrinhoDetalhe"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoDetalhe"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActProtudoDetalhe"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActProtudoDetalhe"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActPricipal"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActLogin"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActLogin"
             android:exported="true" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TudoFarmaOffiline.View.Atividades.ActSplashSreen"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActSplashSreen"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,7 +86,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".TudoFarmaOffiline.Models.Class.Ultis.ReceberPush"
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.ReceberPush"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

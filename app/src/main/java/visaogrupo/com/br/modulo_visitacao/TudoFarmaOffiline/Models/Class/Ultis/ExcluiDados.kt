@@ -6,7 +6,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBas
 
 class ExcluiDados(context: Context) {
      val db = DataBaseHelber(context).writableDatabase
-    fun exluidados():MutableList<String>{
+    fun exluidadosGeral():MutableList<String>{
         val listaNomeTabela:MutableList<String> = mutableListOf<String>()
 
         listaNomeTabela.add("TB_lojas")
@@ -29,10 +29,8 @@ class ExcluiDados(context: Context) {
         listaNomeTabela.add("TB_kit_x_preco")
         listaNomeTabela.add("TB_KItXcliente")
         listaNomeTabela.add("TB_KitxLoja")
-
         listaNomeTabela.add("Tb_GrupoAB")
         listaNomeTabela.add("TB_grupoAB_Produtos")
-
         listaNomeTabela.add("TB_Grupo_Progressiva")
 
 
@@ -56,6 +54,21 @@ class ExcluiDados(context: Context) {
             val excluiTabela = "DELETE FROM TB_Estoque"
             db.execSQL(excluiTabela)
             Log.d("Excluiu dados de : ","TB_Estoque")
+        }catch (e:Exception){
+            e.printStackTrace()
+            Log.d("Falho a exclusão de","Dados")
+        }
+
+    }
+
+    fun exluiDadosEspecifico(listaitens:MutableList<String>){
+        try {
+            for (i in listaitens){
+                val excluiTabela = "DELETE FROM ${i}"
+                db.execSQL(excluiTabela)
+                Log.d("Excluiu dados de : ","TB_Estoque")
+            }
+
         }catch (e:Exception){
             e.printStackTrace()
             Log.d("Falho a exclusão de","Dados")

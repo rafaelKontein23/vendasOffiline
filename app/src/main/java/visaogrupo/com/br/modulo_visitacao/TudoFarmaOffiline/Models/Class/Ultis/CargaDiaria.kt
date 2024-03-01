@@ -51,6 +51,7 @@ class CargaDiaria {
                        subtitulocarga: TextView,
                        icon:ImageView, animador:
                        ObjectAnimator,terminouCarga: TerminouCarga){
+
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 val patch = Task_Cargadiaria().Cargadiaria(user_ide,context )
@@ -62,7 +63,7 @@ class CargaDiaria {
                 Log.d("Caminho Zip","${patch}")
                 if(!patch.isEmpty()){
                     val excluiDadosTabelas = ExcluiDados(context)
-                    excluiDadosTabelas.exluidados()
+                    excluiDadosTabelas.exluidadosGeral()
                     val lerZip = LerZip()
                     val lojasDAO = LojasDAO(context)
                     val clientesDAO = ClientesDAO(context)
@@ -162,8 +163,8 @@ class CargaDiaria {
                     lendoPrazoMedio.join()
 
                     if(!listaErrosCriticos.isEmpty()){
+                        erroNaCargaFun(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
 
-                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
                         return@launch
                     }
 
@@ -198,7 +199,7 @@ class CargaDiaria {
 
                             while (curso.moveToNext()){
                                 try {
-                                    val lojaID =  curso.getInt(21)
+                                    val lojaID =  curso.getInt(0)
                                     jsonFormaDePagamento = lerZip.readTextFileFromZip(patch, "FormaPagamento_${lojaID}.json", "FormaDePAgamento").toString()
                                     val jsosonform = JSONObject(jsonFormaDePagamento)
                                     val jsonArrayFormaDePag = JSONArray(jsosonform.getString("FORMAS"))
@@ -261,6 +262,8 @@ class CargaDiaria {
                     if(!listaErrosCriticos.isEmpty()){
 
                         erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        val excluiDadosTabelas = ExcluiDados(context)
+                        excluiDadosTabelas.exluidadosGeral()
                         return@launch
                     }
 
@@ -364,7 +367,7 @@ class CargaDiaria {
                     lendoProgressiva.join()
 
                     if(!listaErrosCriticos.isEmpty()){
-                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        erroNaCargaFun(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
                         return@launch
                     }
 
@@ -384,20 +387,20 @@ class CargaDiaria {
                                     " order by 1"
                             val cursor = dblistaGrupo.writableDatabase.rawQuery(query,null)
                             while (cursor.moveToNext()){
-                                    val  uf = cursor.getString(1)
-                                    val lojaID = cursor.getString(0)
-                                    val  codigoSync = cursor.getString(2)
+                                val  uf = cursor.getString(1)
+                                val lojaID = cursor.getString(0)
+                                val  codigoSync = cursor.getString(2)
 
-                                    val async = async {
-                                        val taskGruposAB = TaskGruposAB()
-                                        taskGruposAB.taskbuscagrupo(lojaID,uf,codigoSync,jsonArrayLojaAB!!, listaErros)
+                                val async = async {
+                                    val taskGruposAB = TaskGruposAB()
+                                    taskGruposAB.taskbuscagrupo(lojaID,uf,codigoSync,jsonArrayLojaAB!!, listaErros)
 
-                                    }
-                                    coroutines.add(async)
+                                }
+                                coroutines.add(async)
 
-                                    runBlocking {
-                                        coroutines.awaitAll()
-                                    }
+                                runBlocking {
+                                    coroutines.awaitAll()
+                                }
                             }
                         }catch (e:Exception){
                             e.printStackTrace()
@@ -542,8 +545,7 @@ class CargaDiaria {
                                         jsonClientesPorLojasRetorno.optDouble("PERCENTUAL",0.0),
                                         jsonClientesPorLojasRetorno.optString("UF",""),
                                         jsonClientesPorLojasRetorno.optInt("CENTRO",0))
-
-                                        repasseDAO.insert(repasse)
+                                    repasseDAO.insert(repasse)
                                 }
                             }
                         }catch (e:Exception) {
@@ -559,7 +561,7 @@ class CargaDiaria {
                     lendoEstoque.join()
 
                     if(!listaErrosCriticos.isEmpty()){
-                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                        erroNaCargaFun(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
                         return@launch
                     }
 
@@ -649,7 +651,9 @@ class CargaDiaria {
                             lerKits.lerJsonKit(jsonArray,context)
                         }catch (e:Exception){
                             e.printStackTrace()
-                            listaErros.add("kit")
+                            if(!listaErros.contains("kit")){
+                                listaErros.add("loja kit")
+                            }
                         }
 
 
@@ -665,7 +669,7 @@ class CargaDiaria {
                         }catch (e:Exception){
                             e.printStackTrace()
                             if(!listaErros.contains("kit")){
-                                listaErros.add("kit")
+                                listaErros.add("loja kit")
                             }
                         }
 
@@ -686,7 +690,7 @@ class CargaDiaria {
                         }catch (e:Exception){
                             e.printStackTrace()
                             if(!listaErros.contains("kit")){
-                                listaErros.add("kit")
+                                listaErros.add("loja kit")
                             }
                         }
                     }
@@ -701,7 +705,7 @@ class CargaDiaria {
                         }catch (e:Exception){
                             e.printStackTrace()
                             if(!listaErros.contains("kit")){
-                                listaErros.add("kit")
+                                listaErros.add("loja kit")
                             }
                         }
                     }
@@ -729,14 +733,35 @@ class CargaDiaria {
 
     }
 
-    suspend fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, context: Context, icon:ImageView, animador: ObjectAnimator, terminouCarga: visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TerminouCarga){
+    suspend fun cargaTerminada(constrain : ConstraintLayout, texttitulocarga: TextView, subtitulocarga: TextView, context: Context, icon:ImageView, animador: ObjectAnimator, terminouCarga: TerminouCarga){
 
         val drawable = icon.drawable
 
         CoroutineScope(Dispatchers.Main).launch {
             if(!listaErros.isEmpty()){
-                erroNaCargaLoja(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
-                return@launch
+                erroNaCargaLoja(context)
+                val listaNomeTabela = mutableListOf<String>()
+                if (listaErros.contains("loja kit")){
+                    listaNomeTabela.add("TB_Kits")
+                    listaNomeTabela.add("Tb_Kit_Produtos")
+                    listaNomeTabela.add("TB_kit_x_preco")
+                    listaNomeTabela.add("TB_KItXcliente")
+                    listaNomeTabela.add("TB_KitxLoja")
+
+                }
+                if (listaErros.contains("Filtro Produto")){
+                    listaNomeTabela.add("TB_Filtros")
+                    listaNomeTabela.add("TB_FiltroProdutos")
+                    listaNomeTabela.add("TB_FiltroPricipal")
+                }
+
+                if (listaErros.contains("Loja Grupo AB")){
+                    listaNomeTabela.add("Tb_GrupoAB")
+                    listaNomeTabela.add("TB_grupoAB_Produtos")
+                    listaNomeTabela.add("TB_Grupo_Progressiva")
+                }
+                val excluiDados = ExcluiDados(context)
+                excluiDados.exluiDadosEspecifico(listaNomeTabela)
             }
 
 
@@ -745,17 +770,13 @@ class CargaDiaria {
             subtitulocarga.setTextColor(Color.parseColor("#64BC26"))
             subtitulocarga.text ="atualizou."
             animador.end()
-
             val color = ContextCompat.getColor(context, R.color.textacaboucarga)
             val mutableDrawable = DrawableCompat.wrap(drawable).mutate()
             DrawableCompat.setTint(mutableDrawable, color)
             icon.setImageDrawable(mutableDrawable)
             icon.background = ContextCompat.getDrawable(context, R.drawable.cargaacbou)
             terminouCarga.terminouCarga()
-            val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-            val editor = sharedPreferences?.edit()
-            editor?.putBoolean("cargafeita", true)
-            editor?.apply()
+            FezCargaPreferencias.atualizaInfoDeCarga(context, true)
             FragmentCargas.progresspush  =0
         }
 
@@ -793,10 +814,8 @@ class CargaDiaria {
         }
 
     }
-    fun erroNaCargaLoja(img:ImageView, texttitulo:TextView, descricao:TextView,
-                    context: Context, animador: ObjectAnimator, constrain:ConstraintLayout){
+    fun erroNaCargaLoja(context: Context){
         var errolista = ""
-        trocaCoritensCargaFeita(img,texttitulo,descricao,context, animador,constrain)
         val  dialogErro = DialogErro()
         for ((i,valor) in listaErros.withIndex()){
             if (listaErros.size == 1 ){
@@ -839,5 +858,13 @@ class CargaDiaria {
 
             }
         }
+    }
+
+    fun erroNaCargaFun(img:ImageView, texttitulo:TextView, descricao:TextView,
+                    context: Context, animador: ObjectAnimator, constrain:ConstraintLayout){
+        erroNaCarga(img,texttitulo, descricao ,context,animador,constrain)
+        val excluiDadosTabelas = ExcluiDados(context)
+        excluiDadosTabelas.exluidadosGeral()
+        FezCargaPreferencias.atualizaInfoDeCarga(context, false)
     }
 }

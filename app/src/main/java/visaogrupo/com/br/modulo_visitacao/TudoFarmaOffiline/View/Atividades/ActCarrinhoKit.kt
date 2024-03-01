@@ -22,6 +22,10 @@ class ActCarrinhoKit : AppCompatActivity() {
         binding = ActivityActCarrinhoKitBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.voltarCarrinho.setOnClickListener {
+            onBackPressed()
+        }
+
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val gsonclientes = Gson()

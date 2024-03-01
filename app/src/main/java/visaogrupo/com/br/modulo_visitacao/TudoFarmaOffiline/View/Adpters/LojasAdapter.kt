@@ -25,16 +25,20 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.GrupoLojaAbDAO
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.KitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 
 
-class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int, supportFragmentManager:FragmentManager, carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho) : Adapter<LojasAdapter.LojasViewHolder>() {
+class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int, supportFragmentManager:FragmentManager, carrinhoVisible: carrinhoVisible, atualizaCarrinho: AtualizaCarrinho, context: Context) : Adapter<LojasAdapter.LojasViewHolder>() {
     var listaLojas = list
     val trocarcorItem = trocarcorItem
     val  frameid = frameid
     val supportFragmentManager = supportFragmentManager
     val carrinhoVisible = carrinhoVisible
     val  atualizaCarrinho = atualizaCarrinho
+    val context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LojasViewHolder {
      val  view = LayoutInflater.from(parent.context).inflate(R.layout.celula_loja,parent,false)
@@ -66,9 +70,30 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
             trocarcorItem.trocacor()
             val mudarFragment = MudarFragment()
             if (listaLojas[position].LojaTipo == 4){
-                mudarFragment.openFragmentProtudosKit(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+                val kitDaO = KitDAO(context)
+                val existeitem =  kitDaO.confereSeExisteItens()
+                if (!existeitem){
+                    val dialog = DialogErro()
+                    dialog.Dialog(context,"Atenção","No momento essa loja nao está disponivel, Tente Realizar a carga novamente","Ok",""){
+
+                    }
+                }else{
+                    mudarFragment.openFragmentProtudosKit(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)
+
+                }
             }else if(listaLojas[position].LojaTipo == 13){
-                mudarFragment.openFragmentProtudosAB(supportFragmentManager,carrinhoVisible)
+                val grupoLojaAB = GrupoLojaAbDAO(context)
+                val existeitem1 =  grupoLojaAB.confereSeExisteItens()
+
+                if (!existeitem1){
+                    val dialog = DialogErro()
+                    dialog.Dialog(context,"Atenção","No momento essa loja não está disponivel, Tente Realizar a carga novamente","Ok",""){
+
+                    }
+                }else{
+                    mudarFragment.openFragmentProtudosAB(supportFragmentManager,carrinhoVisible)
+
+                }
 
             }else{
                 mudarFragment.openFragmentProtudos(supportFragmentManager,frameid,carrinhoVisible, atualizaCarrinho)

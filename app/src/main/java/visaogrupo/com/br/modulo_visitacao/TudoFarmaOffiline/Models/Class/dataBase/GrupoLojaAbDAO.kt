@@ -156,4 +156,15 @@ class GrupoLojaAbDAO(context: Context) {
         }
         return listaGrupoAB
     }
+    fun confereSeExisteItens():Boolean{
+
+
+        val query = "SELECT  * FROM  Tb_GrupoAB"
+        val cursor = dbGrupoProduto.readableDatabase.rawQuery(query, null)
+        var existemItem =   cursor.moveToFirst()
+        cursor.close()
+        dbGrupoProduto.close()
+
+        return existemItem
+    }
 }

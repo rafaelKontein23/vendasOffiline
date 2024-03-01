@@ -59,7 +59,7 @@ class FragmentLojas (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoVisi
             binding.cnpjClienteSelecionado.text = CNPJ
             binding.textRazaosocialclienteSelecionado.text = clienteSelecionado.RazaoSocial
             AdapterLojas = LojasAdapter(listLojas,trocarcorItem,
-                R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible,atualizaCarrinho)
+                R.id.fragmentContainerViewPrincipal, getParentFragmentManager(),carrinhoVisible,atualizaCarrinho, requireContext())
             val  layoutManager = GridLayoutManager(requireContext(),2)
             binding.recyLojas.layoutManager = layoutManager
             binding.recyLojas.adapter = AdapterLojas

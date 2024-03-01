@@ -8,6 +8,8 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 
 class KitDAO (context: Context){
     val dbKit = DataBaseHelber(context).writableDatabase
+    val dbKitTread = DataBaseHelber(context).readableDatabase
+
     fun insertKit(kit: Kit){
         try {
             val valueskits = ContentValues()
@@ -103,4 +105,38 @@ class KitDAO (context: Context){
         }
         return listaKitPreco
     }
+    fun confereSeExisteItens():Boolean{
+
+
+        val query = "SELECT  * FROM TB_Kits"
+        var existeItens = false
+        val cursor = dbKitTread.rawQuery(query, null)
+        existeItens = cursor.moveToFirst()
+
+
+
+
+
+        cursor.close()
+        dbKitTread.close()
+
+        return existeItens
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

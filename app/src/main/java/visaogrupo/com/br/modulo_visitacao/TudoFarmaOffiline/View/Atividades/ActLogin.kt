@@ -127,7 +127,7 @@ class ActLogin:  AppCompatActivity() ,
                 ExcluirPrefuser.excluirItemPref(baseContext,"LojaSelecionada")
                 ExcluirPrefuser.excluirItemPref(baseContext,"ClienteSelecionado")
                 val excluiDadosTabelas = ExcluiDados(baseContext)
-                excluiDadosTabelas.exluidados()
+                excluiDadosTabelas.exluidadosGeral()
 
                 editor?.putBoolean("cargafeita", false)
                 editor?.apply()

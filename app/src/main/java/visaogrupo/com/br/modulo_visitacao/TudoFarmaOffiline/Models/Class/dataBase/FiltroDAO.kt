@@ -50,4 +50,15 @@ class FiltroDAO (context: Context){
 
         return listaFiltro
     }
+    fun confereSeExisteItens():Boolean{
+
+
+        val query = "SELECT  * FROM  TB_Filtros"
+        val cursor = dbFiltro.rawQuery(query, null)
+        var existemItem =   cursor.moveToFirst()
+        cursor.close()
+        dbFiltro.close()
+
+        return existemItem
+    }
 }

@@ -27,6 +27,8 @@ import visaogrupo.com.br.TudoFarmaOffiline.databinding.FragmentCargasBinding
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TerminouCarga
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.CargaDiaria
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.ExcluirPrefuser
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FezCargaPreferencias
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.task.TaskCargas.TaskEstoqueSeparado
@@ -153,6 +155,9 @@ class FragmentCargas () : Fragment() ,
                 val animatdor = animandoCarregando(view.carregandocargadiaria)
                 atualizaviewAtualizando(view.caragDiaria,requireContext(),view.textcargaDiaria,view.infoTextCargDiaria)
                 try {
+                    ExcluirPrefuser.excluirItemPref(requireContext(),"LojaSelecionada")
+                    ExcluirPrefuser.excluirItemPref(requireContext(),"ClienteSelecionado")
+                    FezCargaPreferencias.atualizaInfoDeCarga(requireContext(),false)
                     val cargadiaria = CargaDiaria()
                     cargadiaria.fazCargaDiaria(requireContext(),login.Usuario_id.toString(),view.caragDiaria,view.textcargaDiaria,view.infoTextCargDiaria,view.imgcargadiaria,animatdor,this)
                 }catch (e:Exception){

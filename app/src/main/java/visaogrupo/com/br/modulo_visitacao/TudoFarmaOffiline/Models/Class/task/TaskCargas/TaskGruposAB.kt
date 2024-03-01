@@ -15,8 +15,8 @@ class TaskGruposAB {
             val  respostaRequest =response.body()?.string()
             jsonArray.add( JSONObject(respostaRequest).getJSONArray("Grupo"))
         }else{
-            if (!list.contains("Grupo AB")){
-                list.add("Grupo AB")
+            if (!list.contains("Loja Grupo AB")){
+                list.add("Loja Grupo AB")
 
             }
         }

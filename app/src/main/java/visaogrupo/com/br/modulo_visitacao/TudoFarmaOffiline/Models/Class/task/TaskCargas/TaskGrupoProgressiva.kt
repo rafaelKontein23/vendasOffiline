@@ -19,8 +19,8 @@ class TaskGrupoProgressiva {
             val responseGrupoProgrssiva = response.body()?.string()
             jsonArray.add(JSONObject(responseGrupoProgrssiva).getJSONArray("PROGRESSIVAS"))
         }else{
-            if (!listaErro.contains("Grupo Progressiva AB")){
-                listaErro.add("Grupo Progressiva AB")
+            if (!listaErro.contains("Loja Grupo AB")){
+                listaErro.add("Loja Grupo AB")
 
             }
         }
