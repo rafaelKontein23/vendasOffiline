@@ -112,8 +112,6 @@ class ActPricipal : AppCompatActivity(),
         }
 
 
-
-
         viewcarrinho = findViewById(R.id.carrinhoO)
         qtdNotificacoes = findViewById(R.id.qtdNotification)
         viewnotification = findViewById(R.id.viewnotification)

@@ -21,10 +21,16 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import java.io.Serializable
 
-class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Context, atualza: AtualizadetalhesProdutos, startaAtividade: StartaAtividade,carrinhodetalhe:Boolean)  : RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
+class CarrinhoDetalheAdpter (list :MutableList<Carrinho>,
+                             view:View,
+                             context:Context,
+                             atualza: AtualizadetalhesProdutos,
+                             startaAtividade: StartaAtividade,
+                             carrinhodetalhe:Boolean): RecyclerView.Adapter<CarrinhoDetalheAdpter.DetalheCarrrinhoHolder>() {
 
     var  listaProdutoCarrinho = list
     val view = view
@@ -38,28 +44,26 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
     }
 
     override fun onBindViewHolder(holder: DetalheCarrrinhoHolder, position: Int) {
+        val itemCarrinhoProduto =  listaProdutoCarrinho[position]
 
-        val valorTotalformat = String.format("%.2f", listaProdutoCarrinho[position].valortotal)
-        val  valorProduto = String.format("%.2f",listaProdutoCarrinho[position].valor)
-        holder.valorTotal.text = "R$ " + valorTotalformat
-        holder.valorProgressiva.text = "${listaProdutoCarrinho[position].quantidade} Uni.  R$ " + valorProduto
-        holder.codigo.text = listaProdutoCarrinho[position].produtoCodigo.toString()
+        holder.valorTotal.text       = FormataValores.formatarParaMoeda(itemCarrinhoProduto.valortotal)
+        holder.valorProgressiva.text = "${itemCarrinhoProduto.quantidade} Uni.  ${FormataValores.formatarParaMoeda(itemCarrinhoProduto.valor)}"
+        holder.codigo.text           = itemCarrinhoProduto.produtoCodigo.toString()
+        holder.desconto.text         = itemCarrinhoProduto.desconto.toString() + "%"
+        holder.nomedoRemedio.text    = itemCarrinhoProduto.nomeProduto
 
-        val nomeRemedio = listaProdutoCarrinho[position].nomeProduto
-        holder.nomedoRemedio.text = nomeRemedio
-
-        holder.exluir.isVisible = listaProdutoCarrinho[position].LojaTipo !=13
-        holder.rever.isVisible = listaProdutoCarrinho[position].LojaTipo !=13
-        holder.containerDetalhe.isEnabled = listaProdutoCarrinho[position].LojaTipo !=13
+        holder.exluir.isVisible           = itemCarrinhoProduto.LojaTipo !=13
+        holder.rever.isVisible            = itemCarrinhoProduto.LojaTipo !=13
+        holder.containerDetalhe.isEnabled = itemCarrinhoProduto.LojaTipo !=13
 
         holder.exluir.setOnClickListener {
-            val item =listaProdutoCarrinho[position]
             listaProdutoCarrinho.removeAt(position)
             notifyItemRemoved(position)
+
             val  snackbar = Snackbar.make(view, "Item excluído", Snackbar.LENGTH_LONG).setBackgroundTint(
                 Color.WHITE).setTextColor(Color.BLACK)
                 .setAction("Desfazer") {
-                    listaProdutoCarrinho.add(position, item)
+                    listaProdutoCarrinho.add(position, itemCarrinhoProduto)
                     notifyItemInserted(position)
                     atualza.detalhes(listaProdutoCarrinho,true,position,0.0)
                 }
@@ -68,7 +72,7 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
                         super.onDismissed(transientBottomBar, event)
                         if (event != DISMISS_EVENT_ACTION) {
                             val carrinhoDAO = CarrinhoDAO(context)
-                            carrinhoDAO.excluirItem(item.lojaId,item.clienteId,item.produtoCodigo)
+                            carrinhoDAO.excluirItem(itemCarrinhoProduto.lojaId,itemCarrinhoProduto.clienteId,itemCarrinhoProduto.produtoCodigo)
                             atualza.detalhes(listaProdutoCarrinho,true,position,0.0)
                         }
                     }
@@ -76,23 +80,32 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
 
             snackbar.show()
         }
-        holder.desconto.text = listaProdutoCarrinho[position].desconto.toString() + "%"
+
+
         holder.containerDetalhe.setOnClickListener {
             val intent = Intent(context, ActProtudoDetalhe::class.java)
             val bundle = Bundle()
-            val produto = ProdutoProgressiva(listaProdutoCarrinho[position].nomeProduto,
-                "",listaProdutoCarrinho[position].barra,"",
-                listaProdutoCarrinho[position].produtoCodigo,
-                listaProdutoCarrinho[position].pf.toString(),
-                listaProdutoCarrinho[position].pmc,listaProdutoCarrinho[position].quantidade,
-                listaProdutoCarrinho[position].caixapadrao,1,
-                listaProdutoCarrinho[position].valor,
-                listaProdutoCarrinho[position].quantidade,
-                listaProdutoCarrinho[position].valortotal,"", 0,listaProdutoCarrinho[position].centro
-                , listaProdutoCarrinho[position].porecentagem)
-
-
-
+            val produto = ProdutoProgressiva(
+                itemCarrinhoProduto.nomeProduto,
+                "",
+                itemCarrinhoProduto.barra,
+                "",
+                itemCarrinhoProduto.produtoCodigo,
+                itemCarrinhoProduto.pf.toString(),
+                itemCarrinhoProduto.pmc,
+                itemCarrinhoProduto.quantidade,
+                itemCarrinhoProduto.caixapadrao,
+                1,
+                itemCarrinhoProduto.valor,
+                itemCarrinhoProduto.quantidade,
+                itemCarrinhoProduto.valortotal,
+                "",
+                0,
+                itemCarrinhoProduto.centro,
+                itemCarrinhoProduto.porecentagem
+                ,0.0,
+                0.0
+            )
 
             bundle.putSerializable("ImagemProd", listaProdutoCarrinho[position].base64)
             intent.putExtra("ProtudoSelecionado_bundle", bundle)
@@ -114,14 +127,14 @@ class CarrinhoDetalheAdpter (list :MutableList<Carrinho>, view:View, context:Con
         return listaProdutoCarrinho.size
     }
     class  DetalheCarrrinhoHolder(itemView: View) : ViewHolder(itemView){
-        val  exluir = itemView.findViewById<ImageView>(R.id.xcarrinhodetalhes)
-        val nomedoRemedio = itemView.findViewById<TextView>(R.id.nomedoRemedio)
-        val valorProgressiva = itemView.findViewById<TextView>(R.id.valorProgressiva)
-        val valorTotal = itemView.findViewById<TextView>(R.id.valorTotal)
-        val containerDetalhe = itemView.findViewById<ConstraintLayout>(R.id.containerDetalhe)
-        val codigo = itemView.findViewById<TextView>(R.id.codproduto)
-        val desconto = itemView.findViewById<TextView>(R.id.desconto)
-        val rever =  itemView.findViewById<ImageView>(R.id.rever)
+        val  exluir =           itemView.findViewById<ImageView>(R.id.xcarrinhodetalhes)
+        val nomedoRemedio =     itemView.findViewById<TextView>(R.id.nomedoRemedio)
+        val valorProgressiva =  itemView.findViewById<TextView>(R.id.valorProgressiva)
+        val valorTotal =        itemView.findViewById<TextView>(R.id.valorTotal)
+        val containerDetalhe =  itemView.findViewById<ConstraintLayout>(R.id.containerDetalhe)
+        val codigo =            itemView.findViewById<TextView>(R.id.codproduto)
+        val desconto =          itemView.findViewById<TextView>(R.id.desconto)
+        val rever =             itemView.findViewById<ImageView>(R.id.rever)
 
 
     }

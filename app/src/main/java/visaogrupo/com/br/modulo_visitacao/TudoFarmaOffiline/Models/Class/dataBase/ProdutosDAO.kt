@@ -95,10 +95,30 @@ class ProdutosDAO(context:Context):
             if (curso.getDouble(18) != null){
                 porecentagem = curso.getDouble(18)
             }
+            val descontoMaximo = curso.getDouble(20)
+            val descontoMin = curso.getDouble(21)
 
 
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,
-                estaCarrinhp,valorcarrinho,quantidadeCarrinho,valor_total, imagebase64, quantidadeEstoque,centro,porecentagem)
+
+            val produtos = ProdutoProgressiva(Nome,
+                Apresentacao,
+                Barra,
+                Imagem,
+                Produto_codigo,
+                valor,
+                PMC,
+                Quantidade,
+                Caixapadrao,
+                estaCarrinhp,
+                valorcarrinho,
+                quantidadeCarrinho,
+                valor_total,
+                imagebase64,
+                quantidadeEstoque,
+                centro,
+                porecentagem,
+                descontoMaximo,
+                descontoMin)
 
             listaprotudos.add(produtos)
         }
@@ -131,14 +151,34 @@ class ProdutosDAO(context:Context):
             var estaNoPedido = 0
             estaNoPedido = curso.getInt(13)
             val quantidadeProduto = curso.getInt(14)
-            val  centro = curso.getInt(14)
+            val  centro = curso.getInt(18)
             var porecentagem = 0.0
-            if (curso.getDouble(18) != null){
-                porecentagem = curso.getDouble(18)
+            if (curso.getDouble(17) != null){
+                porecentagem = curso.getDouble(17)
             }
+            val descontoMaximo = curso.getDouble(20)
+            val descontoMin = curso.getDouble(21)
 
 
-            val produtos = ProdutoProgressiva(Nome,Apresentacao, Barra,Imagem,Produto_codigo,valor,PMC,Quantidade,Caixapadrao,estaNoPedido,valorcarrinho,quantidadeProduto,valor_total, imagebase64, quantidadeEstoque, centro,porecentagem)
+            val produtos = ProdutoProgressiva(Nome,
+                Apresentacao,
+                Barra,
+                Imagem,
+                Produto_codigo,
+                valor,
+                PMC,
+                Quantidade,
+                Caixapadrao,
+                estaNoPedido,
+                valorcarrinho,
+                quantidadeProduto,
+                valor_total,
+                imagebase64,
+                quantidadeEstoque,
+                centro,
+                porecentagem,
+                descontoMaximo,
+                descontoMin)
 
             listaprotudos.add(produtos)
         }

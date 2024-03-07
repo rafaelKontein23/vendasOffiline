@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.TudoFarmaOffiline.databinding.ActivityActProtudoDetalheBinding
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Controler.Presenter.PresenterAtividades.ProdutoDetalhePresenter
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaProgressiva
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaQuantidadeProduto
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaValorProduto
@@ -31,6 +32,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogP
 
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.*
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProgresivaDAO
@@ -40,11 +42,11 @@ import java.text.DecimalFormatSymbols
 
 class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValorProduto , AtualizaQuantidadeProduto{
 
-   lateinit var listaProgressiva :MutableList<ProgressivaLista>
+    var listaProgressiva :MutableList<ProgressivaLista> = mutableListOf<ProgressivaLista>()
    private  lateinit var  binding: ActivityActProtudoDetalheBinding
    lateinit var  progressivaAdpter: ProgressivaAdpter
    lateinit var login: Login
-   var listaProgressivaOriginal :MutableList<ProgressivaLista>  = mutableListOf<ProgressivaLista>()
+   var listaProgressivaOriginal :MutableList<ProgressivaLista> = mutableListOf<ProgressivaLista>()
 
     val atualizaValorProduto: AtualizaValorProduto = this
     val  atualizaQuantidadeProduto :AtualizaQuantidadeProduto = this
@@ -52,6 +54,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
     lateinit var clienteSelecionado:Clientes
     val  lojasxclienets = mutableListOf<LojaXCliente>()
     var repasse = 0.0
+    val produtoDetalhePresenter = ProdutoDetalhePresenter()
 
     companion object {
         lateinit var progressivaSelecionada: ProgressivaSelecionada
@@ -74,9 +77,9 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
 
         var  pedidoFinalizado = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
-        val estaNoCarrinho  = intent.getIntExtra("estaNoCarrinho",0)
-        val estaNoPedidoSalvo = intent.getBooleanExtra("estaNoPedido",false)
-        val pedidodID = intent.getIntExtra("pedidoID",0)
+        val  estaNoCarrinho  = intent.getIntExtra("estaNoCarrinho",0)
+        val  estaNoPedidoSalvo = intent.getBooleanExtra("estaNoPedido",false)
+        val  pedidodID = intent.getIntExtra("pedidoID",0)
         val  pedido = intent.getBooleanExtra("Pedido",false)
         val  carrinhoDetalhe = intent.getBooleanExtra("CarrinhoDetalhe",false)
 
@@ -117,9 +120,6 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
        }
 
-
-
-        // Atualiza as informações do front
         binding.PMC.text = "R$ " + protudoSelecionado.PMC.toString()
         binding.PF.text = "R$ " + protudoSelecionado.valor
         binding.repasse.text =  protudoSelecionado.porcentagem.toString().replace(".",",") + "%"
@@ -130,6 +130,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         binding.codigoProduto.text = protudoSelecionado.ProdutoCodigo.toString()
         binding.checkCaixapadrao.text = "Caixa Padrão ${protudoSelecionado.caixapadrao.toString()} uni."
         binding.estoque.text = protudoSelecionado.quantidadeEstoque.toString()
+
         if(!imagemBase64?.isEmpty()!!){
             val bitmap =exibirImagemBase64(imagemBase64.toString())
             binding.imgprodto.setImageBitmap(bitmap)
@@ -139,7 +140,6 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
        val checkedChangeListener = object : CompoundButton.OnCheckedChangeListener {
            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-               // Lógica para lidar com a mudança de estado do CheckBox
                if (isChecked){
                    progressivaAdpter.anr = true
                    progressivaAdpter.notifyDataSetChanged()
@@ -156,57 +156,33 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
        binding.switANR.setOnCheckedChangeListener(checkedChangeListener)
 
-       // busca progresivas
-        CoroutineScope(Dispatchers.IO).launch {
-             // recupera progressiva do protudo Selecionado
-            val ProgresivaDAO = ProgresivaDAO(baseContext)
-            var  lista_progressivapresona = mutableListOf<ProgressivaLista>()
-            val job1 = launch {
-                  val query = "SELECT DISTINCT Produtos.Produto_codigo, Produtos.caixapadrao, Progressiva.pmc, Progressiva.pf, Progressiva.valor, Progressiva.Quantidade, Progressiva.desconto,Progressiva.DescontoMaximo\n" +
-                          "FROM TB_produtos Produtos\n" +
-                          "INNER JOIN TB_Progressiva Progressiva ON Produtos.Produto_codigo = Progressiva.Prod_cod\n" +
-                          "LEFT JOIN TB_Estoque Estoque ON Estoque.EAN = Produtos.barra\n" +
-                          "WHERE Progressiva.loja_id = ${lojaSelecionada.loja_id}\n" +
-                          "  AND Progressiva.uf = '${clienteSelecionado.UF}'\n" +
-                          "  AND Produtos.Produto_codigo = ${protudoSelecionado.ProdutoCodigo}\n" +
-                          "ORDER BY 6"
-                  listaProgressiva = ProgresivaDAO.listarProgressiba(query,false)
-                  listaProgressivaOriginal = ProgresivaDAO.listarProgressiba(query,false)
-            }
+       CoroutineScope(Dispatchers.IO).launch {
+             val (listaprogressivaFun , listaProgressivaOriginalFun, quantidade) = produtoDetalhePresenter.buscaProgressiva(baseContext,
+                  listaProgressiva,
+                  listaProgressivaOriginal,
+                  lojaSelecionada,
+                  clienteSelecionado,
+                  protudoSelecionado,
+                  estaNoCarrinho
+              )
+            listaProgressiva.addAll(listaprogressivaFun)
+            listaProgressivaOriginal.addAll(listaProgressivaOriginalFun)
+            binding.edtQuantidade.setText(quantidade)
 
-            val  job2 = launch {
-                val queryPersona = "SELECT * FROM Tb_Progressiva_Personalizada WHERE Tb_Progressiva_Personalizada.column_produto_codigo = ${protudoSelecionado.ProdutoCodigo} "
-                lista_progressivapresona = ProgresivaDAO.listarProgressiba(queryPersona,true)
-            }
-            job1.join()
-            job2.join()
-            if (estaNoCarrinho == 1){
-                edtQuantidade.setText(protudoSelecionado.quantidadeCarrinho.toString())
-            }else{
-                binding.edtQuantidade.setText(  listaProgressiva[0].quantidade.toString())
-
-            }
-
-             listaProgressiva.addAll(lista_progressivapresona)
-             repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
-
+            repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
             progressivaAdpter = ProgressivaAdpter(listaProgressiva,baseContext,binding.recyProgressiva,supportFragmentManager, atualizaValorProduto, binding.edtQuantidade,atualizaQuantidadeProduto,repasse)
             val layoutManager = LinearLayoutManager(baseContext)
-
             CoroutineScope(Dispatchers.Main).launch {
                  binding.recyProgressiva.layoutManager = layoutManager
                  binding.recyProgressiva.adapter = progressivaAdpter
                 if (estaNoCarrinho == 1){
                     progressivaAdpter.quantidadeAdionada = protudoSelecionado.quantidadeCarrinho
-
                 }else{
                     progressivaAdpter.quantidadeAdionada = listaProgressiva[0].quantidade
-
                 }
                 progressivaAdpter.clicou= false
                 progressivaAdpter.notifyDataSetChanged()
              }
-
          }
 
         binding.edtQuantidade.setOnFocusChangeListener(object : OnFocusChangeListener{
@@ -217,7 +193,7 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                      }
                      val quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
                      if (quatidadeAdicionadaCap < listaProgressiva[0].quantidade){
-                         Toast.makeText(baseContext,"A Quantidade minima é de ${      listaProgressiva[0].quantidade}",Toast.LENGTH_SHORT).show()
+                         Toast.makeText(baseContext,"A Quantidade minima é de ${listaProgressiva[0].quantidade}",Toast.LENGTH_SHORT).show()
                          binding.edtQuantidade.setText(listaProgressiva[0].quantidade.toString())
 
                      }else {
@@ -225,49 +201,39 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                          val quantidade:Int = quatidadeAdicionadaCap
                          progressivaAdpter.quantidadeAdionada = quantidade
                          progressivaAdpter.clicou= false
-
                          progressivaAdpter.notifyDataSetChanged()
-
                      }
                  }
              }
-
         })
 
         binding.btnMais.setOnClickListener {
-            val quantidadecaixapradrao = binding.caixaPadrao.text.toString()
+            val quantidadecaixapradrao = binding.caixaPadrao.text.toString().toInt()
             if (binding.checkCaixapadrao.isChecked){
+                val quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
+                val quatidadeAdicionadaCapFun = produtoDetalhePresenter.calculaCaixaparaoMais(quatidadeAdicionadaCap,quantidadecaixapradrao)
 
-                var quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
-                quatidadeAdicionadaCap += quantidadecaixapradrao.toInt() - ((quatidadeAdicionadaCap %   quantidadecaixapradrao.toInt() ))
-                binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quatidadeAdicionadaCap.toString())
-                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap
+                binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quatidadeAdicionadaCapFun.toString())
+                progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCapFun
                 progressivaAdpter.clicou= false
                 progressivaAdpter.soma = true
-
                 progressivaAdpter.notifyDataSetChanged()
 
-
             }else{
-
-
                 val quatidadeAdicionadaCap = binding.edtQuantidade.text.toString()
                 val quantidade:Int = quatidadeAdicionadaCap.toInt() +1
+
                 binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
                 progressivaAdpter.quantidadeAdionada = quantidade
                 progressivaAdpter.clicou= false
                 progressivaAdpter.soma = true
-
                 progressivaAdpter.notifyDataSetChanged()
-
-
             }
         }
 
-
-
         binding.btnmenos.setOnClickListener {
             var quatidadeAdicionadaCap = binding.edtQuantidade.text.toString().toInt()
+
            if (quatidadeAdicionadaCap <=listaProgressiva[0].quantidade){
                Toast.makeText(baseContext,"A Quantidade minima é de ${quatidadeAdicionadaCap}",Toast.LENGTH_SHORT).show()
            }else {
@@ -276,19 +242,17 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                        Toast.makeText(baseContext,"A Quantidade minima é de ${quatidadeAdicionadaCap}",Toast.LENGTH_SHORT).show()
                        binding.edtQuantidade.setText(listaProgressiva[0].quantidade)
                    }else{
-                       val quantidadecaixapradrao = binding.caixaPadrao.text.toString()
-                       val resto = quatidadeAdicionadaCap % quantidadecaixapradrao.toInt()
-                       if ( resto == 0) {
-                           quatidadeAdicionadaCap -= quantidadecaixapradrao.toInt()
-                       } else {
-                           quatidadeAdicionadaCap -= resto
-                       }
-                        if ( quatidadeAdicionadaCap == 0){
-                          quatidadeAdicionadaCap = listaProgressiva[0].quantidade
-                        }
-                       binding.edtQuantidade.setText(quatidadeAdicionadaCap.toString())
+                       val quantidadecaixapradrao = binding.caixaPadrao.text.toString().toInt()
+
+                       val quatidadeAdicionadaCapfun = produtoDetalhePresenter.calculaCaixaparaoMenos(
+                           quantidadecaixapradrao,
+                           quatidadeAdicionadaCap,
+                           listaProgressiva
+                       )
+
+                       binding.edtQuantidade.setText(quatidadeAdicionadaCapfun.toString())
                        progressivaAdpter.soma = false
-                       progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap
+                       progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCapfun
                        progressivaAdpter.clicou= false
                        progressivaAdpter.notifyDataSetChanged()
                    }
@@ -296,14 +260,6 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                    if(quatidadeAdicionadaCap == 0){
                        binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable("0")
                    }else{
-                       val valorTotal = binding.valorTotal.text.toString().replace("R$","").replace(" ","").replace(",",".")
-                       var valorProduto =  binding.PF.text.toString()
-                       valorProduto = valorProduto.replace("R$","").replace(" ","").replace(",",".")
-
-                       val valorTotalDouble = valorTotal.toDouble()
-                       val valorProdutoDouble = valorProduto.toDouble()
-                       subtrairPrutudos(valorTotalDouble,valorProdutoDouble,false,0)
-
 
                        val quantidade:Int = quatidadeAdicionadaCap -1
                        binding.edtQuantidade.text = Editable.Factory.getInstance().newEditable(quantidade.toString())
@@ -311,165 +267,53 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
                        progressivaAdpter.quantidadeAdionada = quatidadeAdicionadaCap  -1
                        progressivaAdpter.clicou= false
                        progressivaAdpter.notifyDataSetChanged()
+
                    }
                }
            }
-
         }
-
-
 
         binding.adicionarProgressiva.setOnClickListener {
             val dialogProgressiva = DialogProgressiva()
-            var valorProduto =  binding.PF.text.toString()
-            valorProduto = valorProduto.replace("R$","").replace(" ","").replace(",",".")
+            val valorProduto = binding.PF.text.toString().replace("R$","").replace(" ","").replace(",",".")
             dialogProgressiva.dialog(this,valorProduto.toDouble(),protudoSelecionado.nome,protudoSelecionado,this)
         }
 
-
         binding.adiconarCarrinho.setOnClickListener {
-           val quatidadeadd =  binding.edtQuantidade.text.toString()
-           if(quatidadeadd.isEmpty() ){
+           val quantidadeCap =  binding.edtQuantidade.text.toString().toInt()
+           if(quantidadeCap.toString().isEmpty() ){
                Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
-           }else if (quatidadeadd.toInt() == 0 ){
+           }else if (quantidadeCap == 0 ){
                Toast.makeText(baseContext,"Por favor adicione ao menos uma quantidade para adicionar ao carrinho",Toast.LENGTH_SHORT).show()
 
            } else{
-               var valortotal = binding.valorTotal.text.toString().replace(",",".").replace(" ","").replace("R$","")
-               var repasse  = binding.repasse.text.toString().replace("%","").replace(",",".").toDouble()
-               var valorProduto =  binding.PF.text.toString().replace("R$","").replace(" ","").replace(",",".").toDouble()
-               val  daataformat = DataAtual()
-               val  data = daataformat.recuperaData()
-               var anr =  0
-               if (binding.switANR.isChecked){
-                   anr = 1
-               }else{
-                   anr = 0
-               }
-               var descontoOriginal = 0.0
-               for (i in listaProgressivaOriginal){
-                   if (progressivaSelecionada.quantidadeSelecionada == i.quantidade){
-                       descontoOriginal = i.desconto
-                       break
-                   }
-
-               }
-
-
-               val  carrinho = Carrinho(lojaSelecionada.loja_id,
-                   clienteSelecionado.Empresa_id,
-                   protudoSelecionado.ProdutoCodigo,"",
-                   login.Usuario_id.toString().toInt(),clienteSelecionado.UF,
-                   0.0,0.0,0,
-                   protudoSelecionado.barra,quatidadeadd.toInt(),protudoSelecionado.valor.toDouble(),
-                   progressivaSelecionada.valorProgressivaSelecionada,protudoSelecionado.valor.toString().toDouble(),0,
-                   progressivaSelecionada.porcentagemProgressivaSelecionda,
-                   descontoOriginal,0.0,
-                   "",1,"",valortotal.toDouble(),
-                   protudoSelecionado.nome,lojaSelecionada.nome,clienteSelecionado.RazaoSocial,clienteSelecionado.CNPJ,data,
-                   lojaSelecionada.MinimoValor,imagemBase64,protudoSelecionado.PMC,
-                   clienteSelecionado.FormaPagamentoExclusiva,protudoSelecionado.caixapadrao,lojaSelecionada.Qtd_Minima_Operador,
-                   lojaSelecionada.Qtd_Maxima_Operador,anr, lojaSelecionada.RegraPrazoMedio,lojaSelecionada.LojaTipo,protudoSelecionado.centro,protudoSelecionado.porcentagem)
-
-
-               val carrinhoDAO = CarrinhoDAO(this)
-               try {
-                   if (pedido){
-                       if (estaNoPedidoSalvo){
-                           val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(baseContext)
-                           pedidosFinalizadosDAO.atualizaProdutoPedidoValores(pedidodID,carrinho.produtoCodigo,carrinho)
-                           Toast.makeText(baseContext,"Item atualizado com sucesso nos pedidos",Toast.LENGTH_SHORT).show()
-
-                       }else{
-                           val  pedidosFinalizadosDAO = PedidosFinalizadosDAO(baseContext)
-                           pedidosFinalizadosDAO.adicionaItemNoPedido(pedidodID,carrinho)
-                           Toast.makeText(baseContext,"Item adicionado com sucesso nos pedidos",Toast.LENGTH_SHORT).show()
-                       }
-                   }else {
-                       if (estaNoCarrinho  == 1){
-                           carrinhoDAO.atualizaItemCarrinho(carrinho)
-                           Toast.makeText(baseContext,"Item atualizado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
-
-                       }else{
-                           carrinhoDAO.insertCarrinho(carrinho)
-                           Toast.makeText(baseContext,"Item adicionado com sucesso ao carrinho",Toast.LENGTH_SHORT).show()
-                       }
-                   }
-
-
-
-
-               }catch (e:Exception){
-                   e.printStackTrace()
-                   val dialogErro = DialogErro()
-                   dialogErro.Dialog(this,"Ops!", "Algo deu errado","Ok",""){
-
-                   }
-               }
+               var valortotal = FormataValores.converterMoedaParaDouble(binding.valorTotal.text.toString())
+               produtoDetalhePresenter.adiconarAoCarrinho(
+                   baseContext,
+                   listaProgressivaOriginal,
+                   lojaSelecionada,
+                   clienteSelecionado,
+                   protudoSelecionado,
+                   estaNoCarrinho,
+                   pedidodID,
+                   binding.switANR.isChecked,
+                   valortotal!!,
+                   pedido,
+                   estaNoPedidoSalvo,
+                   imagemBase64
+                   ,quantidadeCap,
+                   login.Usuario_id.toString().toInt()
+               )
 
                val intent = Intent()
                setResult(Activity.RESULT_OK, intent)
                finish()
            }
-
         }
 
-
-       // botao voltar
        binding.voltarProtudo.setOnClickListener {
            this.onBackPressed()
        }
-
-    }
-
-    fun somaProdutos(quantidade:Int,valorProtudo:Double,caixapardrao:Boolean){
-            var valorProdutoItem = valorProtudo
-            if(repasse > 0.0){
-                var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
-                valorProdutoItem = discount;
-
-                val formato = DecimalFormat("#.##")
-                val numeroFormatado = formato.format(valorProdutoItem)
-                valorProdutoItem = numeroFormatado.replace(",",".").toDouble()
-
-            }else{
-                valorProdutoItem = valorProtudo
-            }
-          val valorAdicionado = quantidade * valorProdutoItem
-          val valorFormatado = String.format("%.2f", valorAdicionado)
-          binding.valorTotal.text = "R$ "+ valorFormatado
-
-    }
-    fun subtrairPrutudos(valortotal:Double,valorProtudo:Double,caixapadrao:Boolean,quantidade: Int){
-        var valorProdutoItem = valorProtudo
-        if(repasse > 0.0){
-            var discount = valorProdutoItem - (valorProdutoItem * (repasse) / 100);
-            valorProdutoItem = discount;
-
-
-            val symbols = DecimalFormatSymbols()
-            symbols.decimalSeparator = ','
-            val formato = DecimalFormat("#,##0.00", symbols)
-
-            val numeroFormatado = formato.format(valorProdutoItem)
-
-            valorProdutoItem = numeroFormatado.replace(",",".").toDouble()
-
-        }else{
-            valorProdutoItem = valorProtudo
-        }
-        if(caixapadrao){
-            val valortotalCal  =  quantidade *valorProdutoItem
-            val valorFormatado = String.format("%.2f", valortotalCal)
-            binding.valorTotal.text = "R$ "+ valorFormatado
-
-        }else{
-            val valorAdicionadosub = valortotal - valorProdutoItem
-            val valorFormatado = String.format("%.2f", valorAdicionadosub)
-            binding.valorTotal.text = "R$ "+ valorFormatado
-
-        }
-
     }
 
     override fun ProgressivaAtualiza(
@@ -479,16 +323,20 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
         valor: Double,
         desconto: Double
     ) {
-        val porgressiva = ProgressivaLista( ProtudoCodigo,
+        val porgressiva = ProgressivaLista(
+         ProtudoCodigo,
          protudoseleciona.caixapadrao,
          protudoseleciona.PMC,
          protudoseleciona.valor.toDouble(),
          valor,
          quatidade,
          desconto,
-         true,false,0.0)
+        true,
+        false,
+         protudoseleciona.descontoMaximo
+        )
 
-        if (desconto > 10.00 ){ // trocar esse 10.00 por um valor correto
+        if (desconto > protudoseleciona.descontoMaximo ){
             val alertas = Alertas()
             alertas.alerta(supportFragmentManager,"O desconto irá passar por aprovação","#B89A00",
                 R.drawable.atencao, R.drawable.bordas_amerala_alert)
@@ -504,28 +352,25 @@ class ActProtudoDetalhe : AppCompatActivity(), AtualizaProgressiva, AtualizaValo
 
     }
     fun exibirImagemBase64(imagemBase64: String): Bitmap {
-        // Decodificar a string Base64 em um array de bytes
         val imageBytes = Base64.decode(imagemBase64, Base64.DEFAULT)
-
-        // Converter o array de bytes em um objeto Bitmap
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         return  bitmap
 
     }
-
     override fun AtualizaValorProduto(
         quantidade: Int,
         valorProtudo: Double,
         caixapardrao: Boolean, soma:Boolean
     ) {
         if (soma){
-            somaProdutos(quantidade,valorProtudo, caixapardrao)
+            val valorProtudo = produtoDetalhePresenter.somaProdutos(quantidade,valorProtudo, repasse)
+            binding.valorTotal.setText(valorProtudo)
         }else{
-            val valorTotal = binding.valorTotal.text.toString().replace("R$","").replace(" ","").replace(",",".")
-
-            subtrairPrutudos(valorTotal.toDouble(),valorProtudo,caixapardrao,quantidade)
+            val valorTotal =  FormataValores.converterMoedaParaDouble(binding.valorTotal.text.toString())
+            val quantidade = edtQuantidade.text.toString()
+            val valorProtudo =  produtoDetalhePresenter.subtrairPrutudos(valorTotal!!,valorProtudo,caixapardrao,quantidade.toInt(),repasse)
+            binding.valorTotal.setText(valorProtudo)
         }
-
     }
 
     override fun AtuliazaQuantidaProduto(quantidadeProduto: Int) {

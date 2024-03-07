@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.OperadorLogistico
 
-class OperadorAdpter  (listaOpl :ArrayList<OperadorLogistico>, quantidadeMaximaDePpl:Int, context:Context,opl:MutableList<String>): Adapter<OperadorAdpter.ViewHolderOpl>() {
+class OperadorAdpter  (listaOpl :MutableList<OperadorLogistico>, quantidadeMaximaDePpl:Int, context:Context,opl:MutableList<String>): Adapter<OperadorAdpter.ViewHolderOpl>() {
 
 
     val listaOpl = listaOpl

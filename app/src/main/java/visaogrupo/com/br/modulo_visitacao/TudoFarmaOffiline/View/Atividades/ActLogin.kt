@@ -26,19 +26,15 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBas
 class ActLogin:  AppCompatActivity() ,
     Ondismiss {
 
-
     private var email: EditText? = null
     private  var senha:EditText? = null
     private var carregandoprogress: ProgressBar? = null
     private var  equesciSenha :TextView? =  null
     private var entrar: Button? = null
 
-
-    val login_erro = Login_Erro.Erro
     companion object {
         val  versao = "3.0.0"
         var device = ""
-
     }
 
 
@@ -46,16 +42,16 @@ class ActLogin:  AppCompatActivity() ,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tela_login)
 
-        email = findViewById(R.id.email_login)
-        senha = findViewById(R.id.senha)
-        entrar = findViewById(R.id.entrar)
-        equesciSenha = findViewById(R.id.equesci_senha)
+        email              = findViewById(R.id.email_login)
+        senha              = findViewById(R.id.senha)
+        entrar             = findViewById(R.id.entrar)
+        equesciSenha       = findViewById(R.id.equesci_senha)
         carregandoprogress = findViewById(R.id.progressBar_carregando_login)
-        // Cria o banco de dados Pela primeira vez
         DataBaseHelber(this).writableDatabase
 
         val  capDevice = CapturaDeviceToken()
         capDevice.recuperaToken()
+
         entrar!!.setOnClickListener {
 
             entrar!!.text = ""
@@ -87,9 +83,7 @@ class ActLogin:  AppCompatActivity() ,
                 }
                 carregandoprogress!!.visibility = View.GONE
                 entrar!!.text = "Entrar"
-
             }
-
         }
     }
 
@@ -97,8 +91,7 @@ class ActLogin:  AppCompatActivity() ,
        // super.onBackPressed()
     }
 
-    override fun ondismiss(enum: visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Enuns.Login_Erro) {
-        // Para verificar se os dados estão corretos
+    override fun ondismiss(enum: Login_Erro) {
         when(enum){
            Login_Erro.Erro ->{
                 val dialog_erro = DialogErro()

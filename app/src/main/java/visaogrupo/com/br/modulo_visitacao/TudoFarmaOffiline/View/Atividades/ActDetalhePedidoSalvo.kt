@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.TudoFarmaOffiline.databinding.ActivityActDetalhePedidoSalvoBinding
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Controler.Presenter.PresenterAtividades.DetalhePedidoSalvoPresenter
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaValorPedidoKitPedido
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.ExcluiPedidoKit
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.CustomSpinerFormDePag
@@ -23,6 +24,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.OperadorLogistico
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutosFinalizados
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.FormaDePagamentoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.OperadorLogisticaDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
@@ -43,18 +45,14 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
         binding =  ActivityActDetalhePedidoSalvoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         pedido = intent.getSerializableExtra("PedidoClicado") as? PedidoFinalizado
-
         BuscaInfos()
-
-        binding.atualizarItensCarrinho.isVisible = pedido?.TipoLoja != 13
-
 
         binding.atualizarItensCarrinho.setOnClickListener {
             val intent = Intent(context,ActProdutosAtualizar::class.java)
             intent.putExtra("PedidoClicado", pedido as Serializable)
-
             startActivityForResult(intent,4)
         }
+
         binding.voltarPedido.setOnClickListener {
             val  intent = Intent()
             intent.putExtra("excluirPedido",true)
@@ -62,28 +60,37 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
             finish()
         }
 
-
         binding.atualizaInfos.setOnClickListener {
-            val formadepagamentocap = binding.formaDepagamentospiner.selectedItem.toString()
-
+             val formadepagamentocap = binding.formaDepagamentospiner.selectedItem.toString()
+             val detalhePedidoSalvoPresenter = DetalhePedidoSalvoPresenter()
 
             if (!oplId.isEmpty() && !formadepagamentocap.contains("Selecionar")){
                 val pedidosFinalizadosDAO = PedidosFinalizadosDAO(context)
-                val formaDePagmento = infoFormaDePagamentoSalvo(context,pedido!!.valorTotal!!.toDouble(),pedido!!.RegraPrazo,pedido!!.cnpj!!,formadepagamentocap)
-                pedidosFinalizadosDAO.atualizarItem(pedido!!.pedidoID.toInt(),oplId.toString(),formadepagamentocap,formaDePagmento!!)
+                val formaDePagmento = detalhePedidoSalvoPresenter.infoFormaDePagamentoSalvo(
+                    context,
+                    pedido!!.valorTotal!!.toDouble(),
+                    pedido!!.RegraPrazo,pedido!!.cnpj!!,
+                    formadepagamentocap,
+                    pedido!!
+                )
+
+                pedidosFinalizadosDAO.atualizarItem(
+                    pedido!!.pedidoID.toInt(),
+                    oplId.toString(),
+                    formadepagamentocap,
+                    formaDePagmento!!
+                )
+
                 val  intent = Intent()
                 intent.putExtra("excluirPedido",true)
                 setResult(Activity.RESULT_OK, intent)
-
                 finish()
-
                 Toast.makeText(context,"Informações atualizadas com sucesso!" , Toast.LENGTH_SHORT).show()
-
-
 
             }else{
                 if (oplId.isEmpty() && formadepagamentocap.contains("Selecionar") ){
                     Toast.makeText(context,"Selecione o operador logístico, Selecione uma forma de pagamento " , Toast.LENGTH_SHORT).show()
+
                 }else if (oplId.isEmpty()){
                     Toast.makeText(context,"Selecione o operador logístico" , Toast.LENGTH_SHORT).show()
 
@@ -92,7 +99,6 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
 
                 }
             }
-
         }
     }
 
@@ -100,7 +106,6 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
         val  intent = Intent()
         intent.putExtra("excluirPedido",true)
         setResult(Activity.RESULT_OK, intent)
-
         finish()
     }
 
@@ -111,72 +116,47 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
                  val  intent = Intent()
                  intent.putExtra("excluirPedido",true)
                  setResult(Activity.RESULT_OK, intent)
-
                  finish()
              }else{
                  BuscaInfos()
-
              }
         }
     }
 
     fun BuscaInfos(){
         CoroutineScope(Dispatchers.IO).launch {
-            val  listaFormPag = mutableListOf<CustomSpinerFormDePag>()
-            val listaOplspner :ArrayList<OperadorLogistico> = ArrayList()
-            // busca opl
-            val buscaOpl = launch {
-                val  operadorLogisticaDAO = OperadorLogisticaDAO(context)
-                val listaOpl = operadorLogisticaDAO.listar(pedido!!.uf,pedido!!.lojaId)
-
-                for (i in 0 until listaOpl.size){
-                    listaOplspner.add(listaOpl[i])
-                }
-
-            }
-            // busca forma de pagamento
-            val buscaFormaDePag = launch {
-                val  formaDePagamentoDAO = FormaDePagamentoDAO(context)
-                val listaFormaDePagemento = formaDePagamentoDAO.listar(pedido!!.lojaId ,pedido!!.valorTotal!!.toDouble(), pedido!!.RegraPrazo, pedido!!.cnpj!!)
-                listaFormPag.add(0, CustomSpinerFormDePag("Selecionar",0))
-                for (i in 0 until listaFormaDePagemento.size){
-                    listaFormPag.add(CustomSpinerFormDePag(listaFormaDePagemento[i].FormaPgto,listaFormaDePagemento[i].exlusiva))
-                }
-            }
-            buscaOpl.join()
-            buscaFormaDePag.join()
+            val DetalhePedidoSalvoPresenter = DetalhePedidoSalvoPresenter()
+            val infosDetalhesPedidoSalvo = DetalhePedidoSalvoPresenter.buscaInfosDetalhePedidoSalvo(pedido!!,context)
 
             MainScope().launch {
-                val adapterForm = AdapterFormDePagSpiner(context,1, listaFormPag)
-
-                val oplAdapter  = OperadorAdpter(listaOplspner,pedido!!.quantidadeMaximaOpl,context, oplId  )
+                val adapterForm = AdapterFormDePagSpiner(context,1, infosDetalhesPedidoSalvo.listaFormPag)
+                val oplAdapter  = OperadorAdpter(infosDetalhesPedidoSalvo.listaOplspner,pedido!!.quantidadeMaximaOpl,context, oplId  )
                 val layoutMeneger = GridLayoutManager(context,2)
+
                 binding.recyclerOpl.layoutManager = layoutMeneger
                 binding.recyclerOpl.adapter= oplAdapter
-
                 binding.formaDepagamentospiner.adapter = adapterForm
+                binding.atualizarItensCarrinho.isVisible = pedido?.TipoLoja != 13
+
                 val pedidosFinalizadosDAO = PedidosFinalizadosDAO(applicationContext)
                 var listaProdutos  = mutableListOf<ProdutosFinalizados>()
-                var kitTituloLista = mutableListOf<KitTituloPreco>()
-
 
                 if (pedido!!.kit == 1){
-                    kitTituloLista = pedidosFinalizadosDAO.listaPedidoKit(pedido!!.pedidoID.toInt())
+                    val kitTituloLista = pedidosFinalizadosDAO.listaPedidoKit(pedido!!.pedidoID.toInt())
                     val linearlayout = LinearLayoutManager(baseContext)
                     val adapterTituloKitPedido = AdapterTituloKitPedido(kitTituloLista,baseContext, pedido!!, context, context)
+
                     binding.recyKIt.layoutManager = linearlayout
                     binding. recyKIt.adapter = adapterTituloKitPedido
-
-                    val valorTot = String.format("%.2f",pedido!!.valorTotal)
-                    binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
+                    binding.totalPedido.text = "Total : ${FormataValores.formatarParaMoeda(pedido!!.valorTotal!!)} "
                     binding.recyProdutos.isVisible = false
                     binding.recyKIt.isVisible = true
                     binding.descontoMedio.isVisible= false
                     binding.atualizarItensCarrinho.isVisible = false
-
                     val params = binding.textView35.layoutParams as ConstraintLayout.LayoutParams
                     params.topToBottom = binding.recyKIt.id
                     binding.textView35.layoutParams = params
+
                 }else{
                     val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
                     if (pedido != null) {
@@ -184,45 +164,27 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
                     }
                     val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,context)
                     val linearLayout = LinearLayoutManager(context)
+
                     binding.recyProdutos.layoutManager = linearLayout
                     binding. recyProdutos.adapter = adpterProdutosPedidos
                     binding.descontoMedio.text = pedido!!.desconto.toString() + "% méd."
-                    val valorTot = String.format("%.2f",valorTotalPedido)
-                    binding.totalPedido.text = "Tot : R$ " + valorTot.replace(".",",")
+                    binding.totalPedido.text = "Total : ${FormataValores.formatarParaMoeda(valorTotalPedido)}"
                     binding.recyProdutos.isVisible = true
                     binding.recyKIt.isVisible = false
                 }
-
             }
         }
     }
 
-    fun infoFormaDePagamentoSalvo(context: Context, valorToatalPedido: Double, RegraPrazo:Int, cnpj:String, formaDepagaemntoSelecionada:String ): FormaDePagaemnto? {
-        var formaDePagaemnto: FormaDePagaemnto? = null
-
-        val  formaDePagamentoDAO = FormaDePagamentoDAO(context)
-        val listaFormaDePagemento = formaDePagamentoDAO.listar(pedido!!.lojaId, valorToatalPedido, RegraPrazo, cnpj)
-
-        for (i in listaFormaDePagemento){
-            if (formaDepagaemntoSelecionada.contains(i.FormaPgto)){
-                formaDePagaemnto = i
-                break
-            }
-        }
-
-        return formaDePagaemnto
-    }
 
     override fun atualizaValorPedidoKitPedido(valorTotal: Double) {
-        val  valorFormat = String.format("%.2f",valorTotal)
-        binding.totalPedido.text = "R$ " + valorFormat
+        binding.totalPedido.text = FormataValores.formatarParaMoeda(valorTotal)
     }
 
     override fun excluiPedidoKit() {
         val  intent = Intent()
         intent.putExtra("excluirPedido",true)
         setResult(Activity.RESULT_OK, intent)
-
         finish()
     }
 }

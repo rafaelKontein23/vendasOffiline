@@ -18,6 +18,8 @@ data class ProdutoProgressiva(
     val quantidadeEstoque:Int,
     val centro:Int,
     val porcentagem:Double,
+    val descontoMaximo:Double,
+    val descontoMinimo:Double
 
 
 ):java.io.Serializable
