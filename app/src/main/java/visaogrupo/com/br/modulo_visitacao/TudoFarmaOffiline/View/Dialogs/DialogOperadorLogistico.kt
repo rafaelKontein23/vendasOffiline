@@ -86,7 +86,7 @@ class DialogOperadorLogistico (context:Context){
                 val observacaocap = observacao.text.toString()
 
                 val formaDePagmento = infoFormaDePagamento(context,list[0].valortotal,list[0].RegraPrazo,list[0].cnpj,formadepagamentocap,list[0].lojaId)
-                val pedidoFinalizado = PedidosFinalizadosDAO(context)
+
                 val data = RecuperaDataAtual.dataAtual()
                 val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
                 val gsonuserid = Gson()
@@ -94,9 +94,12 @@ class DialogOperadorLogistico (context:Context){
                 val login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
                 var chave = login.Usuario_id + list[0]?.clienteId +data
                 chave = chave.replace(":","").replace("/","").replace(" ","")
+
                 PushNativo.showNotificationPedido(context,"TESTE1","Pedido Salvo ","Seu pedido foi salvo com sucesso\n" +
                         "Data do Pedido: ${data} | ${HoraAtual.horaAtual()}")
+
                 if (formaDePagmento != null) {
+                    val pedidoFinalizado = PedidosFinalizadosDAO(context)
                     pedidoFinalizado.insert(
                         list[0],
                         data,
@@ -108,7 +111,8 @@ class DialogOperadorLogistico (context:Context){
                         observacaocap,
                         formaDePagmento,
                         list[0].RegraPrazo,
-                        list[0].QtdMaxima_Operador
+                        list[0].QtdMaxima_Operador,
+                        valorTotal
                     )
                 }
                 val carrinhoDao = CarrinhoDAO(context)
@@ -179,6 +183,10 @@ class DialogOperadorLogistico (context:Context){
             }
         }
     }
+
+
+
+
 
     fun dialogSalvarPedidoKIT(context:Context,carrinhoKit: CarrinhoKit, valorTotal:Double){
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -30,6 +30,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ValoresProgressiva
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProdutosDAO
@@ -107,11 +108,11 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
                     holder.quantidade.text =  listaProtudos[position].quantidadeCarrinho.toString() +" Uni."
                     holder.progressivaSelecionada.isVisible = false
                     holder.valorPorcentagem.text = valores?.desconto + "%"
-                    val valorFormatadoDesconto = String.format("%.2f",  valores?.valorDesconto?.toDouble())
+                    val valorFormatadoDesconto = FormataValores.formatarParaMoeda(valores!!.valorDesconto!!.toDouble())
                     holder.valorDesconto.text = "R$" + valorFormatadoDesconto
-                    val valorFormatadoTotal = String.format("%.2f",  valores?.valorToral?.toDouble())
-                    holder.valorTotal.text = "R$ " + valorFormatadoTotal
+                    val valorFormatadoTotal = FormataValores.formatarParaMoeda(valores!!.valorToral!!.toDouble())
                     holder.valorDesconto.setTextColor(Color.parseColor("#FF059669"))
+                    holder.valorTotal.text  = valorFormatadoTotal
                 }else{
                     holder.quantidade.isVisible = false
                     holder.excluiritem.isVisible = false
@@ -122,7 +123,7 @@ Context, start : StartaAtividade, loja_id:Int, cliente_id:Int, excluiItemcarrinh
 
                     val produtos = ProdutosDAO(context)
                     val buscarvValores = produtos.buscarDescontoeValor(listaProtudos[position].ProdutoCodigo,loja_id,uf)
-                    val valorFormatadoDesconto = String.format("%.2f",  buscarvValores?.valorDesconto?.toDouble())
+                    val valorFormatadoDesconto = FormataValores.formatarParaMoeda( buscarvValores!!.valorDesconto!!.toDouble())
 
                     holder.valorDesconto.setTextColor(Color.parseColor("#FF737880"))
                     holder.valorDesconto.text = "R$" + valorFormatadoDesconto

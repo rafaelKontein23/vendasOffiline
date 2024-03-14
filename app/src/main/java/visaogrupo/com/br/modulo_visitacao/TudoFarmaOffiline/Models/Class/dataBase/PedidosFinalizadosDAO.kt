@@ -17,11 +17,18 @@ class PedidosFinalizadosDAO(context: Context) {
         val queryUp = "UPDATE TBPedidosFinalizados SET PedidoEnviado = '$peidoEnvia' WHERE PedidoID = $pedidoId"
         dbPedido.writableDatabase.execSQL(queryUp)
     }
-    fun insert(carrinho:Carrinho, data:String,hora:String, chave:String,
+    fun insert(carrinho:Carrinho,
+               data:String,
+               hora:String,
+               chave:String,
                listaProdutduos:MutableList<Carrinho>,
-               numeroPedido:String,opls:String, justificativaAnr :String,
+               numeroPedido:String,
+               opls:String,
+               justificativaAnr :String,
                formaDePagamento:FormaDePagaemnto,
-               RegraPrazo:Int, QuantidadeMaxima:Int){
+               RegraPrazo:Int,
+               QuantidadeMaxima:Int,
+               valorTotal: Double){
 
         val valoresPedidos = ContentValues().apply {
             put("loja_id", carrinho.lojaId)
@@ -44,7 +51,7 @@ class PedidosFinalizadosDAO(context: Context) {
             put("ST", carrinho.st)
             put("formalizacao", carrinho.formalizacao)
             put("CODLISTAPRECOSYNC", carrinho.codListaPrecoSync)
-            put("ValorTotal", carrinho.valortotal)
+            put("ValorTotal", valorTotal)
             put("Nome", carrinho.nomeProduto)
             put("Apontador_codigo", carrinho.apontadorCodigo)
             put("nomeLoja", carrinho.nomeLoja)
@@ -68,9 +75,6 @@ class PedidosFinalizadosDAO(context: Context) {
             put("TipoLoja", carrinho.LojaTipo)
             put("RegraPrazo",RegraPrazo)
             put("QtdMaximaOpl",QuantidadeMaxima)
-
-
-
         }
 
 
@@ -485,6 +489,11 @@ class PedidosFinalizadosDAO(context: Context) {
         }
         return valortotal
     }
+
+    fun atualizaValortotalPedidoComum (valorTotal: Double, pedidoID:Long){
+        val query  = "UPDATE TBPedidosFinalizados SET ValorTotal = ${valorTotal} WHERE PedidoID = ${pedidoID}"
+        dbPedido.writableDatabase.execSQL(query)
+    }
     fun countarItensPedidos(pedidoId:Int):Int{
         val query = "SELECT COUNT (*) FROM TB_Produtos_Pedidos_Finalizado WHERE pedidoid = ${pedidoId}"
         val cursor = dbPedido.readableDatabase.rawQuery(query, null)
@@ -519,7 +528,7 @@ class PedidosFinalizadosDAO(context: Context) {
 
         dbPedido.writableDatabase.execSQL(queryCarrinho)
     }
-    fun atualizarItem(pedidoId:Int,operadorLogistigo:String, formaDePagaemtocap:String, formaDePagaemto: FormaDePagaemnto){
+    fun atualizarItem(pedidoId:Int,operadorLogistigo:String, formaDePagaemtocap:String, formaDePagaemto: FormaDePagaemnto, kitCodigo: Int){
         val conteudos=  ContentValues()
         if (!operadorLogistigo.isEmpty()){
             conteudos.put("OperadorLogistigo",operadorLogistigo)
@@ -528,8 +537,17 @@ class PedidosFinalizadosDAO(context: Context) {
             conteudos.put("formaDePagemento",formaDePagaemto.Cod_FormaPgto)
             conteudos.put("FormaPagamentoExclusiva",formaDePagaemto.exlusiva)
         }
+        var tabela =""
+        if (kitCodigo ==1 ){
+             tabela ="TBPedidosFinalizadosKit"
+        }else{
+             tabela ="TBPedidosFinalizados"
+        }
+        val query ="UPDATE ${tabela} SET formaDePagemento = '${formaDePagaemto.Cod_FormaPgto}', " +
+                "FormaPagamentoExclusiva = ${formaDePagaemto.exlusiva}, " +
+                "OperadorLogistigo = '${operadorLogistigo}' " +
+                "WHERE PedidoID = $pedidoId"
 
-        dbPedido.writableDatabase.update("TBPedidosFinalizados",conteudos,
-            "PedidoID = ${pedidoId}", null) // o Interrogação serve para
+        dbPedido.writableDatabase.execSQL(query)
     }
 }

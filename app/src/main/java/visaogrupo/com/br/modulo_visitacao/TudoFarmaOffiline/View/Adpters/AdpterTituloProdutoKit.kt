@@ -18,6 +18,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 
 class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
                              context: Context,
@@ -43,8 +44,8 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
 
     override fun onBindViewHolder(holder: ViewHoldertituloKit, position: Int) {
         val itemTitulo = listakitTitulo[position]
-        val valorDeFormat = String.format("%.2f", itemTitulo.De)
-        val valorPorFormat = String.format("%.2f", itemTitulo.Por)
+        val valorDeFormat = FormataValores.formatarParaMoeda(itemTitulo.De)
+        val valorPorFormat = FormataValores.formatarParaMoeda(itemTitulo.Por)
 
         holder.De.text = "De R$ " + valorDeFormat
         holder.por.text ="Por R$ " + valorPorFormat
@@ -71,8 +72,8 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
 
         holder.btnmenos.setOnClickListener {
             var  quantidade = holder.edtQuantidade.text.toString().toInt()
-            val  valorTotalKit = holder.por.text.toString().replace("Por R$ ","").replace(",",".").toDouble()
-            val  valorTotalKitDe = holder.De.text.toString().replace("De R$ ","").replace(",",".").toDouble()
+            val  valorTotalKit = itemTitulo.De
+            val  valorTotalKitPor = itemTitulo.Por
             val data = DataAtual()
             val somaQuantidade = quantidade - 1
             if (somaQuantidade < 0){
@@ -81,8 +82,8 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
                 toast?.show()
 
             }else {
-                val  soma = somaQuantidade * valorTotalKit
-                val  valorTotalFormat = String.format("%.2f",soma)
+                val  soma = somaQuantidade * valorTotalKitPor!!
+                val  valorTotalFormat = FormataValores.formatarParaMoeda(soma)
 
                 holder.edtQuantidade.setText(somaQuantidade.toString())
                 holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
@@ -95,7 +96,7 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
                     0.0,
                     0,somaQuantidade,
                     valorTotalKit,
-                    valorTotalKitDe,
+                    valorTotalKitPor!!,
                     0,
                     0.0,
                     clienteSelecionado.CODLISTAPRECOSYNC,
@@ -129,7 +130,7 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
 
     class ViewHoldertituloKit(itemView: View) : RecyclerView.ViewHolder(itemView){
         val  nomeKit = itemView.findViewById<TextView>(R.id.nomeKit)
-        val  De = itemView.findViewById<TextView>(R.id.De)
+        val  De = itemView.findViewById<TextView>(R.id.de)
         val  por = itemView.findViewById<TextView>(R.id.por)
         val  total = itemView.findViewById<TextView>(R.id.total)
         val  edtQuantidade = itemView.findViewById<EditText>(R.id.edtQuantidade)
@@ -140,17 +141,19 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
 
     fun somar(holder: ViewHoldertituloKit, itemTitulo:KitTituloPreco){
         var  quantidade = holder.edtQuantidade.text.toString().toInt()
-        val  valorTotalKit = holder.por.text.toString().replace("Por R$ ","").replace(",",".").toDouble()
-        val  valorTotalKitDe = holder.De.text.toString().replace("De R$ ","").replace(",",".").toDouble()
-        val somaQuantidade = quantidade +1
-        val  soma = somaQuantidade * valorTotalKit
 
-        val  valorTotalFormat = String.format("%.2f",soma)
+        val  valorTotalKit = itemTitulo.De
+        val  valorTotalKitpor = itemTitulo.Por
+        val somaQuantidade = quantidade +1
+        val  soma = somaQuantidade * valorTotalKitpor!!
+
+        val  valorTotalFormat = FormataValores.formatarParaMoeda(soma)
         val data = DataAtual()
 
         holder.edtQuantidade.setText(somaQuantidade.toString())
-        holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
-        val carrinhoKit = CarrinhoKit(lojaSelecionada.loja_id,
+        holder.total.text = valorTotalFormat
+        val carrinhoKit = CarrinhoKit(
+            lojaSelecionada.loja_id,
             clienteSelecionado.Empresa_id,
             itemTitulo.kitId,
             "",
@@ -158,8 +161,8 @@ class AdpterTituloProdutoKit(listaProdutos:MutableList<KitTituloPreco>,
             0.0,
             0.0,
             0,somaQuantidade,
-            valorTotalKit,
-            valorTotalKitDe,
+            valorTotalKit!!,
+            valorTotalKitpor!!,
             0,
             0.0,
             clienteSelecionado.CODLISTAPRECOSYNC,

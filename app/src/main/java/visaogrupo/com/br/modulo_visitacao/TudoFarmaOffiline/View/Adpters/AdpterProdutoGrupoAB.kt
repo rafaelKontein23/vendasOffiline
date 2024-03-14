@@ -20,6 +20,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.GrupoLojaAb
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoAB
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoValorAB
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 
 
 class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, context: Context,
@@ -52,13 +53,12 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
 
         val valorComDesconto = (itemListaAbProdutos.PF *itemListaAbProdutos.Desconto ) /100
         val valorTotalComDesconto = itemListaAbProdutos.PF - valorComDesconto
-        val valorpfFormat = String.format("%.2f", itemListaAbProdutos.PF)
-        val valorFormatComDesconto = String.format("%.2f", valorTotalComDesconto)
+        val valorFormatComDesconto = FormataValores.formatarParaMoeda(valorTotalComDesconto)
 
 
 
         holder.valorProgressiva.text = valorFormatComDesconto
-        holder.pf.text ="${valorpfFormat}"
+        holder.pf.text ="${FormataValores.formatarParaMoeda(valorTotalComDesconto)}"
 
         if (itemListaAbProdutos.estaNoCarrinho == 1){
             holder.edtQuantidade.setText(itemListaAbProdutos.quantidadeCarrinho.toString())
@@ -144,8 +144,7 @@ class AdpterProdutoGrupoAB (list: MutableList<ProdutoAB>, prioridade:Int, contex
         }
 
         var valorTotal = valorComDesconto * valorQuantidade
-        val  valorFormatTotal = String.format("%.2f",valorTotal)
-        holder.valorToral.text = "R$ " +valorFormatTotal
+        holder.valorToral.text = FormataValores.formatarParaMoeda(valorTotal)
         holder.edtQuantidade.setText(valorQuantidade.toString())
         val produtoValorAB = ProdutoValorAB(holder.codigoProtudo.text.toString(),valorTotal)
         var temNaLista = false

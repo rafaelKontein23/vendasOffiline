@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutosFinalizados
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdpterProdutosPedidos
 
@@ -65,8 +66,7 @@ class ActPedidoEnviado : AppCompatActivity() {
         if (pedido?.pedidoEnviado == true){
 
             chave.text =pedido?.chave
-            val valorFormatado = String.format("%.2f", valorTotalPedido)
-            valorTotal.text = "R$ "+ valorFormatado.replace(".",",")
+            valorTotal.text = FormataValores.formatarParaMoeda(valorTotalPedido)
             data.text = pedido?.dataPedido
             chave.setOnClickListener{
                 val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -80,8 +80,7 @@ class ActPedidoEnviado : AppCompatActivity() {
         }else{
             tituloPedido.setText("Detalhes de produtos")
             totalPedido.isVisible = true
-            val valorFormatado = String.format("%.2f", valorTotalPedido)
-            totalPedido.text = "R$ ${valorFormatado.replace(".",",")}"
+            totalPedido.text = FormataValores.formatarParaMoeda(valorTotalPedido)
 
         }
         val adpterProdutosPedidos = AdpterProdutosPedidos(listaProdutos,this)

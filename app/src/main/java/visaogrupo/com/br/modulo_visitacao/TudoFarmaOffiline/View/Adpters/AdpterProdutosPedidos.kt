@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutosFinalizados
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 
 class AdpterProdutosPedidos  (list:MutableList<ProdutosFinalizados>, context : Context) : RecyclerView.Adapter<AdpterProdutosPedidos.ViewHolderPedidoFinalizadoProdutos>() {
     var listaPedidoProdutos = list
@@ -22,7 +23,7 @@ class AdpterProdutosPedidos  (list:MutableList<ProdutosFinalizados>, context : C
     }
 
     override fun onBindViewHolder(holder: ViewHolderPedidoFinalizadoProdutos, position: Int) {
-        val valorTot = String.format("%.2f",listaPedidoProdutos[position].valor)
+        val valorTot = FormataValores.formatarParaMoeda(listaPedidoProdutos[position].valor)
 
 
         holder.nomeProdtud.text = listaPedidoProdutos[position].nomeProduto

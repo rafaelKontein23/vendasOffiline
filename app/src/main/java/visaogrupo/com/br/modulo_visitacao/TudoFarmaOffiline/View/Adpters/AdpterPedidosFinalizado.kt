@@ -24,6 +24,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.VaiParaEnviados
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataTexto
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Verifica_Internet
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.FormaDePagamentoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
@@ -59,7 +60,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolderPedidoFinalizado, position: Int) {
 
-        val valorTot = String.format("%.2f",listaPedido[position].valorTotal)
+        val valorTot = FormataValores.formatarParaMoeda(listaPedido[position].valorTotal!!)
         val formaPag = FormaDePagamentoDAO(context)
         val codForm = listaPedido[position].formaDePagamento
         var nomeFormaPag = ""

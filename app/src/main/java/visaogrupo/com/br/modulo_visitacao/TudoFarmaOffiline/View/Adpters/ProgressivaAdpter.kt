@@ -23,6 +23,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActProtudoDetalhe
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProgressivaLista
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProgressivaSelecionada
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MascaraCampo
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProgresivaDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.Alertas
@@ -72,8 +73,8 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
         }else{
             valorProdutoItem = listaProgrssiva[position].valor
         }
-        val descontoFormat = String.format("%.2f",listaProgrssiva[position].desconto)
-        val  valorprogressivaformat = String.format("%.2f",valorProdutoItem)
+        val descontoFormat = FormataValores.formatarParaMoeda(listaProgrssiva[position].desconto)
+        val  valorprogressivaformat =FormataValores.formatarParaMoeda(valorProdutoItem)
         holder.desconto.setText( descontoFormat)
         holder.quatidade.text = listaProgrssiva[position].quantidade.toString() +" Desc."
         holder.valorProgressiva.setText("R$ "  + valorprogressivaformat.toString())
@@ -251,7 +252,7 @@ class ProgressivaAdpter (list :MutableList<ProgressivaLista>, context: Context, 
         val valorPf = listaProgrssiva[position].pf
         val valorTotDesc = valorPf  *(descontoCap/ 100)
         val valorFinal =  valorPf - valorTotDesc
-        holder.valorProgressiva.setText(String.format("%.2f", valorFinal))
+        holder.valorProgressiva.setText(FormataValores.formatarParaMoeda(valorFinal))
         listaProgrssiva[position].valor = valorFinal
         atualizaValorProduto.AtualizaValorProduto(quantidadeAdionada,valorFinal,true, false)
     }

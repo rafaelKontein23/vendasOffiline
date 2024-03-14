@@ -18,6 +18,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Pedido
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.SalvarLojaeClientePrefereferciaUser
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
@@ -37,7 +38,7 @@ class AdapterPedido (list:MutableList<Pedido>, context :Context, atualizaCarinho
     }
 
     override fun onBindViewHolder(holder: ViewHolderPedido, position: Int) {
-        val valorTot = String.format("%.2f",listaPedido[position].valortotal)
+        val valorTot = FormataValores.formatarParaMoeda(listaPedido[position].valortotal)
         val cnpj = listaPedido[position].cnpj.substring(0,2)+"."+
                 listaPedido[position].cnpj.substring(2,5)+"."+
                 listaPedido[position].cnpj.substring(5,8)+"/"+

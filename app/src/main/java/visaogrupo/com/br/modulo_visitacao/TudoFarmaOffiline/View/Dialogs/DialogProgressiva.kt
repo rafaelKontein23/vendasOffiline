@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoProgressiva
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProgresivaDAO
 
 class DialogProgressiva {
@@ -71,7 +72,7 @@ class DialogProgressiva {
                     porcentagem =  p0.toString().toDouble()
                     val descontonovo = (valorpfatual * porcentagem) / 100
                     valornovo = valorpfatual - descontonovo
-                    descontoeValor.text = porcentagem.toString()+"% - R$ " +String.format("%.2f",valornovo)
+                    descontoeValor.text = porcentagem.toString()+"% - R$ " +FormataValores.formatarParaMoeda(valornovo)
                 }
             }
 

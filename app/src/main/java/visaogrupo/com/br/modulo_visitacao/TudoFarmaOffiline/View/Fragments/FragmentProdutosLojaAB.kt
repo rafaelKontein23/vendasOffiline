@@ -32,6 +32,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoAB
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoValorAB
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.GrupoLojaAbDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdpterGrupoABProdutos
@@ -231,23 +232,19 @@ class FragmentProdutosLojaAB (carrinhoVisible: carrinhoVisible) : Fragment(),Atu
 
             val valorTotalDosGrupos = valorTotalGrupoA +valorTotalGrupoB
             val  porcentagemProgressA = (valorTotalGrupoA / valorTotalDosGrupos) * 100
-            val valorFomatocentagemA = String.format("%.2f",porcentagemProgressA)
-            val valorFomatTotalA = String.format("%.2f",valorTotalGrupoA)
+            val valorFomatocentagemA =  String.format("%.2f",porcentagemProgressA)
+            val valorFomatTotalA = FormataValores.formatarParaMoeda(valorTotalGrupoA)
             binding.porcentagemA.text = valorFomatocentagemA+ "%"
-            binding.valorTotalA.text = "R$ " + valorFomatTotalA
-          /*  val animationDuration = 200L
-            val finalProgress = porcentagemProgressA.toInt()
-            val animator = ObjectAnimator.ofInt(binding.progressA, "progress", finalProgress)
-            animator.duration = animationDuration
-            animator.start()*/
+            binding.valorTotalA.text = valorFomatTotalA
+
 
             val  porcentagemProgressB = (valorTotalGrupoB / valorTotalDosGrupos) * 100
-            val valorFomatocentagemB = String.format("%.2f",porcentagemProgressB)
-            val valorFomatTotalB = String.format("%.2f",valorTotalGrupoB)
+            val valorFomatocentagemB =  String.format("%.2f",porcentagemProgressB)
+            val valorFomatTotalB = FormataValores.formatarParaMoeda(valorTotalGrupoB)
 
             binding.imgcerto.isVisible = porcentagemProgressB >= porcentagemBglobal
             binding.porcentagemB.text = valorFomatocentagemB + "%"
-            binding.valorTotalB.text = "R$ " + valorFomatTotalB
+            binding.valorTotalB.text = valorFomatTotalB
 
 
             if (porcentagemProgressB >= porcentagemBglobal) {

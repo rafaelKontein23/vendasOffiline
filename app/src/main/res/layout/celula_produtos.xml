@@ -55,7 +55,6 @@
             android:layout_height="0dp"
             android:background="#EF4444"
             android:padding="4dp"
-            android:visibility="gone"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
             android:src="@drawable/lixeira"

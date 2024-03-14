@@ -33,6 +33,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutoProgressiva
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataTexto
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.ProtudoAdapter
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoDetalhe
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
@@ -193,7 +194,7 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
             }
             // notificaça a theared de interface
             MainScope().launch {
-                val valorFormatado = String.format("%.2f", valorSomado)
+                val valorFormatado = FormataValores.formatarParaMoeda(valorSomado)
                 binding.TotalCarrinho.text ="R$ " + valorFormatado.replace(".",",")
                 binding.progressBarValorminimo.max =lojaSelecionada.MinimoValor.toInt()
                 binding.progressBarValorminimo.progress = valorSomado.toInt()

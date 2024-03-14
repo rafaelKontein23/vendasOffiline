@@ -18,6 +18,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Lojas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataTexto
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoKitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.KitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.ProdutosDAO
@@ -58,7 +59,7 @@ class FragmentProdutosKit (carrinhoVisible: carrinhoVisible) : Fragment(), Atual
 
         login =  gsonuserid.fromJson(objetoSerializadoLogin, Login::class.java)
         protudosIniciais()
-        val valorMinimoFormat = String.format("%.2f",lojaSelecionada.MinimoValor)
+        val valorMinimoFormat =FormataValores.formatarParaMoeda(lojaSelecionada.MinimoValor)
         binding.valorMinimo.text  = "R$ " +valorMinimoFormat.replace(".",",")
         binding.lojasSelecionadas.text =lojaSelecionada.nome
         binding.textRazaosocialclienteSelecionado.text = clienteSelecionado.RazaoSocial
@@ -127,8 +128,7 @@ class FragmentProdutosKit (carrinhoVisible: carrinhoVisible) : Fragment(), Atual
             val carrinhoKitDAO = CarrinhoKitDAO(requireContext())
             carrinhoKitDAO.verificaExiste(carrinhoKit)
             val (valorTotal,quantidade) = carrinhoKitDAO.PegarValor(carrinhoKit)
-            val valorTotalFormat = String.format("%.2f",valorTotal)
-            binding.TotalCarrinho.text = "R$ " + valorTotalFormat.replace(".",",")
+            binding.TotalCarrinho.text = FormataValores.formatarParaMoeda(valorTotal)
             if (quantidade >= 999){
                 binding.quatidadeItens.text = "999+"
             }else{

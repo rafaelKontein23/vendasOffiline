@@ -77,16 +77,25 @@ class FragmentLojas (trocarcorItem: TrocarcorItem, carrinhoVisible: carrinhoVisi
                listalojasDao.listarlojas(requireContext(),1,querylojasClientes)
             }
 
+
+            listLojas .addAll(initialLojas)
             AdapterLojas.listaLojas = initialLojas
             AdapterLojas.notifyDataSetChanged()
             binding.progressLoja.isVisible = false
 
+            binding.fecharMensagemLoja.setOnClickListener {
+                binding.view9.isVisible =false
+                binding.fecharMensagemLoja.isVisible =false
+                binding.verMensagem.isVisible = true
+            }
+            binding.verMensagem.setOnClickListener {
+                binding.view9.isVisible =true
+                binding.fecharMensagemLoja.isVisible =true
+                binding.verMensagem.isVisible = false
 
-
+            }
         }
 
-
-        // listerner de busca
         binding.edtBuscaLojas.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }

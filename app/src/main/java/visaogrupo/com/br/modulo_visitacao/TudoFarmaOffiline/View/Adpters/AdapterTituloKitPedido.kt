@@ -18,6 +18,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.KitTituloPreco
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 
@@ -38,8 +39,8 @@ class AdapterTituloKitPedido(
     }
     override fun onBindViewHolder(holder: viewHolderAdpterPedido, position: Int) {
         val itemTitulo = listakitTitulo[position]
-        val valorDeFormat = String.format("%.2f", itemTitulo.De)
-        val valorPorFormat = String.format("%.2f", itemTitulo.Por)
+        val valorDeFormat = FormataValores.formatarParaMoeda(itemTitulo.De)
+        val valorPorFormat = FormataValores.formatarParaMoeda(itemTitulo.Por)
 
         holder.De.text = "De R$ " + valorDeFormat
         holder.por.text ="Por R$ " + valorPorFormat
@@ -53,7 +54,7 @@ class AdapterTituloKitPedido(
 
 
         holder.edtQuantidade.setText(itemTitulo.quantidade.toString())
-        val  valorTotalFormat = String.format("%.2f",pedido.valorTotal)
+        val  valorTotalFormat = FormataValores.formatarParaMoeda(pedido.valorTotal!!)
 
         holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
 
@@ -65,8 +66,7 @@ class AdapterTituloKitPedido(
 
         holder.btnmenos.setOnClickListener {
             var  quantidade = holder.edtQuantidade.text.toString().toInt()
-            val  valorTotalKit = holder.por.text.toString().replace("Por R$ ","").replace(",",".").toDouble()
-            val  valorTotalKitDe = holder.De.text.toString().replace("De R$ ","").replace(",",".").toDouble()
+            val  valorTotalKit = itemTitulo.Por
             val data = DataAtual()
             val somaQuantidade = quantidade - 1
             if (somaQuantidade == 0){
@@ -80,13 +80,11 @@ class AdapterTituloKitPedido(
 
             }else {
                 val  soma = somaQuantidade * valorTotalKit
-                val  valorTotalFormat = String.format("%.2f",soma)
                 val pedidoFinalizadosDAO = PedidosFinalizadosDAO(context)
-
                 pedidoFinalizadosDAO.atualizaPedidoKit(pedido.pedidoID.toInt(),soma,somaQuantidade)
 
                 holder.edtQuantidade.setText(somaQuantidade.toString())
-                holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
+                holder.total.text =  FormataValores.formatarParaMoeda(soma)
 
             }
 
@@ -98,7 +96,7 @@ class AdapterTituloKitPedido(
 
     class viewHolderAdpterPedido(itemView: View) :ViewHolder(itemView){
         val  nomeKit = itemView.findViewById<TextView>(R.id.nomeKit)
-        val  De = itemView.findViewById<TextView>(R.id.De)
+        val  De = itemView.findViewById<TextView>(R.id.de)
         val  por = itemView.findViewById<TextView>(R.id.por)
         val  total = itemView.findViewById<TextView>(R.id.total)
         val  edtQuantidade = itemView.findViewById<EditText>(R.id.edtQuantidade)
@@ -108,13 +106,12 @@ class AdapterTituloKitPedido(
     }
     fun somar(holder: viewHolderAdpterPedido, itemTitulo:KitTituloPreco){
         var  quantidade = holder.edtQuantidade.text.toString().toInt()
-        val  valorTotalKit = holder.por.text.toString().replace("Por R$ ","").replace(",",".").toDouble()
+        val  valorTotalKit = itemTitulo.Por
         val somaQuantidade = quantidade +1
         val  soma = somaQuantidade * valorTotalKit
-        val  valorTotalFormat = String.format("%.2f",soma)
 
         holder.edtQuantidade.setText(somaQuantidade.toString())
-        holder.total.text = "R$ "+ valorTotalFormat.replace(".",",")
+        holder.total.text = FormataValores.formatarParaMoeda(soma)
         val pedidoFinalizadosDAO = PedidosFinalizadosDAO(context)
         pedidoFinalizadosDAO.atualizaPedidoKit(pedido.pedidoID.toInt(),soma, somaQuantidade)
 

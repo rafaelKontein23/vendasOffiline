@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.KitProtudos
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 
 
 class AdapterProdutoskit (listaProdutos:List<KitProtudos>): Adapter<AdapterProdutoskit.ViewholderProdutoKit>() {
@@ -25,7 +26,7 @@ class AdapterProdutoskit (listaProdutos:List<KitProtudos>): Adapter<AdapterProdu
           holder.quantidade.text = itemProdtudo.quantidade.toString() + " uni."
           holder.NomeProtudo.text = itemProdtudo.produtoNome
           holder.barraProduto.text = itemProdtudo.barra
-          val valorProdutoFormat = String.format("%.2f",itemProdtudo.valorTotal)
+          val valorProdutoFormat = FormataValores.formatarParaMoeda(itemProdtudo.valorTotal)
           holder.valorDesconto.text = "R$ " + valorProdutoFormat.replace(".",",")
           if ( itemProdtudo.imgBase64 != null){
               if (!itemProdtudo.imgBase64!!.isEmpty() ){

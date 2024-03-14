@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.CarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoKitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
@@ -32,7 +33,7 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
     override fun onBindViewHolder(holder: ViewHolderCarrinhhoKit, position: Int) {
 
         val itemCarrinhoKit = listCarrinhoKit[position]
-        val vlaorTotalFormat = String.format("%.2f",itemCarrinhoKit.valortotal)
+        val vlaorTotalFormat = FormataValores.formatarParaMoeda(itemCarrinhoKit.valortotal)
         holder.pedidoText.text = "Pedido #"+ itemCarrinhoKit.numerPedido.toString()
         holder.nomeKit.text = itemCarrinhoKit.nomeKit
         holder.valorTotalKit.text = "R$" +vlaorTotalFormat
@@ -81,10 +82,10 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
                 }
             }else {
                 val  soma = somaQuantidade * valorTotalKit
-                val  valorTotalFormat = String.format("%.2f",soma)
+                val  valorTotalFormat = FormataValores.formatarParaMoeda(soma)
 
                 holder.edtQuantidade.setText(somaQuantidade.toString())
-                holder.valorTotalKit.text = "R$ "+ valorTotalFormat.replace(".",",")
+                holder.valorTotalKit.text =  valorTotalFormat
                 val carrinhoKitDAO = CarrinhoKitDAO(holder.btnmenos.context)
                 itemCarrinhoKit.quantidade = quantidade
                 itemCarrinhoKit.valortotal = soma
@@ -113,8 +114,8 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
 
     class ViewHoldertituloKit(itemView: View) : RecyclerView.ViewHolder(itemView){
         val  nomeKit = itemView.findViewById<TextView>(R.id.nomeKit)
-        val  De = itemView.findViewById<TextView>(R.id.De)
-        val  por = itemView.findViewById<TextView>(R.id.por)
+        val  De = itemView.findViewById<TextView>(R.id.de)
+        val  por = itemView.findViewById<TextView>(R.id.de)
         val  total = itemView.findViewById<TextView>(R.id.total)
         val  edtQuantidade = itemView.findViewById<EditText>(R.id.edtQuantidade)
         val  btnMais = itemView.findViewById<Button>(R.id.btnMais)
@@ -127,10 +128,8 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
         val  valorTotalKit = item.por
         val somaQuantidade = quantidade +1
         val  soma = somaQuantidade * valorTotalKit
-        val  valorTotalFormat = String.format("%.2f",soma)
-
         holder.edtQuantidade.setText(somaQuantidade.toString())
-        holder.valorTotalKit.text = "R$ "+ valorTotalFormat.replace(".",",")
+        holder.valorTotalKit.text = FormataValores.formatarParaMoeda(soma)
         item.quantidade = quantidade
         item.valortotal = soma
         val carrinhoKitDAO = CarrinhoKitDAO(holder.btnmenos.context)

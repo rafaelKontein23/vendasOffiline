@@ -24,6 +24,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Lojas
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataValores
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.GrupoLojaAbDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.KitDAO
@@ -47,8 +48,7 @@ class LojasAdapter (list :List<Lojas>, trocarcorItem: TrocarcorItem, frameid:Int
 
     override fun onBindViewHolder(holder: LojasViewHolder, position: Int) {
         holder.nomeloja.text = listaLojas[position].nome.toString()
-        val valorMinimoFormatado = String.format("%.2f", listaLojas[position].MinimoValor)
-        holder.valorMinimo.text = "Valor mínimo " + valorMinimoFormatado.replace(".",",")
+        holder.valorMinimo.text = "Valor mínimo " + FormataValores.formatarParaMoeda(listaLojas[position].MinimoValor)
         val loja = listaLojas[position]
 
         holder. imgLoja.roundTopCorners(25f) // Raio desejado

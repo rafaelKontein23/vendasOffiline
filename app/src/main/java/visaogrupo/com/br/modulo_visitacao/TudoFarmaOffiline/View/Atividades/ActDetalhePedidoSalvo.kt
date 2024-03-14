@@ -78,7 +78,7 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
                     pedido!!.pedidoID.toInt(),
                     oplId.toString(),
                     formadepagamentocap,
-                    formaDePagmento!!
+                    formaDePagmento!!,pedido!!.kit
                 )
 
                 val  intent = Intent()
@@ -159,6 +159,8 @@ class ActDetalhePedidoSalvo : AppCompatActivity() , AtualizaValorPedidoKitPedido
 
                 }else{
                     val valorTotalPedido = pedidosFinalizadosDAO.somarTotalPedido(pedido!!.pedidoID)
+                    pedidosFinalizadosDAO.atualizaValortotalPedidoComum(valorTotalPedido,pedido!!.pedidoID)
+
                     if (pedido != null) {
                         listaProdutos =  pedidosFinalizadosDAO.listarPedidosProdutos(pedido!!.pedidoID)
                     }
