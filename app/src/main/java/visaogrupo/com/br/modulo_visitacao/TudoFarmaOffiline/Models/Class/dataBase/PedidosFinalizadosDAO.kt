@@ -3,13 +3,16 @@ package visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBa
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Carrinho
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.FormaDePagaemnto
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.KitProtudos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.KitTituloPreco
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Notificacoes
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.PedidoFinalizado
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ProdutosFinalizados
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.ValoresProgressiva
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
 
 class PedidosFinalizadosDAO(context: Context) {
     val dbPedido = DataBaseHelber(context)
@@ -28,7 +31,8 @@ class PedidosFinalizadosDAO(context: Context) {
                formaDePagamento:FormaDePagaemnto,
                RegraPrazo:Int,
                QuantidadeMaxima:Int,
-               valorTotal: Double){
+               valorTotal: Double,
+               context: Context){
 
         val valoresPedidos = ContentValues().apply {
             put("loja_id", carrinho.lojaId)
@@ -81,6 +85,17 @@ class PedidosFinalizadosDAO(context: Context) {
 
         val pedidoID: Long =  dbPedido.writableDatabase.insertOrThrow("TBPedidosFinalizados",null,valoresPedidos)
 
+        val  notificacaoDAO  = NotificacaoDAO(context)
+        val  notificacao = Notificacoes(0,
+            "Pedido ${pedidoID} Salvo!",
+            "Seu Pedido foi salvo com sucesso, clique aqui e envie ele agora!",
+            3,
+            " ",
+            pedidoID,
+            0 ,
+            data+ hora)
+        val  sucesso = notificacaoDAO.insert(notificacao)
+        Log.d("Notificação", sucesso.toString())
 
         for (i in listaProdutduos){
              val valoresProdutosPedidos = ContentValues()

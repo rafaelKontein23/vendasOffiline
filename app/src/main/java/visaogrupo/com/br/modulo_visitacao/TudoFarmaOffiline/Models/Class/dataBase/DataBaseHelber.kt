@@ -9,7 +9,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
     context,
     "CargaHertz11.db",
     null,
-    140// aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
+    141// aqui serve para especificar a versao do banco de dados , vc troca quando cria uma nova tabela ou muda algo nas query
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         CriarEAtualizarTabelas(db)
@@ -518,6 +518,18 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
                 "PORC INTEGER," +
                 "formalizacao INTEGER" +
                 ")"
+
+
+        val  sqlNotificacaoes = "CREATE TABLE IF NOT EXISTS TB_Notificacao(" +
+                "noticacoesID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "titulo VARCHAR(255)," +
+                "mensagem VARCHAR(255)," +
+                "Tipo Integer," + // tipo 1 avisos,tipo 2 promocões, tipo 3 pedidos
+                "json TEXT,"+
+                "pedidoID Integer," +
+                "visualizado Integer," +
+                "dataChegada VARCHAR(255)" +
+                ")"
         try {
             db?.execSQL(sqlFiltro)
             db?.execSQL(sqlFiltroProduto)
@@ -553,6 +565,7 @@ class DataBaseHelber (context:Context,) : SQLiteOpenHelper(
             db?.execSQL(sqlGrupoAB)
             db?.execSQL(sqlGrupoABProduto)
             db?.execSQL(sqlGrupoProgressiva)
+            db?.execSQL(sqlNotificacaoes)
         }catch (e:Exception) {
             e.printStackTrace()
             Log.d("Info_dp","Erro ao cria tabela")

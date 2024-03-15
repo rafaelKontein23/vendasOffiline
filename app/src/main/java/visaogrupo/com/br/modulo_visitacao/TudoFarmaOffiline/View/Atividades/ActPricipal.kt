@@ -49,6 +49,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TrocarcorItem
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.CustomSpinnerAdapter
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Trocar_cor_de_icon
@@ -296,19 +297,21 @@ class ActPricipal : AppCompatActivity(),
         // clik do do spiner
 
         val items = listOf(
-            visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem(
+           CustomSpinnerItem(
                 "",
                 R.drawable.defaut
             ),
-            visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem(
+            CustomSpinnerItem("Notificação",
+                R.drawable.notificacao),
+            CustomSpinnerItem(
                 "Portal",
-                R.drawable.portal
+                R.drawable.adm
             ),
-            visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem(
+           CustomSpinnerItem(
                 "Adm",
                 R.drawable.adm
             ),
-            visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem(
+            CustomSpinnerItem(
                 "Sair",
                 R.drawable.sair
             )
@@ -351,9 +354,14 @@ class ActPricipal : AppCompatActivity(),
                     startActivity(intent)
 
                 }else if(selectedItem.contains("Sair")){
-                    finish()
                     MainScope().launch {
                         val  intent = Intent(applicationContext,ActLogin::class.java)
+                        startActivity(intent)
+                    }
+
+                }else if(selectedItem.contains("Notifi")){
+                  MainScope().launch {
+                        val  intent = Intent(applicationContext,ActNotificacao::class.java)
                         startActivity(intent)
                     }
 

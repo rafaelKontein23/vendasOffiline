@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bordasimagenscargas"
+        android:padding="10dp"
+        android:tint="@color/Prymary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pedidos" />
+
+    <TextView
+        android:id="@+id/tituloNotificao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/inter"
+        android:text="Pedido 1234 Enviado! "
+        android:textColor="@color/Prymary"
+        android:lineHeight="25.6sp"
+
+        android:textFontWeight="600"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView10"
+        app:layout_constraintTop_toTopOf="@+id/imageView10" />
+
+    <TextView
+        android:id="@+id/tempo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/inter"
+        android:text="2 min"
+        android:textAlignment="center"
+        android:textColor="@color/prymary300"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10"
+        app:layout_constraintStart_toStartOf="@+id/imageView10"
+        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+
+    <TextView
+        android:id="@+id/mensagem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/inter"
+        android:text="Lorem ipsum dolor sit amet, consctetur adipis elit lakssnf."
+        android:textColor="@color/prymary300"
+
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/tituloNotificao"
+        app:layout_constraintStart_toStartOf="@+id/tituloNotificao"
+        app:layout_constraintTop_toBottomOf="@+id/tituloNotificao" />
+
+    <View
+        android:id="@+id/linha"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="#5EE6EDF3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mensagem" />
+
+    <View
+        android:id="@+id/visualiza"
+        android:layout_width="12.5dp"
+        android:layout_height="12.5dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/visualiza_notificacao"
+        android:elevation="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintStart_toStartOf="@+id/imageView10" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,9 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Enuns.TrocaItemSelecionado
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TrocarcorItem
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Clientes
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
@@ -26,8 +29,9 @@ class DialogDetalhesClientes {
        fun dialogDetalhe(context:Context, cnpjformat:String,
                          cliente: Clientes, frameid:Int,
                          supportFragmentManager:FragmentManager,
-                         trocarcorItem: visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.TrocarcorItem,
-                         carrinhoVisible: visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible, atualizaCarrinho: visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.AtualizaCarrinho
+                         trocarcorItem: TrocarcorItem,
+                         carrinhoVisible: carrinhoVisible,
+                         atualizaCarrinho: AtualizaCarrinho
        ){
            val  dialog =  Dialog(context);
 
@@ -47,6 +51,13 @@ class DialogDetalhesClientes {
            val  xdetalhe = dialog.findViewById<ImageView>(R.id.xdetalhe)
            val email = dialog.findViewById<TextView>(R.id.email)
            val maps= dialog.findViewById<ImageView>(R.id.maps)
+           cnpj.text = cnpjformat
+
+
+           razaoSocial.text = cliente.RazaoSocial
+           endereco.text = "${cliente.Endereco}, ${cliente.Numero} ${cliente.Cidade},${cliente.Bairro}, ${cliente.UF}"
+           Telefone.text = cliente.Telefone
+           email.text = cliente.Email
 
            email.setOnClickListener {
                val subject = "Comprar remedios"
@@ -83,6 +94,7 @@ class DialogDetalhesClientes {
            xdetalhe.setOnClickListener {
                dialog.onBackPressed()
            }
+
            vender.setOnClickListener {
                dialog.onBackPressed()
 
@@ -92,10 +104,6 @@ class DialogDetalhesClientes {
                mudarFragment.openFragmentLojas(supportFragmentManager,frameid,trocarcorItem, carrinhoVisible, atualizaCarrinho )
 
            }
-           cnpj.text = cnpjformat
-           razaoSocial.text = cliente.RazaoSocial
-           endereco.text = "${cliente.Endereco}, ${cliente.Numero} ${cliente.Cidade},${cliente.Bairro}, ${cliente.UF}"
-           Telefone.text = cliente.Email
-           email.text = cliente.Telefone
+
        }
 }

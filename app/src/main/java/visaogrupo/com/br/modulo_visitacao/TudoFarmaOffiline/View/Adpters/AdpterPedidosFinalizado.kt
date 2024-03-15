@@ -77,6 +77,7 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         holder.valorTotal.text = "R$ " + valorTot
         holder.cnpjcliente.text = cnpj
         holder.razaoSocial.text  = listaPedido[position].razaoSocial
+        holder.pedidoID .text = listaPedido[position].pedidoID.toString()
 
         holder.data.text  = listaPedido[position].dataPedido+ " | ${nomeFormaPag}"
 
@@ -194,6 +195,6 @@ class AdpterPedidosFinalizado (list:MutableList<PedidoFinalizado>, context : Con
         val  enviarPedido = itemView.findViewById<ImageView>(R.id.enviarPedido)
         val  excluirItem = itemView.findViewById<ImageView>(R.id.excluirItem)
         val nomeloja = itemView.findViewById<TextView>(R.id.nomeloja)
-
+        val pedidoID = itemView.findViewById<TextView>(R.id.pedidoID)
     }
 }

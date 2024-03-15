@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActNotificacao">
+
+    <ImageView
+        android:id="@+id/voltarTela"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/voltarcompra" />
+
+    <TextView
+        android:id="@+id/tituloPedido"
+        style="@style/text_sub_titulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/inter_medium"
+
+        android:text="Notificações"
+        android:textColor="#2E3642"
+
+        android:textFontWeight="@integer/material_motion_duration_long_1"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/voltarTela"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/todos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bordas_filtro_azul_selecionada"
+        android:fontFamily="@font/inter"
+        android:letterSpacing="0.05"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="Todos"
+        android:textAlignment="center"
+        android:textColor="@color/Prymary"
+        android:textFontWeight="600"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/promocoes"
+        app:layout_constraintStart_toStartOf="@+id/voltarTela"
+        app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
+
+    <TextView
+        android:id="@+id/promocoes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bordas_filtro_azul_deselecionada"
+        android:fontFamily="@font/inter"
+        android:letterSpacing="0.05"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="Promoções"
+        android:textAlignment="center"
+        android:textColor="#8AAAC6"
+        android:textFontWeight="600"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/todos"
+        app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
+
+    <TextView
+        android:id="@+id/campanhas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+
+        android:background="@drawable/bordas_filtro_azul_deselecionada"
+        android:fontFamily="@font/inter"
+        android:letterSpacing="0.05"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="Campanhas"
+        android:textAlignment="center"
+        android:textColor="#8AAAC6"
+        android:textFontWeight="600"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/promocoes"
+        app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
+
+    <TextView
+        android:id="@+id/avisos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bordas_filtro_azul_deselecionada"
+        android:fontFamily="@font/inter"
+        android:letterSpacing="0.05"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:text="Avisos"
+        android:textAlignment="center"
+        android:textColor="#8AAAC6"
+        android:textFontWeight="600"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/campanhas"
+        app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
+
+    <ImageView
+        android:id="@+id/lerTodos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/lertodos" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyNotificaocao"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promocoes" />
+</androidx.constraintlayout.widget.ConstraintLayout>

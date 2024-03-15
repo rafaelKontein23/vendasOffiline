@@ -28,6 +28,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.CustomSpinerFormDePag
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.FormaDePagaemnto
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Notificacoes
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.OperadorLogistico
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.ExcluirPrefuser
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.HoraAtual
@@ -37,6 +38,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoKitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.FormaDePagamentoDAO
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.NotificacaoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.OperadorLogisticaDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidoKitDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.PedidosFinalizadosDAO
@@ -98,8 +100,10 @@ class DialogOperadorLogistico (context:Context){
                 PushNativo.showNotificationPedido(context,"TESTE1","Pedido Salvo ","Seu pedido foi salvo com sucesso\n" +
                         "Data do Pedido: ${data} | ${HoraAtual.horaAtual()}")
 
+
                 if (formaDePagmento != null) {
                     val pedidoFinalizado = PedidosFinalizadosDAO(context)
+
                     pedidoFinalizado.insert(
                         list[0],
                         data,
@@ -112,7 +116,8 @@ class DialogOperadorLogistico (context:Context){
                         formaDePagmento,
                         list[0].RegraPrazo,
                         list[0].QtdMaxima_Operador,
-                        valorTotal
+                        valorTotal,
+                        context
                     )
                 }
                 val carrinhoDao = CarrinhoDAO(context)
