@@ -269,6 +269,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:elevation="10dp"
+        android:visibility="gone"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -348,5 +349,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/carregandoProgress" />
+
+
+
+
+    <ImageView
+        android:id="@+id/notificao"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/bordas_menu_cima"
+        android:padding="10dp"
+        android:src="@drawable/notificacao"
+        android:tint="#595E67"
+        app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
+        app:layout_constraintEnd_toStartOf="@+id/menucim_spnier"
+        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
+
+    <View
+        android:id="@+id/noticaocaoIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/bordas_carga"
+        android:backgroundTint="#D30404"
+        app:layout_constraintBottom_toBottomOf="@+id/notificao"
+        app:layout_constraintEnd_toEndOf="@+id/notificao" />
+
+    <TextView
+        android:id="@+id/quatidadeNotificao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textSize="10dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/noticaocaoIcon"
+        app:layout_constraintEnd_toEndOf="@+id/noticaocaoIcon"
+        app:layout_constraintStart_toStartOf="@+id/noticaocaoIcon"
+        app:layout_constraintTop_toTopOf="@+id/noticaocaoIcon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

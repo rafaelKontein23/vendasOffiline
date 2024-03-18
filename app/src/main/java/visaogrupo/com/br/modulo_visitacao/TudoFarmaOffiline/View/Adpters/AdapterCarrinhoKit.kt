@@ -33,10 +33,10 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
     override fun onBindViewHolder(holder: ViewHolderCarrinhhoKit, position: Int) {
 
         val itemCarrinhoKit = listCarrinhoKit[position]
-        val vlaorTotalFormat = FormataValores.formatarParaMoeda(itemCarrinhoKit.valortotal)
+        val valorTotalFormat = FormataValores.formatarParaMoeda(itemCarrinhoKit.valortotal)
         holder.pedidoText.text = "Pedido #"+ itemCarrinhoKit.numerPedido.toString()
         holder.nomeKit.text = itemCarrinhoKit.nomeKit
-        holder.valorTotalKit.text = "R$" +vlaorTotalFormat
+        holder.valorTotalKit.text = valorTotalFormat
         holder.edtQuantidade.setText(itemCarrinhoKit.quantidade.toString())
         val linearLayoutManager = LinearLayoutManager(holder.continuarCarrinhoKit.context)
         val adpterProdutoKit = AdapterProdutoskit(itemCarrinhoKit.listProdutoKit!!)

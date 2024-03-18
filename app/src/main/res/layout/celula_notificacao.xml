@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/containerNotification"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView10"
+        android:id="@+id/iconeNotification"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginStart="24dp"
@@ -32,8 +33,8 @@
         android:textFontWeight="600"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView10"
-        app:layout_constraintTop_toTopOf="@+id/imageView10" />
+        app:layout_constraintStart_toEndOf="@+id/iconeNotification"
+        app:layout_constraintTop_toTopOf="@+id/iconeNotification" />
 
     <TextView
         android:id="@+id/tempo"
@@ -45,9 +46,9 @@
         android:textAlignment="center"
         android:textColor="@color/prymary300"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView10"
-        app:layout_constraintStart_toStartOf="@+id/imageView10"
-        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+        app:layout_constraintEnd_toEndOf="@+id/iconeNotification"
+        app:layout_constraintStart_toStartOf="@+id/iconeNotification"
+        app:layout_constraintTop_toBottomOf="@+id/iconeNotification" />
 
     <TextView
         android:id="@+id/mensagem"
@@ -81,6 +82,6 @@
         android:layout_marginBottom="28dp"
         android:background="@drawable/visualiza_notificacao"
         android:elevation="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
-        app:layout_constraintStart_toStartOf="@+id/imageView10" />
+        app:layout_constraintBottom_toBottomOf="@+id/iconeNotification"
+        app:layout_constraintStart_toStartOf="@+id/iconeNotification" />
 </androidx.constraintlayout.widget.ConstraintLayout>

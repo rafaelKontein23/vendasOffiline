@@ -252,7 +252,8 @@ class DialogOperadorLogistico (context:Context){
                         observacaocap,
                         formaDePagmento,
                         carrinhoKit.RegraPrazo,
-                        carrinhoKit.QtdMaxima_Operador
+                        carrinhoKit.QtdMaxima_Operador,
+                        context
                     )
                 }
                 val carrinhokitDao = CarrinhoKitDAO(context)

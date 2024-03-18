@@ -3,8 +3,10 @@ package visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBa
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.CarrinhoKit
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.FormaDePagaemnto
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Notificacoes
 
 class PedidoKitDAO (context: Context){
     val dbPedidoKIt =  DataBaseHelber(context).writableDatabase
@@ -12,7 +14,8 @@ class PedidoKitDAO (context: Context){
     fun insert(carrinhokit: CarrinhoKit, data:String, hora:String, chave:String,
                numeroPedido:String, opls:String, justificativaAnr :String,
                formaDePagamento: FormaDePagaemnto,
-               RegraPrazo:Int, QuantidadeMaxima:Int){
+               RegraPrazo:Int, QuantidadeMaxima:Int,
+               context: Context){
 
         try {
             val valoresPedidos = ContentValues().apply {
@@ -51,6 +54,19 @@ class PedidoKitDAO (context: Context){
             }
 
             val pedidoID: Long =  dbPedidoKIt.insertOrThrow("TBPedidosFinalizadosKit",null,valoresPedidos)
+
+
+            val  notificacaoDAO  = NotificacaoDAO(context)
+            val  notificacao = Notificacoes(0,
+                "Pedido Kit ${pedidoID} Salvo!",
+                "Seu Pedido Kit foi salvo com sucesso, clique aqui e envie ele agora!",
+                3,
+                " ",
+                 pedidoID,
+                0 ,
+                data+ hora)
+            val  sucesso = notificacaoDAO.insert(notificacao)
+            Log.d("Notificao kit",sucesso.toString())
 
             for (i in carrinhokit.listProdutoKit!!){
                 val valoresProdutosPedidos = ContentValues()

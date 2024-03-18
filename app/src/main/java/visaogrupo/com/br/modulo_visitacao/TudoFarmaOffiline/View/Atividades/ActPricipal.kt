@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_act_cargas.icon_home
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_lojas
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_pedidos
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_produtos
+import kotlinx.android.synthetic.main.activity_act_cargas.noticaocaoIcon
 import kotlinx.android.synthetic.main.activity_act_cargas.qtdNotification
 import kotlinx.android.synthetic.main.activity_act_cargas.text_clientes
 import kotlinx.android.synthetic.main.activity_act_cargas.text_home
@@ -40,6 +41,8 @@ import kotlinx.android.synthetic.main.activity_act_cargas.view_home
 import kotlinx.android.synthetic.main.activity_act_cargas.view_lojas
 import kotlinx.android.synthetic.main.activity_act_cargas.view_prdidos
 import kotlinx.android.synthetic.main.activity_act_cargas.view_produto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.TudoFarmaOffiline.R
@@ -54,6 +57,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.C
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.NotificacaoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
@@ -88,6 +92,10 @@ class ActPricipal : AppCompatActivity(),
     lateinit var viewCarregando :View
     lateinit var  carregandoProgress :ProgressBar
     lateinit var textCarregando:TextView
+    lateinit var iconeNotificacao:ImageView
+    lateinit var noticaocaoIcon :View
+    lateinit var quatidadeNotificao :TextView
+    val context = this
     companion object {
         var  troca = TrocaItemSelecionado.home
         var clienteUF =""
@@ -102,9 +110,7 @@ class ActPricipal : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_act_cargas)
         list_menu.add("")
-        list_menu.add("")
-        list_menu.add("")
-        list_menu.add("")
+
         FirebaseApp.initializeApp(this);
 
 
@@ -120,13 +126,17 @@ class ActPricipal : AppCompatActivity(),
         viewCarregando = findViewById(R.id.viewCarregando)
         carregandoProgress = findViewById(R.id.carregandoProgress)
         textCarregando  = findViewById(R.id.textCarregando)
+        iconeNotificacao  = findViewById(R.id.notificao)
+        noticaocaoIcon = findViewById(R.id.noticaocaoIcon)
+        quatidadeNotificao = findViewById(R.id.quatidadeNotificao)
+
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val objetoSerializado = sharedPreferences?.getString("UserLogin", null)
         login =  gson.fromJson(objetoSerializado, Login::class.java)
         fragmentCargas.callback =this
 
-        atualizaQtdCarrinho()
+        atualizaQtdCarrinhoNotificao()
         val tela = intent.getStringExtra("Tela")
         if (!tela?.isEmpty()!!){
 
@@ -221,6 +231,12 @@ class ActPricipal : AppCompatActivity(),
         viewcarrinho.setOnClickListener {
             startActivityForResult(Intent(this,ActPedido::class.java),3)
         }
+        iconeNotificacao.setOnClickListener {
+            MainScope().launch {
+                val  intent = Intent(applicationContext,ActNotificacao::class.java)
+                startActivity(intent)
+            }
+        }
 
         icon_clientes.setOnClickListener(clickListenerclientes)
         text_clientes.setOnClickListener  (clickListenerclientes)
@@ -301,8 +317,6 @@ class ActPricipal : AppCompatActivity(),
                 "",
                 R.drawable.defaut
             ),
-            CustomSpinnerItem("Notificação",
-                R.drawable.notificacao),
             CustomSpinnerItem(
                 "Portal",
                 R.drawable.adm
@@ -359,12 +373,6 @@ class ActPricipal : AppCompatActivity(),
                         startActivity(intent)
                     }
 
-                }else if(selectedItem.contains("Notifi")){
-                  MainScope().launch {
-                        val  intent = Intent(applicationContext,ActNotificacao::class.java)
-                        startActivity(intent)
-                    }
-
                 }
             }
 
@@ -381,7 +389,7 @@ class ActPricipal : AppCompatActivity(),
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 3) {
             if (resultCode == Activity.RESULT_OK) {
-                atualizaQtdCarrinho()
+                atualizaQtdCarrinhoNotificao()
            }
         }
     }
@@ -486,12 +494,19 @@ class ActPricipal : AppCompatActivity(),
         viewcarrinho.isVisible = true
         qtdNotificacoes.isVisible = true
         viewnotification.isVisible = true
+        iconeNotificacao.isVisible = true
+        noticaocaoIcon.isVisible = true
+        quatidadeNotificao.isVisible =true
     }
 
     fun itensInvisible(){
         viewcarrinho.isVisible = false
         qtdNotificacoes.isVisible = false
         viewnotification.isVisible = false
+        iconeNotificacao.isVisible = false
+        noticaocaoIcon.isVisible = false
+        quatidadeNotificao.isVisible =false
+
     }
 
     override fun carrinhoVisivel() {
@@ -499,20 +514,47 @@ class ActPricipal : AppCompatActivity(),
     }
 
     override fun atualizaCarrinho() {
-        atualizaQtdCarrinho()
+        atualizaQtdCarrinhoNotificao()
     }
-    fun  atualizaQtdCarrinho(){
-        val queryQuantidadeNoCarrinho = "SELECT cliente_id, loja_id, COUNT (*) AS total " +
-                "FROM TB_Carrinho " +
-                "GROUP BY cliente_id, loja_id"
+    fun  atualizaQtdCarrinhoNotificao(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val qtdCarrinho = launch {
+                val queryQuantidadeNoCarrinho = "SELECT cliente_id, loja_id, COUNT (*) AS total " +
+                        "FROM TB_Carrinho " +
+                        "GROUP BY cliente_id, loja_id"
 
-        val  carrinhoDAO = CarrinhoDAO(this)
-        val  countCarrinho = carrinhoDAO.countarItenscarrinho(queryQuantidadeNoCarrinho)
-        if(countCarrinho > 9){
-            qtdNotification.text = "9+"
-        }else{
-            qtdNotification.text = countCarrinho.toString()
+                val  carrinhoDAO = CarrinhoDAO(context)
+                val  countCarrinho = carrinhoDAO.countarItenscarrinho(queryQuantidadeNoCarrinho)
+                MainScope().launch {
+                    if(countCarrinho > 9){
+                        qtdNotification.text = "9+"
+                    }else{
+                        qtdNotification.text = countCarrinho.toString()
+                    }
+                }
+
+            }
+
+            val qtdNotificacao = launch {
+                val notidicaoDao =  NotificacaoDAO(context)
+                val countNotificaon = notidicaoDao.countarItensNotificao()
+                MainScope().launch {
+                    if (countNotificaon > 9){
+                        quatidadeNotificao.text = "9+"
+                    }else if(countNotificaon == 0){
+                        quatidadeNotificao.text = "-"
+
+                    }else{
+                        quatidadeNotificao.text = countNotificaon.toString()
+                    }
+                }
+            }
+            qtdCarrinho.join()
+            qtdNotificacao.join()
         }
+
+
+
 
     }
 

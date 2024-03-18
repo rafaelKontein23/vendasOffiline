@@ -72,8 +72,6 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         savedInstanceState: Bundle?
     ): View? {
 
-
-        //Recupera produtos da loja Selecionada
         val view  = binding.root
         val sharedPreferences =context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
@@ -237,8 +235,11 @@ class FragmentProtudos (carrinhoVisible: carrinhoVisible, atulizaCarrinho: Atual
         val carrinhoDAO=  CarrinhoDAO(requireContext())
         val count = carrinhoDAO.quantidadeItens(clienteSelecionado.Empresa_id, lojaSelecionada.loja_id)
         MainScope().launch {
-            binding.quatidadeItens.text = count.toString()
-
+            if (count >9){
+                binding.quatidadeItens.text = "9+"
+            }else{
+                binding.quatidadeItens.text = count.toString()
+            }
         }
     }
 

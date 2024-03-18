@@ -28,17 +28,34 @@ class NotificacaoDAO(context: Context) {
          }
     }
 
-    fun atualizar(): Boolean {
-        TODO("Not yet implemented")
+    fun atualizar(notificationId:Int): Boolean {
+        val  queryNotificao = "UPDATE TB_Notificacao SET visualizado = 1 WHERE noticacoesID = $notificationId\n"
+        dbNotificacoes.execSQL(queryNotificao)
+        return true
     }
 
-    fun remover(Clientes: Clientes): Boolean {
+    fun remover(): Boolean {
         TODO("Not yet implemented")
     }
+    fun countarItensNotificao():Int{
+        val query = "SELECT *" +
+                "FROM TB_Notificacao WHERE visualizado = 0 "
 
+
+        val  curso = dbNotificacoes.rawQuery(query,null,null)
+        var  count = 0
+        while (curso.moveToNext()){
+            count +=1
+        }
+
+        curso.close()
+
+        return count
+
+    }
     fun listar(): MutableList<Notificacoes> {
         val listaNoticacoes = mutableListOf<Notificacoes>()
-        val query = "Select * FROM TB_Notificacao"
+        val query = "Select * FROM TB_Notificacao ORDER BY noticacoesID DESC "
 
         val cursor = dbNotificacoes.rawQuery(query,null)
         while (cursor.moveToNext()){
