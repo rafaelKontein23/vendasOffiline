@@ -268,8 +268,10 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="12dp"
-                    android:background="#80EAEBEC"
-                    android:buttonTint="#496683"
+                    android:padding="4dp"
+                    android:buttonTint="#9FA3A8"
+                    android:textFontWeight="700"
+                    android:background="@drawable/funco_caixa_padrao"
                     android:text="Caixa Padrão 24 uni."
                     android:textColor="#9FA3A8"
                     android:textSize="12dp" />

@@ -20,4 +20,29 @@ class NotificationPresenter {
 
         return listaNotificao
     }
+
+    fun itensVisualizados(listaNotificao:MutableList<Notificacoes>):MutableList<Notificacoes>{
+        val listaNotificaoVisualizado = mutableListOf <Notificacoes>()
+        for (i in  listaNotificao){
+            if (i.visualizado == 0){
+                listaNotificaoVisualizado.add(i)
+            }
+
+        }
+
+        return listaNotificaoVisualizado
+    }
+
+
+    fun itensNaoVisualizados(listaNotificao:MutableList<Notificacoes>):MutableList<Notificacoes>{
+        val listaNotificaoNaoVisualizado = mutableListOf <Notificacoes>()
+        for (i in  listaNotificao){
+            if (i.visualizado == 1){
+                listaNotificaoNaoVisualizado.add(i)
+            }
+
+        }
+
+        return listaNotificaoNaoVisualizado
+    }
 }

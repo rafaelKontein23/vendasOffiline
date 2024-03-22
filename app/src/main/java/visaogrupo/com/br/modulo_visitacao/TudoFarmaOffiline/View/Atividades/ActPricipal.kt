@@ -7,21 +7,23 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
+import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.FirebaseApp
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_clientes
@@ -29,7 +31,6 @@ import kotlinx.android.synthetic.main.activity_act_cargas.icon_home
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_lojas
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_pedidos
 import kotlinx.android.synthetic.main.activity_act_cargas.icon_produtos
-import kotlinx.android.synthetic.main.activity_act_cargas.noticaocaoIcon
 import kotlinx.android.synthetic.main.activity_act_cargas.qtdNotification
 import kotlinx.android.synthetic.main.activity_act_cargas.text_clientes
 import kotlinx.android.synthetic.main.activity_act_cargas.text_home
@@ -53,12 +54,11 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfa
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.carrinhoVisible
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem
-import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.CustomSpinnerAdapter
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MudarFragment
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Trocar_cor_de_icon
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.CarrinhoDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.NotificacaoDAO
-import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.task.Retrofit_Request.URLs
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdapterMenuCima
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.Alertas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Fragments.FragmentCargas
@@ -68,6 +68,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Fragments.Fragm
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Fragments.FragmentProdutosKit
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Fragments.FragmentProdutosLojaAB
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Fragments.FragmentProtudos
+
 
 class ActPricipal : AppCompatActivity(),
     TrocarcorItem,
@@ -87,7 +88,7 @@ class ActPricipal : AppCompatActivity(),
     lateinit var viewcarrinho :TextView
     lateinit var qtdNotificacoes :TextView
     lateinit var viewnotification :View
-    lateinit var  spniner :Spinner
+    lateinit var menuRecycler:RecyclerView
     lateinit var login: Login
     lateinit var viewCarregando :View
     lateinit var  carregandoProgress :ProgressBar
@@ -95,6 +96,9 @@ class ActPricipal : AppCompatActivity(),
     lateinit var iconeNotificacao:ImageView
     lateinit var noticaocaoIcon :View
     lateinit var quatidadeNotificao :TextView
+    lateinit var  menuCima:ImageView
+    lateinit var containerActPrincipal:ConstraintLayout
+    lateinit var fragmentContainerViewPrincipal: FrameLayout
     val context = this
     companion object {
         var  troca = TrocaItemSelecionado.home
@@ -119,16 +123,20 @@ class ActPricipal : AppCompatActivity(),
         }
 
 
-        viewcarrinho = findViewById(R.id.carrinhoO)
-        qtdNotificacoes = findViewById(R.id.qtdNotification)
-        viewnotification = findViewById(R.id.viewnotification)
-        spniner = findViewById(R.id.menucim_spnier)
-        viewCarregando = findViewById(R.id.viewCarregando)
+        viewcarrinho       = findViewById(R.id.carrinhoO)
+        qtdNotificacoes     = findViewById(R.id.qtdNotification)
+        viewnotification    = findViewById(R.id.viewnotification)
+        viewCarregando     = findViewById(R.id.viewCarregando)
         carregandoProgress = findViewById(R.id.carregandoProgress)
-        textCarregando  = findViewById(R.id.textCarregando)
-        iconeNotificacao  = findViewById(R.id.notificao)
-        noticaocaoIcon = findViewById(R.id.noticaocaoIcon)
-        quatidadeNotificao = findViewById(R.id.quatidadeNotificao)
+        textCarregando     = findViewById(R.id.textCarregando)
+        iconeNotificacao    = findViewById(R.id.notificao)
+        noticaocaoIcon     = findViewById(R.id.noticaocaoIcon)
+        quatidadeNotificao  = findViewById(R.id.quatidadeNotificao)
+        menuRecycler       = findViewById(R.id.menuRecycler)
+        menuCima           = findViewById(R.id.menu_cima)
+        containerActPrincipal = findViewById(R.id.containerActPrincipal)
+        fragmentContainerViewPrincipal = findViewById(R.id.fragmentContainerViewPrincipal)
+
 
         val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
@@ -157,6 +165,9 @@ class ActPricipal : AppCompatActivity(),
 
 
         val clickListenerhome = View.OnClickListener {
+            iconeNotificacao.isVisible = true
+            noticaocaoIcon.isVisible = true
+            quatidadeNotificao.isVisible =true
             seleciona(text_home,view_home,icon_home);
             Deseleciona_itens(text_pedidos,text_clientes,text_lojas,text_protudo,view_prdidos,
                 view_clientes,view_lojas,view_produto,icon_pedidos,icon_clientes,icon_lojas,icon_produtos)
@@ -180,6 +191,9 @@ class ActPricipal : AppCompatActivity(),
             seleciona(text_pedidos,view_prdidos,icon_pedidos);
             Deseleciona_itens(text_home,text_clientes,text_lojas,text_protudo,view_home,
                 view_clientes,view_lojas,view_produto,icon_home,icon_clientes,icon_lojas,icon_produtos)
+            iconeNotificacao.isVisible = false
+            noticaocaoIcon.isVisible = false
+            quatidadeNotificao.isVisible =false
             if(!fragementPedido.isVisible){
 
                 val fragmentManager: FragmentManager = supportFragmentManager
@@ -201,6 +215,7 @@ class ActPricipal : AppCompatActivity(),
         val clickListenerclientes = View.OnClickListener {
             val sharedPreferences =getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
             val feitacarga = sharedPreferences?.getBoolean("cargafeita", false)
+
             if(feitacarga == false){
                 if (!FragmentCargas.alertvisible){
                     FragmentCargas.alertvisible = true
@@ -225,7 +240,9 @@ class ActPricipal : AppCompatActivity(),
 
                 }
             }
-
+            iconeNotificacao.isVisible = false
+            noticaocaoIcon.isVisible = false
+            quatidadeNotificao.isVisible =false
         }
 
         viewcarrinho.setOnClickListener {
@@ -244,6 +261,8 @@ class ActPricipal : AppCompatActivity(),
 
         val clickListenerlojas = View.OnClickListener {
             fragmentClientes.onDestroy()
+
+
 
             val visivel =fragmentLojas.isVisible
 
@@ -270,8 +289,11 @@ class ActPricipal : AppCompatActivity(),
                     fragmentTransaction.addToBackStack("h")
                     fragmentTransaction.commit()
                 }
-            }
 
+            }
+            iconeNotificacao.isVisible  = false
+            noticaocaoIcon.isVisible   = false
+            quatidadeNotificao.isVisible =false
         }
 
         icon_lojas.setOnClickListener(clickListenerlojas)
@@ -310,79 +332,33 @@ class ActPricipal : AppCompatActivity(),
         icon_produtos.setOnClickListener (clickListenerprodutos)
         text_protudo.setOnClickListener(clickListenerprodutos)
 
-        // clik do do spiner
+        menuCima.setOnClickListener {
 
-        val items = listOf(
-           CustomSpinnerItem(
-                "",
-                R.drawable.defaut
-            ),
+            menuRecycler.isVisible = true
+        }
+
+        val listaItensMenu = listOf(
             CustomSpinnerItem(
                 "Portal",
-                R.drawable.adm
+                R.drawable.portal
             ),
            CustomSpinnerItem(
                 "Adm",
                 R.drawable.adm
             ),
             CustomSpinnerItem(
+                "Visitas",
+                R.drawable.visitaicon
+            ),
+            CustomSpinnerItem(
                 "Sair",
                 R.drawable.sair
             )
-            // adicionar mais itens personalizados aqui
         )
-        val adapter = CustomSpinnerAdapter(this, R.layout.custom_spinner_item, items)
-        spniner.adapter = adapter
-
-        spniner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                // Lógica a ser executada quando um item é selecionado
-                val selectedItem = parent.getItemAtPosition(position).toString()
-                if(selectedItem.contains("Portal")){
-                    val json = "{" +
-                            "\"email\": \"" + login.Email + "\"," +
-                            "\"senha\": \"" + login.Senha + "\"," +
-                            "\"origem\":" + "\"app\"," +
-                            "\"versaoapp\":" + "\"" + "1.0.5" + "\"" +
-                            "}"
-
-                    // Encode para Base64
-                    val encodedString = Base64.encodeToString(json.toByteArray(), Base64.DEFAULT)
-
-                    val url = "${URLs.urlportal}mobile/${encodedString}"
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(intent)
-                }else if(selectedItem.contains("Adm")){
-                    val json: String = login.Email + ":" +login.Senha
-
-                    // Encode para Base64
-
-                    // Encode para Base64
-                    val encodedString =
-                        org.apache.commons.codec.binary.Base64.encodeBase64String(json.toByteArray())
-
-                    val urladm: String = URLs.urlAdm + encodedString
-
-
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urladm))
-                    startActivity(intent)
-
-                }else if(selectedItem.contains("Sair")){
-                    MainScope().launch {
-                        val  intent = Intent(applicationContext,ActLogin::class.java)
-                        startActivity(intent)
-                    }
-
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Lógica a ser executada quando nenhum item é selecionado
-            }
-        }
-
-
-
+        val adapterMenuCima     = AdapterMenuCima(listaItensMenu, baseContext,login, this)
+        val linearLayoutManager    = LinearLayoutManager(baseContext)
+        menuRecycler.layoutManager = linearLayoutManager
+        menuRecycler.adapter       = adapterMenuCima
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -543,6 +519,8 @@ class ActPricipal : AppCompatActivity(),
                         quatidadeNotificao.text = "9+"
                     }else if(countNotificaon == 0){
                         quatidadeNotificao.text = "-"
+                        noticaocaoIcon.isVisible = false
+                        quatidadeNotificao.isVisible =false
 
                     }else{
                         quatidadeNotificao.text = countNotificaon.toString()
@@ -552,10 +530,6 @@ class ActPricipal : AppCompatActivity(),
             qtdCarrinho.join()
             qtdNotificacao.join()
         }
-
-
-
-
     }
 
 
@@ -593,6 +567,29 @@ class ActPricipal : AppCompatActivity(),
              textCarregando.text = mensagem
          }
 
+    }
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev != null && menuRecycler.isVisible) {
+
+            val x = ev.x.toInt()
+            val y = ev.y.toInt()
+
+            if (menuRecycler.isTouchInsideView(x, y)) {
+                return super.dispatchTouchEvent(ev)
+            } else {
+                menuRecycler.isVisible = false
+                return true
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+
+    }
+    fun View.isTouchInsideView(x: Int, y: Int): Boolean {
+        val location = IntArray(2)
+        this.getLocationOnScreen(location)
+        val viewX = location[0]
+        val viewY = location[1]
+        return (x >= viewX && x <= viewX + this.width && y >= viewY && y <= viewY + this.height)
     }
 }
 

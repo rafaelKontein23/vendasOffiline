@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Modulo_visitacao"
         tools:targetApi="31">
         <activity
+            android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActRoteiro"
+            android:exported="false" />
+        <activity
             android:name="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActNotificacao"
             android:exported="false" />
         <activity
@@ -91,10 +94,10 @@
             </intent-filter>
         </service>
     </application>
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>

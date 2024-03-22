@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import visaogrupo.com.br.TudoFarmaOffiline.R
 
 class CustomSpinnerAdapter(
@@ -19,8 +21,10 @@ class CustomSpinnerAdapter(
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.custom_spinner_item, parent, false)
 
         val item = getItem(position)
+
         val item_menu = view.findViewById<TextView>(R.id.item_menu)
         val iamgem_menu = view.findViewById<ImageView>(R.id.iamgem_menu)
+        val container = view.findViewById<ConstraintLayout>(R.id.container)
 
         item_menu.text = item?.item
         iamgem_menu.setImageResource(item?.icons ?: R.drawable.defaut)

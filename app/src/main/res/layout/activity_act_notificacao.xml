@@ -50,12 +50,12 @@
         android:textColor="@color/Prymary"
         android:textFontWeight="600"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/promocoes"
+        app:layout_constraintEnd_toStartOf="@+id/visualizado"
         app:layout_constraintStart_toStartOf="@+id/voltarTela"
         app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
 
     <TextView
-        android:id="@+id/promocoes"
+        android:id="@+id/visualizado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -67,7 +67,7 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="4dp"
-        android:text="Promoções"
+        android:text="Visualizados"
         android:textAlignment="center"
         android:textColor="#8AAAC6"
         android:textFontWeight="600"
@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
 
     <TextView
-        android:id="@+id/campanhas"
+        android:id="@+id/NaoVisualizado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -89,12 +89,12 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="4dp"
-        android:text="Campanhas"
+        android:text="Não Visualizados"
         android:textAlignment="center"
         android:textColor="#8AAAC6"
         android:textFontWeight="600"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/promocoes"
+        app:layout_constraintStart_toEndOf="@+id/visualizado"
         app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
 
     <TextView
@@ -116,7 +116,7 @@
         android:textColor="#8AAAC6"
         android:textFontWeight="600"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/campanhas"
+        app:layout_constraintStart_toEndOf="@+id/NaoVisualizado"
         app:layout_constraintTop_toBottomOf="@+id/voltarTela" />
 
     <ImageView
@@ -137,5 +137,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/promocoes" />
+        app:layout_constraintTop_toBottomOf="@+id/visualizado" />
+
+    <TextView
+        android:id="@+id/semNotificaoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="No momento não há notificações"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/recyNotificaocao"
+        app:layout_constraintTop_toTopOf="@+id/recyNotificaocao" />
 </androidx.constraintlayout.widget.ConstraintLayout>

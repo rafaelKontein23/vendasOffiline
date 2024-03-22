@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lay"
+    android:id="@+id/containerActPrincipal"
     android:layout_width="match_parent"
+    android:elevation="12sp"
     android:layout_height="match_parent"
     tools:context=".TudoFarmaOffiline.View.Atividades.ActPricipal">
 
@@ -276,35 +277,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_alerta" />
 
-    <Spinner
-        android:id="@+id/menucim_spnier"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bordas_menu_cima"
-        android:gravity="left"
-        android:popupBackground="@drawable/bordas_spiner_personalizada"
-        android:rotationX="187"
-        android:rotationY="182"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
 
     <ImageView
         android:id="@+id/menu_cima"
-        android:layout_width="18dp"
-
-        android:layout_height="18dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="3dp"
+        android:layout_width="38dp"
+        android:padding="8sp"
+        android:layout_height="38dp"
+        android:background="@drawable/bordas_menu_cima"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:src="@drawable/icon_pontos"
-        app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
-        app:layout_constraintEnd_toEndOf="@+id/menucim_spnier"
-        app:layout_constraintStart_toStartOf="@+id/menucim_spnier"
-        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/viewCarregando"
@@ -351,31 +335,30 @@
         app:layout_constraintTop_toBottomOf="@+id/carregandoProgress" />
 
 
-
-
     <ImageView
         android:id="@+id/notificao"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/bordas_menu_cima"
         android:padding="10dp"
         android:src="@drawable/notificacao"
         android:tint="#595E67"
         app:layout_constraintBottom_toBottomOf="@+id/menucim_spnier"
-        app:layout_constraintEnd_toStartOf="@+id/menucim_spnier"
-        app:layout_constraintTop_toTopOf="@+id/menucim_spnier" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/noticaocaoIcon"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginStart="28dp"
         android:layout_marginBottom="28dp"
         android:background="@drawable/bordas_carga"
         android:backgroundTint="#D30404"
         app:layout_constraintBottom_toBottomOf="@+id/notificao"
-        app:layout_constraintEnd_toEndOf="@+id/notificao" />
+        app:layout_constraintStart_toStartOf="@+id/notificao" />
 
     <TextView
         android:id="@+id/quatidadeNotificao"
@@ -390,5 +373,16 @@
         app:layout_constraintEnd_toEndOf="@+id/noticaocaoIcon"
         app:layout_constraintStart_toStartOf="@+id/noticaocaoIcon"
         app:layout_constraintTop_toTopOf="@+id/noticaocaoIcon" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/menuRecycler"
+        android:layout_width="150dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bordas_spiner_personalizada"
+        android:elevation="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_cima" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
