@@ -1,0 +1,112 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/tela"
+    android:background="#004682"
+    android:layout_weight="2"
+    android:layout_height="match_parent"
+    tools:context="visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActCalendarioRoteiro">
+
+    <!-- Conteúdo principal (CalendarView e outros elementos) -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Seus elementos aqui -->
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="4dp"
+            android:dateTextAppearance="@style/CustomCalendarDay"
+            android:weekDayTextAppearance="@style/CustomCalendarWeek"
+            android:theme="@style/CustomCalendarMonth"
+
+            android:layout_marginTop="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.818"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+        <!-- Outros elementos aqui -->
+
+        <TextView
+            android:id="@+id/textView28"
+            style="@style/textbold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/inter_medium"
+            android:textColor="#FFFFFF"
+            android:text="Calendario de visitas"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- BottomSheet -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewDrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="24sp"
+        android:background="@drawable/bordas_cima_calendario"
+        android:elevation="12sp"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Conteúdo do BottomSheet (RecyclerView ou outros elementos) -->
+        <TextView
+            android:id="@+id/diaSelecionado"
+
+            style="@style/TextCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/inter_medium"
+
+            android:text="Dia"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view20" />
+
+        <!-- Conteúdo do BottomSheet (RecyclerView ou outros elementos) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyVisitasMarcadas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diaSelecionado" />
+
+        <View
+            android:id="@+id/view20"
+            android:layout_width="60dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bordas_menu_cima"
+
+            android:backgroundTint="#BAD9F4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

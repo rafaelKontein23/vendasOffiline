@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -30,6 +31,10 @@ class ActRoteiro : AppCompatActivity() {
         setContentView(bingind.root)
 
         carregaInfos()
+        bingind.calendarioVisitas.setOnClickListener {
+            val intent =  Intent(baseContext,ActCalendarioRoteiro::class.java)
+            startActivity(intent)
+        }
 
         bingind.buscaClientesRoteiro.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

@@ -11,11 +11,12 @@ import android.view.Window
 import android.widget.DatePicker
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.DataPikerData
 import java.util.Calendar
 
-class DialogCalendarrio {
+class DialogCalendarrio: BottomSheetDialogFragment() {
 
     fun dialogCalendario(context:Context,dataPikerData: DataPikerData){
         val  dialog =  Dialog(context);
@@ -47,3 +48,4 @@ class DialogCalendarrio {
 
     }
 }
+

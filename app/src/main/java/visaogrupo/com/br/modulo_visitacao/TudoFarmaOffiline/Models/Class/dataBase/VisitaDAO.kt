@@ -31,7 +31,7 @@ class VisitaDAO(context: Context) {
         if (ordem){
             query = "SELECT * FROM TB_Visitas"
         }else{
-            query = "SELECT * FROM TB_Visitas WHERE data_visita =${dataVisita}"
+            query = "SELECT * FROM TB_Visitas WHERE data_visita = '${dataVisita}'"
         }
 
         val cursor = db.rawQuery(query,null)

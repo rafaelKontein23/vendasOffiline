@@ -112,4 +112,22 @@
         <item name="android:fontFamily">@font/inter</item>
 
     </style>
+    <style name="textoCalendario" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
+    <style name="CustomCalendarMonth" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorAccent">#34ABC3</item>
+        <item name="colorPrimary">#A9F1FF</item>
+    </style>
+
+    <style name="CustomCalendarDay" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CustomCalendarWeek" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
