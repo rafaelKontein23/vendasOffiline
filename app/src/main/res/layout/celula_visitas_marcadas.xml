@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
+    android:id="@+id/containerVisita"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content">
 
@@ -11,9 +13,12 @@
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
         android:text="00.000.000/0001/31"
+        android:textColor="@color/gray600"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgVista"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -22,8 +27,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:textFontWeight="400"
+        android:textColor="@color/gray400"
         android:text="rafa Faema"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView8"
+        app:layout_constraintStart_toEndOf="@+id/imgVista"
         app:layout_constraintTop_toBottomOf="@+id/celulaClienteCNPJ" />
 
     <TextView
@@ -31,36 +39,139 @@
         style="@style/text_comum"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="16dp"
 
+        android:layout_marginTop="2dp"
         android:drawablePadding="8dp"
         android:text="Rua campos de guaira"
-        android:textColor="@color/azulrua"
+        android:textColor="@color/gray400"
         android:textSize="12dp"
-        app:layout_constraintEnd_toEndOf="@+id/textRazaosocialcliente"
+        app:layout_constraintEnd_toStartOf="@+id/imageView8"
+        app:layout_constraintStart_toEndOf="@+id/imgVista"
         app:layout_constraintTop_toBottomOf="@+id/textRazaosocialcliente" />
 
-    <View
-        android:id="@+id/linhacliente"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="2dp"
-        android:background="#E6EDF3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enderecoCliente" />
 
     <ImageView
         android:id="@+id/imgVista"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
         android:padding="3dp"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/certoicon" />
+        app:srcCompat="@drawable/check_branco" />
+
+    <View
+        android:id="@+id/view21"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/imgVista" />
+
+    <View
+        android:id="@+id/view22"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view21" />
+
+
+    <View
+        android:id="@+id/view23"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view22" />
+
+    <View
+        android:id="@+id/view24"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view23" />
+
+    <View
+        android:id="@+id/view245"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view24" />
+
+    <View
+        android:id="@+id/view26"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view245" />
+
+    <View
+        android:id="@+id/view27"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view26" />
+    <View
+        android:id="@+id/view28"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view23" />
+
+    <View
+        android:id="@+id/view29"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/funcdo_icone_calendario_sucesso"
+        android:backgroundTint="#9FA3A8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imgVista"
+        app:layout_constraintStart_toStartOf="@+id/imgVista"
+        app:layout_constraintTop_toBottomOf="@+id/view27" />
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/drag" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

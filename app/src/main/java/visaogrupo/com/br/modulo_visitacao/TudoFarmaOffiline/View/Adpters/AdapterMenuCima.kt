@@ -1,5 +1,6 @@
 package visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,19 +16,21 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import visaogrupo.com.br.TudoFarmaOffiline.R
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Interfaces.Ondimiss.menuVisitas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Login
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Personalizacao.CustomSpinnerItem
-import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.CustomSpinnerAdapter
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.MenuVisitas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.task.Retrofit_Request.URLs
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActLogin
-import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActPricipal
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Atividades.ActRoteiro
 
-class AdapterMenuCima (customSpinnerItem: List<CustomSpinnerItem>, context: Context, login:Login, actPricipal: ActPricipal) : Adapter<AdapterMenuCima.ViewHolderMenuCima>() {
+class AdapterMenuCima(customSpinnerItem: List<CustomSpinnerItem>, context: Context, login: Login? = null, act: Activity,menuVisitas:menuVisitas? = null) : Adapter<AdapterMenuCima.ViewHolderMenuCima>() {
     val listaSpinnerItem = customSpinnerItem
     val context = context
     val login = login
-    val actPricipal = actPricipal
+    val actPricipal = act
+    var menuVisitas = MenuVisitas.filtros
+    var menuVisitasInterface = menuVisitas
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderMenuCima {
         val  view = LayoutInflater.from(parent.context).inflate(R.layout.custom_spinner_item,parent,false)
         return ViewHolderMenuCima(view)
@@ -41,7 +44,7 @@ class AdapterMenuCima (customSpinnerItem: List<CustomSpinnerItem>, context: Cont
         holder.container.setOnClickListener {
             if(itemMenu.item.contains("Portal")){
                 val json = "{" +
-                        "\"email\": \"" + login.Email + "\"," +
+                        "\"email\": \"" + login!!.Email + "\"," +
                         "\"senha\": \"" + login.Senha + "\"," +
                         "\"origem\":" + "\"app\"," +
                         "\"versaoapp\":" + "\"" + "1.0.5" + "\"" +
@@ -54,11 +57,7 @@ class AdapterMenuCima (customSpinnerItem: List<CustomSpinnerItem>, context: Cont
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 actPricipal.startActivity(intent)
             }else if(itemMenu.item.contains("Adm")){
-                val json: String = login.Email + ":" +login.Senha
-
-                // Encode para Base64
-
-                // Encode para Base64
+                val json: String = login!!.Email + ":" +login!!.Senha
                 val encodedString =
                     org.apache.commons.codec.binary.Base64.encodeBase64String(json.toByteArray())
 
@@ -79,7 +78,25 @@ class AdapterMenuCima (customSpinnerItem: List<CustomSpinnerItem>, context: Cont
                     val  intent = Intent(actPricipal, ActRoteiro::class.java)
                     actPricipal.startActivity(intent)
                 }
-            }
+
+            }else if (itemMenu.item.contains("Marca como não visitadas")){
+                menuVisitas = MenuVisitas.naoVisitada
+                menuVisitasInterface?.visitasmenu(menuVisitas)
+
+
+            }else if (itemMenu.item.contains("Excluir visitas")){
+                menuVisitas = MenuVisitas.excluivisita
+                menuVisitasInterface?.visitasmenu(menuVisitas)
+
+            }else if (itemMenu.item.contains("Filtros")){
+                menuVisitas = MenuVisitas.filtros
+                menuVisitasInterface?.visitasmenu(menuVisitas)
+
+            }else if (itemMenu.item.contains("Remarcar visitas")){
+                menuVisitas = MenuVisitas.remarcarVisitas
+                menuVisitasInterface?.visitasmenu(menuVisitas)
+
+             }
         }
     }
     override fun getItemCount(): Int {

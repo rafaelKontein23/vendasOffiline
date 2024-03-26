@@ -97,7 +97,7 @@ class DialogMarcaVisitas(context: Context): DataPikerData {
                 gradientDrawable.setStroke(2,Color.parseColor("#BEC1C4"))
                 val  dataCap = dataInput.text.toString()
                 val visitaoDAO = VisitaDAO(context)
-                val listaVisita = visitaoDAO.lista(true,dataCap)
+                val listaVisita = visitaoDAO.lista(false,dataCap)
                 val  visitas = Visitas(
                     0,
                     cliente.CNPJ,

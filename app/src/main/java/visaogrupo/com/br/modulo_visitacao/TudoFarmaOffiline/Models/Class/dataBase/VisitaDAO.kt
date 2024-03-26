@@ -16,7 +16,10 @@ class VisitaDAO(context: Context) {
                 put("Telefone", visitas.telefone)
                 put("Email", visitas.email)
                 put("data_visita", visitas.dataVisita)
+                put("status", 0)
                 put("ordem", visitas.ordem)
+
+
             }
             db.insertOrThrow("TB_Visitas",null,valoresInserts)
 
@@ -26,12 +29,20 @@ class VisitaDAO(context: Context) {
 
     }
 
+    fun atualizaPosition(listaVisitas: MutableList<Visitas>){
+        for ((i, vistas) in listaVisitas.withIndex()){
+            val query = "UPDATE TB_Visitas SET ordem = '$i' WHERE data_visita = '${vistas.dataVisita}' AND visitaID = ${vistas.visitaID}"
+            db.execSQL(query)
+        }
+
+    }
+
     fun lista(ordem:Boolean, dataVisita: String = ""):MutableList<Visitas>{
         var query = ""
         if (ordem){
             query = "SELECT * FROM TB_Visitas"
         }else{
-            query = "SELECT * FROM TB_Visitas WHERE data_visita = '${dataVisita}'"
+            query = "SELECT * FROM TB_Visitas WHERE data_visita = '${dataVisita}' ORDER BY ordem ASC "
         }
 
         val cursor = db.rawQuery(query,null)

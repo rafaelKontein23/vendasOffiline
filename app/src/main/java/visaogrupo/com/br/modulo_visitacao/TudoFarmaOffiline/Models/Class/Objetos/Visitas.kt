@@ -7,4 +7,5 @@ data class Visitas( val visitaID: Int? = null,
                     val telefone: String? = null,
                     val email: String? = null,
                     val dataVisita: String? = null,
-                    val ordem: Int? = null)
+                    val ordem: Int? = null,
+                    val status :Int = 0)

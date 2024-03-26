@@ -20,17 +20,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/menu_cima"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bordas_menu_cima"
+            android:padding="8sp"
+
+            android:src="@drawable/icon_pontos"
+            android:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView28" />
+
+        <ImageView
+            android:id="@+id/aplicarFiltro"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bordas_menu_cima"
+            android:padding="8sp"
+            android:src="@drawable/check_branco"
+            android:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <!-- Seus elementos aqui -->
         <CalendarView
             android:id="@+id/calendarView"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="4dp"
+            android:layout_height="322dp"
+            android:layout_marginTop="24dp"
             android:dateTextAppearance="@style/CustomCalendarDay"
-            android:weekDayTextAppearance="@style/CustomCalendarWeek"
+            android:padding="4dp"
             android:theme="@style/CustomCalendarMonth"
 
-            android:layout_marginTop="40dp"
+            android:weekDayTextAppearance="@style/CustomCalendarWeek"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.818"
@@ -44,13 +70,48 @@
             style="@style/textbold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/inter_medium"
-            android:textColor="#FFFFFF"
             android:text="Calendario de visitas"
+            android:textColor="#FFFFFF"
             android:textSize="18dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView10"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/voltarcompra" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menuRecycler"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+
+            android:visibility="gone"
+            android:background="@drawable/bordas_spiner_personalizada"
+            android:elevation="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menu_cima"  />
+
+        <ImageView
+            android:id="@+id/limparfiltro"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/aplicarFiltro"
+            app:layout_constraintEnd_toStartOf="@+id/aplicarFiltro"
+            app:srcCompat="@drawable/xmodal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:layout_marginTop="24sp"
+        android:layout_marginTop="62dp"
         android:background="@drawable/bordas_cima_calendario"
         android:elevation="12sp"
         android:orientation="vertical"
@@ -74,25 +135,27 @@
             style="@style/TextCnpj"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/inter_medium"
 
-            android:text="Dia"
+            android:text="Hoje"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view20" />
 
         <!-- Conteúdo do BottomSheet (RecyclerView ou outros elementos) -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyVisitasMarcadas"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/diaSelecionado" />
+            app:layout_constraintTop_toBottomOf="@+id/descricao" />
 
         <View
             android:id="@+id/view20"
@@ -101,11 +164,49 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bordas_menu_cima"
 
-            android:backgroundTint="#BAD9F4"
+            android:backgroundTint="#B0C6D8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/descricao"
+            style="@style/TextrazaoSocial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:text="Segure e arraste para reorganizar as visitas como preferir"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/diaSelecionado" />
+
+        <ProgressBar
+            android:id="@+id/progressVisitas"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="29dp"
+            android:visibility="gone"
+            android:layout_height="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyVisitasMarcadas" />
+
+        <TextView
+            android:id="@+id/semvisitas"
+            style="@style/TextrazaoSocial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textColor="@color/corneutratext"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="16dp"
+            android:text="Não há visitas para a data selecionada"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/recyVisitasMarcadas" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
