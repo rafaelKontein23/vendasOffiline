@@ -21,6 +21,8 @@ class AdapterVisitasOrdenar(listaVisitas:MutableList<Visitas>) : Adapter<Adapter
 
     var listaVisitas = listaVisitas
     var selecionar = false
+    var listaVisitasfilter = null
+    var excluirIten =-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCalendarioRotiro {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.celula_visitas_marcadas, parent,false)
         return ViewHolderCalendarioRotiro(view)

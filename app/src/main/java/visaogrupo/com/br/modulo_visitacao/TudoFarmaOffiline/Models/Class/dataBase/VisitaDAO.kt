@@ -29,10 +29,18 @@ class VisitaDAO(context: Context) {
 
     }
 
-    fun atualizaPosition(listaVisitas: MutableList<Visitas>){
-        for ((i, vistas) in listaVisitas.withIndex()){
-            val query = "UPDATE TB_Visitas SET ordem = '$i' WHERE data_visita = '${vistas.dataVisita}' AND visitaID = ${vistas.visitaID}"
-            db.execSQL(query)
+    fun atualizaPositionEstatus(listaVisitas: MutableList<Visitas>, alteraStatusVisitas:Boolean = false, status:Int = 0){
+        if (!alteraStatusVisitas){
+            for ((i, vistas) in listaVisitas.withIndex()){
+                val query = "UPDATE TB_Visitas SET ordem = '$i' WHERE data_visita = '${vistas.dataVisita}' AND visitaID = ${vistas.visitaID}"
+                db.execSQL(query)
+            }
+
+        }else{
+            for ((i, vistas) in listaVisitas.withIndex()){
+                val query = "UPDATE TB_Visitas SET status = $status WHERE data_visita = '${vistas.dataVisita}' AND visitaID = ${vistas.visitaID}"
+                db.execSQL(query)
+            }
         }
 
     }
@@ -56,9 +64,10 @@ class VisitaDAO(context: Context) {
             val telefone = cursor.getString(4)
             val emal    = cursor.getString(5)
             val dataVisita = cursor.getString(6)
-            val ordem     = cursor.getInt(7)
+            val  status = cursor.getInt(7)
+            val ordem     = cursor.getInt(8)
 
-            val visitas = Visitas(visitaID, cnpj, razaoSocial, endereco, telefone, emal,dataVisita,ordem)
+            val visitas = Visitas(visitaID, cnpj, razaoSocial, endereco, telefone, emal,dataVisita,ordem, status =  status)
             listaVisitas.add(visitas)
         }
         return listaVisitas

@@ -28,6 +28,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.M
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.dataBase.VisitaDAO
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdapterMenuCima
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Adpters.AdapterVisitasOrdenar
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 import java.util.Calendar
 import java.util.Collections
 
@@ -37,6 +38,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
     lateinit var adapterCalendario:AdapterVisitasOrdenar
     var listaVisita = mutableListOf<Visitas>()
     var dataAtualiza =""
+    var menuVisitas = MenuVisitas.naoVisitada
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +60,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
 
            binding.menuRecycler.isVisible = true
         }
+
 
         val listaItensMenu = listOf(
             CustomSpinnerItem(
@@ -82,6 +85,72 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
         binding.menuRecycler.layoutManager = linearMeneger
         binding.menuRecycler.adapter       = adapterMenuCima
 
+        binding.aplicarFiltro.setOnClickListener {
+            when(menuVisitas){
+                MenuVisitas.filtros ->{
+                }
+
+                MenuVisitas.excluivisita ->{
+                    val dialogErro = DialogErro()
+                    MainScope().launch {
+                        dialogErro.Dialog(this@ActCalendarioRoteiro,"Atenção", "As visitas selecionadas serão excluidas, deseja continuar?"
+                            ,"Sim",
+                            "Não"){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val listaVisitasFilter= mutableListOf<Visitas>()
+                                for ((i,visista) in listaVisita.withIndex()){
+                                    if (visista.selcionado){
+                                        listaVisitasFilter.add(visista)
+                                    }
+                                }
+                                MainScope().launch {
+                                    adapterCalendario.notifyDataSetChanged()
+                                    voltaConfigInicial()
+                                }
+                                val visitaDAO = VisitaDAO(this@ActCalendarioRoteiro)
+                                visitaDAO.atualizaPositionEstatus(listaVisitasFilter,true,2)
+                            }
+                        }
+                    }
+                }
+
+                MenuVisitas.naoVisitada ->{
+                    val dialogErro = DialogErro()
+                    MainScope().launch {
+                        dialogErro.Dialog(this@ActCalendarioRoteiro,"Atenção", "As visitas selecionadas serão marcadas como não vistadas, deseja continuar?"
+                            ,"Sim",
+                            "Não"){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val listaVisitasFilter= mutableListOf<Visitas>()
+                                for (i in listaVisita){
+                                    if (i.selcionado){
+                                        i.selcionado = false
+                                        i.status = 2
+                                        listaVisitasFilter.add(i)
+                                    }
+                                }
+                                MainScope().launch {
+                                    adapterCalendario.listaVisitas = listaVisita
+                                    voltaConfigInicial()
+                                }
+                                val visitaDAO = VisitaDAO(this@ActCalendarioRoteiro)
+                                visitaDAO.atualizaPositionEstatus(listaVisitasFilter,true,2)
+                            }
+                        }
+                    }
+
+                }
+
+                MenuVisitas.remarcarVisitas->{
+
+
+                }
+                else->{
+
+                }
+            }
+        }
+
         binding.limparfiltro.setOnClickListener {
             esconteItens(false)
             binding.menuRecycler.isVisible = false
@@ -91,7 +160,6 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
             binding.diaSelecionado.text = dataAtualiza
 
         }
-
 
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -139,7 +207,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && isDragging) {
                     isDragging = false
                     val visitaDAO = VisitaDAO(baseContext)
-                    visitaDAO.atualizaPosition(listaVisita)
+                    visitaDAO.atualizaPositionEstatus(listaVisita)
                 }
             }
 
@@ -248,24 +316,31 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
     override fun visitasmenu(menuVisitass: MenuVisitas) {
         esconteItens(true)
 
-
-
         when(menuVisitass){
              MenuVisitas.filtros ->{
+                 menuVisitas = MenuVisitas.filtros
              }
 
             MenuVisitas.excluivisita ->{
+                menuVisitas = MenuVisitas.excluivisita
+
+                binding.diaSelecionado.text = "Selecione os itens que deseja excluir visitadas"
+                adapterCalendario.selecionar  = true
+                adapterCalendario.notifyDataSetChanged()
 
             }
 
             MenuVisitas.naoVisitada ->{
-                binding.diaSelecionado.text = "Selecione os itens que deseja marcar como não visitados"
+                menuVisitas = MenuVisitas.naoVisitada
 
+                binding.diaSelecionado.text = "Selecione os itens que deseja marcar como não visitados"
                 adapterCalendario.selecionar  = true
                 adapterCalendario.notifyDataSetChanged()
             }
 
             MenuVisitas.remarcarVisitas->{
+                menuVisitas = MenuVisitas.remarcarVisitas
+
 
             }
             else->{
@@ -280,5 +355,21 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
         binding.menuCima.isVisible = !esconte
         binding.aplicarFiltro.isVisible = esconte
         binding.limparfiltro.isVisible = esconte
+    }
+    fun voltaConfigInicial(){
+        binding.recyVisitasMarcadas.recyVisitasMarcadas.isVisible = true
+        binding.semvisitas.isVisible = false
+        binding.progressVisitas.isVisible = false
+        binding.descricao.isVisible = true
+        binding.menuCima.isVisible = true
+        esconteItens(true)
+        binding.menuRecycler.isVisible = false
+        adapterCalendario.selecionar = false
+        adapterCalendario.notifyDataSetChanged()
+        binding.descricao.text = "Segure e arraste para reorganizar as visitas como preferir"
+        binding.diaSelecionado.text = dataAtualiza
+        binding.aplicarFiltro.isVisible = false
+        binding.limparfiltro.isVisible = false
+
     }
 }
