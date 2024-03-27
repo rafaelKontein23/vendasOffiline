@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import visaogrupo.com.br.TudoFarmaOffiline.R
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Objetos.Visitas
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.FormataTexto
@@ -38,18 +42,38 @@ class AdapterVisitasOrdenar(listaVisitas:MutableList<Visitas>) : Adapter<Adapter
              holder.imgVista.setImageResource(R.drawable.relogio)
 
          }
+
+        holder.imgSeleciona.isEnabled = selecionar
+
         if (selecionar){
-            holder.imgSeleciona.setImageResource(R.drawable.marcar_visita)
             val shakeAnimation = ObjectAnimator.ofFloat(holder.containerVisita, "translationX", -10f, 10f)
             shakeAnimation.duration = 100
             shakeAnimation.repeatCount = 5
             shakeAnimation.repeatMode = ObjectAnimator.REVERSE
             shakeAnimation.start()
+            holder.imgSeleciona.setImageResource(R.drawable.marcar_visita)
+
         }else{
-
             holder.imgSeleciona.setImageResource(R.drawable.drag)
-        }
 
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            listaVisitas.forEach{
+                it.selcionado = false
+            }
+       }
+
+       holder.imgSeleciona.setOnClickListener {
+           if (!itemVisita.selcionado){
+               itemVisita.selcionado = true
+               listaVisitas[position].selcionado = true
+               holder.imgSeleciona.setImageResource(R.drawable.check_visita)
+           }else{
+               itemVisita.selcionado = false
+               listaVisitas[position].selcionado = false
+               holder.imgSeleciona.setImageResource(R.drawable.marcar_visita)
+           }
+       }
 
     }
 

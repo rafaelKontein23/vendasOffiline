@@ -33,19 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView28" />
 
-        <ImageView
-            android:id="@+id/aplicarFiltro"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="20dp"
-            android:visibility="gone"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/bordas_menu_cima"
-            android:padding="8sp"
-            android:src="@drawable/check_branco"
-            android:tint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
         <!-- Seus elementos aqui -->
         <CalendarView
             android:id="@+id/calendarView"
@@ -102,16 +90,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/menu_cima"  />
 
-        <ImageView
-            android:id="@+id/limparfiltro"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="gone"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/aplicarFiltro"
-            app:layout_constraintEnd_toStartOf="@+id/aplicarFiltro"
-            app:srcCompat="@drawable/xmodal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,14 +99,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:layout_marginTop="62dp"
+        android:paddingBottom="20dp"
         android:background="@drawable/bordas_cima_calendario"
         android:elevation="12sp"
-        android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:layout_constraintBottom_toBottomOf="parent">
+        <ImageView
+            android:id="@+id/limparfiltro"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="16dp"
+            android:tint="@color/Prymary"
+            android:visibility="gone"
 
-        <!-- Conteúdo do BottomSheet (RecyclerView ou outros elementos) -->
+            app:layout_constraintBottom_toBottomOf="@+id/aplicarFiltro"
+            app:layout_constraintEnd_toStartOf="@+id/aplicarFiltro"
+            app:srcCompat="@drawable/xmodal" />
+
+        <ImageView
+            android:id="@+id/aplicarFiltro"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bordas_azul"
+            android:padding="8sp"
+            android:visibility="gone"
+            android:src="@drawable/check_branco"
+            android:tint="@color/Prymary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/diaSelecionado"
 
@@ -136,7 +137,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:fontFamily="@font/inter_medium"
 
             android:text="Hoje"
@@ -145,7 +146,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view20" />
 
-        <!-- Conteúdo do BottomSheet (RecyclerView ou outros elementos) -->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyVisitasMarcadas"

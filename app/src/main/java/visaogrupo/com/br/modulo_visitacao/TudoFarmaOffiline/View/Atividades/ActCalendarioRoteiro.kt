@@ -38,6 +38,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
     var listaVisita = mutableListOf<Visitas>()
     var dataAtualiza =""
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityActCalendarioRoteiroBinding.inflate(layoutInflater)
@@ -52,6 +53,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
         val month = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
         buscaInfos(year,month,dayOfMonth)
+
         binding.menuCima.setOnClickListener {
 
            binding.menuRecycler.isVisible = true
@@ -95,10 +97,10 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val halfScreenHeight = displayMetrics.heightPixels / 2
         val params = binding.constraintLayout7.getLayoutParams()
-        params.height = halfScreenHeight + 50
+        params.height = halfScreenHeight
         binding.constraintLayout7.setLayoutParams(params)
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.viewDrop)
-        bottomSheetBehavior.peekHeight = halfScreenHeight -50
+        bottomSheetBehavior.peekHeight = halfScreenHeight
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -168,7 +170,13 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
                 binding.recyVisitasMarcadas.recyVisitasMarcadas.isVisible = false
                 binding.semvisitas.isVisible = false
                 binding.progressVisitas.isVisible = true
-                binding.descricao.isVisible = false
+                binding.descricao.isVisible = true
+                esconteItens(false)
+                binding.menuRecycler.isVisible = false
+                adapterCalendario.selecionar = false
+                adapterCalendario.notifyDataSetChanged()
+                binding.descricao.text = "Segure e arraste para reorganizar as visitas como preferir"
+                binding.diaSelecionado.text = dataAtualiza
             }
             var mes  = month +1
             val diaAtual = DataAtual()
@@ -239,6 +247,7 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
 
     override fun visitasmenu(menuVisitass: MenuVisitas) {
         esconteItens(true)
+
 
 
         when(menuVisitass){

@@ -8,4 +8,5 @@ data class Visitas( val visitaID: Int? = null,
                     val email: String? = null,
                     val dataVisita: String? = null,
                     val ordem: Int? = null,
-                    val status :Int = 0)
+                    val status :Int = 0,
+                    var selcionado:Boolean = false)
