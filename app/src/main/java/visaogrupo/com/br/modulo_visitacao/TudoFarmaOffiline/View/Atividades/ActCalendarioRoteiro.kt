@@ -100,15 +100,16 @@ class ActCalendarioRoteiro : AppCompatActivity(),menuVisitas {
                                 val listaVisitasFilter= mutableListOf<Visitas>()
                                 for ((i,visista) in listaVisita.withIndex()){
                                     if (visista.selcionado){
-                                        listaVisitasFilter.add(visista)
+                                        listaVisita.remove(visista)
                                     }
                                 }
                                 MainScope().launch {
+                                    adapterCalendario.listaVisitas = listaVisita
                                     adapterCalendario.notifyDataSetChanged()
                                     voltaConfigInicial()
                                 }
-                                val visitaDAO = VisitaDAO(this@ActCalendarioRoteiro)
-                                visitaDAO.atualizaPositionEstatus(listaVisitasFilter,true,2)
+                                //val visitaDAO = VisitaDAO(this@ActCalendarioRoteiro)
+                               // visitaDAO.atualizaPositionEstatus(listaVisitasFilter,true,2)
                             }
                         }
                     }

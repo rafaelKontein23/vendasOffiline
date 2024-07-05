@@ -21,8 +21,8 @@ class AdapterVisitasOrdenar(listaVisitas:MutableList<Visitas>) : Adapter<Adapter
 
     var listaVisitas = listaVisitas
     var selecionar = false
-    var listaVisitasfilter = null
-    var excluirIten =-
+    var listaVisitasfilter = mutableListOf<Visitas>()
+    var excluirIten = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderCalendarioRotiro {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.celula_visitas_marcadas, parent,false)
         return ViewHolderCalendarioRotiro(view)
@@ -44,6 +44,7 @@ class AdapterVisitasOrdenar(listaVisitas:MutableList<Visitas>) : Adapter<Adapter
              holder.imgVista.setImageResource(R.drawable.relogio)
 
          }
+
 
         holder.imgSeleciona.isEnabled = selecionar
 

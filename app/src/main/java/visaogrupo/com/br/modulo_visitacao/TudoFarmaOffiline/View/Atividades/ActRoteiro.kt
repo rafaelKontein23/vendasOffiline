@@ -64,8 +64,8 @@ class ActRoteiro : AppCompatActivity() {
                     }
                 }else{
                     CoroutineScope(Dispatchers.Main).launch {
-                        adaterRoteiro.listaCliente = listaclientes
-                        adaterRoteiro.notifyDataSetChanged()
+                      //   adaterRoteiro.listaCliente = listaclientes
+                       // adaterRoteiro.notifyDataSetChanged()
                     }
 
 
