@@ -100,6 +100,7 @@ class AdapterCarrinhoKit(CarrinhoKit:MutableList<CarrinhoKit>, context:ActCarrin
       return listCarrinhoKit.size
     }
 
+
     class ViewHolderCarrinhhoKit(itemView: View) : ViewHolder(itemView){
         val pedidoText = itemView.findViewById<TextView>(R.id.pedidoText)
         val nomeKit = itemView.findViewById<TextView>(R.id.nomeKit)

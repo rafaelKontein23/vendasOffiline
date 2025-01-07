@@ -16,6 +16,7 @@ import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.C
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.DataAtual
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.ExcluiDados
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.ExcluirPrefuser
+import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.PushNativo
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.View.Dialogs.DialogErro
 
 import visaogrupo.com.br.modulo_visitacao.TudoFarmaOffiline.Models.Class.Ultis.Verifica_Internet
@@ -51,7 +52,7 @@ class ActLogin:  AppCompatActivity() ,
 
         val  capDevice = CapturaDeviceToken()
         capDevice.recuperaToken()
-
+        PushNativo.showNotification(this,"200","Titulo1","")
         entrar!!.setOnClickListener {
 
             entrar!!.text = ""

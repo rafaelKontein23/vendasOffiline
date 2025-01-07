@@ -8,7 +8,16 @@ plugins {
 android {
     namespace 'visaogrupo.com.br.TudoFarmaOffiline'
     compileSdk 33
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\rafael.tein\\Documents\\chavesDosProjetosDosApps\\Chaves de Assinatura Projetos')
+            storePassword 'visaogrupo'
+            keyAlias 'tudofarmaOffiline'
+            keyPassword 'visaogrupo'
 
+
+        }
+    }
     defaultConfig {
         applicationId "visaogrupo.com.br.TudoFarmaOffiline"
         minSdk 21

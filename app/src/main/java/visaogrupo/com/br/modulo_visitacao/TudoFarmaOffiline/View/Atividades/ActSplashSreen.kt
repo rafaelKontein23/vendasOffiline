@@ -19,7 +19,8 @@ class ActSplashSreen : AppCompatActivity() {
                val dataUltimoLogin = sharedPreferences?.getString("dataLogin", null)
                val userObject = sharedPreferences?.getString("UserLogin", null)
               val handler = Handler()
-            PushNativo.showNotificationPedido(this,"TESTE1","Seja Bem Vindo!","Tudo farma está em execução")
+            PushNativo.showNotificationPedido(this,"TESTE1","Seja Bem Vindo!!!!!!!!!","Tudo farma está em execução")
+            PushNativo.showNotificationPedido(this,"TESTE2","Titulo1","")
 
 
                val dataAtual = DataAtual()
