@@ -63,7 +63,7 @@ class CargaDiaria {
                 Log.d("Caminho Zip","${patch}")
                 if(!patch.isEmpty()){
                     val excluiDadosTabelas = ExcluiDados(context)
-                    excluiDadosTabelas.exluidadosGeral()
+                  //  excluiDadosTabelas.exluidadosGeral()
                     val lerZip = LerZip()
                     val lojasDAO = LojasDAO(context)
                     val clientesDAO = ClientesDAO(context)
@@ -261,9 +261,9 @@ class CargaDiaria {
 
                     if(!listaErrosCriticos.isEmpty()){
 
-                        erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
+                   //     erroNaCarga(icon,texttitulocarga, subtitulocarga ,context,animador,constrain)
                         val excluiDadosTabelas = ExcluiDados(context)
-                        excluiDadosTabelas.exluidadosGeral()
+                      //  excluiDadosTabelas.exluidadosGeral()
                         return@launch
                     }
 
@@ -864,7 +864,7 @@ class CargaDiaria {
                     context: Context, animador: ObjectAnimator, constrain:ConstraintLayout){
         erroNaCarga(img,texttitulo, descricao ,context,animador,constrain)
         val excluiDadosTabelas = ExcluiDados(context)
-        excluiDadosTabelas.exluidadosGeral()
+      //  excluiDadosTabelas.exluidadosGeral()
         FezCargaPreferencias.atualizaInfoDeCarga(context, false)
     }
 }
